@@ -3,7 +3,7 @@
 
 @section('title', 'Constructora MAGC')
 @section('template_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/css/bulma.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('src/css/bulma.css') }}" />
 @endsection
 
 @section('template_login')
@@ -52,10 +52,10 @@
 
     </form>
 
-    <div class="login100-more" style="background-image: url({{ asset('vendors/images/logo-empresa.jpeg') }});">
+    <div class="login100-more" style="background-image: url({{ asset('src/images/logo-empresa.jpeg') }});">
     </div>
 @endsection
 
 @section('template_js')
-    <script src="{{ asset('vendors/js/bulma.js') }}"></script>
+    <script src="{{ asset('src/js/bulma.js') }}"></script>
 @endsection
