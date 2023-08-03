@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts/app')
 @section('title', 'MAGC | Personal')
 
 @section('template_css')
@@ -21,8 +21,8 @@
 
             </div>
 
-            <div id="table-container">
-                <table id="table-records" class="table  is-striped is-hoverable has-background-info-light">
+            <div id="table-container"   >
+                <table id="table-records" class="table  is-striped is-hoverable has-background-info-light"  style="width:100%"  >
 
                 </table>
             </div>
@@ -33,8 +33,7 @@
 
 @section('template_js')
     <script src="{{ asset('src/plugins/data-table/DataTableBulma1.13.js') }}"></script>
-    <script src="{{ asset('src/js/personal/PersonalRender.js') }}"  type="module"></script>
-
+      <script src="{{ asset('src/js/personal/PersonalRender.js') }}"  type="module"></script>
     <script>
         // Carga el archivo Spanish.json de forma síncrona
         var es_json = {{ Js::from(asset('src/plugins/data-table/es.json')) }};
@@ -52,6 +51,4 @@
             }
         });
     </script>
-
-      
 @endsection

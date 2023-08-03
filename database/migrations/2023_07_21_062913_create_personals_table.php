@@ -12,6 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('personals', function (Blueprint $table) {
+            $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
+            
             $table->id();
             $table->string('nombres',200);
             $table->string('apellido_paterno',200);

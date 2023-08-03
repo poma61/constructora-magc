@@ -65,5 +65,12 @@
               </a>
           </li>
 
+
+    <li class="{{ $city == 'Otros' ? 'is-active' : null }}">
+              <a href="{{ route('r-personal-index-view', 'Otros') }}">
+                  <span class="icon is-small"><i class="bi bi-0-circle" aria-hidden="true"></i></span>
+                  <span>Otros</span>
+              </a>
+          </li>
       </ul>
   </div>

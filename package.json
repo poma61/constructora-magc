@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "@vitejs/plugin-vue": "^4.2.3",
+        "bulma-block-list": "^0.7.0",
         "vue": "^3.3.4"
     }
 }

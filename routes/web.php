@@ -18,7 +18,7 @@ Route::get("/salir",[LoginController::class,'logout'])->name("r-salir")->middlew
 
 //Personal
 Route::group(["middleware"=>["auth"]],function(){
-    Route::get('/personal/index/view/{city}',[PersonalController::class,'indexView'])->name("r-personal-index-view");
+    Route::get('/personal/view/{city}',[PersonalController::class,'indexView'])->name("r-personal-index-view");
     Route::post('/personal/index',[PersonalController::class,'index']);
     Route::post('/personal/create',[PersonalController::class,'create']);
     Route::post('/personal/edit',[PersonalController::class,'edit']);
@@ -29,7 +29,7 @@ Route::group(["middleware"=>["auth"]],function(){
 
 //User
 Route::group(['middleware'=>['auth']],function(){
-Route::get('/user/view',[UserController::class,'indexView'])->name('r-user-view');
+Route::get('/user/view/{ciudad}',[UserController::class,'indexView'])->name('r-user-view');
 Route::post('/user/index',[UserController::class, 'index']);
 Route::post('/user/create',[UserController::class, 'create']);
 Route::post('/user/edit',[UserController::class, 'edit']);

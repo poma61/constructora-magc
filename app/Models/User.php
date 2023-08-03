@@ -13,7 +13,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
 
-    
+
     protected $fillable = [
         'nombres',
         'apellidos',
@@ -29,6 +29,14 @@ class User extends Authenticatable
         'created_at',
         'updated_at',
     ];
+
+    //para unir dos tablas en este claso unos a muchos
+    // users => muchos  a uno => personals
+    public function onPersonal()
+    {
+        return $this->belongsTo(Personal::class,'id_personal');
+
+    }
 
     
 }

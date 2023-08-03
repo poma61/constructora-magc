@@ -1,30 +1,9 @@
-/* body,
-html {
-    -webkit-font-smoothing: antialiased;
-    width: 100% !important;
-    background-color: #fff;
-}
-
-html {
-    -webkit-text-size-adjust: none;
-    -moz-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-*,
-:after,
-:before {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-} */
-
+     
 .header {
     position: fixed;
     height: 70px;
     width: calc(100% - 280px);
-    background-color: #04809c;
+    background-color: #5b7378;
     right: 0;
     top: 0;
     z-index: 123;
@@ -87,7 +66,7 @@ html {
 .brand-logo {
     width: 280px;
     height: 70px;
-    background-color: #04809c;
+    background-color: #5b7378;
 }
 
 .brand-logo a {
@@ -155,7 +134,7 @@ html {
 .left-side-bar {
     width: 280px;
     z-index: 1000;
-    background-color: #005c71;
+    background-color: #435558;
 }
 
 .left-side-bar .mCS-dark-2.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
@@ -469,8 +448,10 @@ html {
     width: 100% ;
     padding-top: 80px;
     padding-right: 20px;
+    padding-bottom: 20px;
     position: absolute;
-
+    min-height: 90vh;
+   
 }
 
 @media (min-width: 1301px) and (max-width: 1400px) {
@@ -666,15 +647,7 @@ html {
     border-top: 1px solid #e9ecef;
 }
 
-.mi-content {
-    min-height: 90vh;
-    padding: 20px;
-    border-radius: 5px;
-    /* -webkit-box-shadow: 21px 17px 13px -7px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 21px 17px 13px -7px rgba(0, 0, 0, 0.75);
-    box-shadow: 21px 17px 13px -7px rgba(0, 0, 0, 0.75); */
-    margin-bottom: 12px;
-}
+
 
 *::-webkit-scrollbar {
     width: 10px !important;

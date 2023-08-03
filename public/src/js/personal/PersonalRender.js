@@ -163,7 +163,7 @@ async function initDataTable() {
                 <th>Creado el</th>
                 <th>Acciones</th>
             </tr>
-        </tfoot>
+        </tfoot> 
         `;
     $('#table-records').append(tfootHtml);
     const table = $('#table-records').DataTable({
@@ -236,21 +236,20 @@ async function initDataTable() {
                 }
             },
 
-        ],
-        responsive: true,
-        //scrollCollapse: true,
-        autoWidth: true,
-        scrollY: '500px',
-        lengthMenu: [10, 25, 50, 100],
-        buttons: [{
+        ],    
+       responsive: true,
+      autoWidth: true,
+      fixedHeader:true,
+       lengthMenu: [10, 25, 50, 100],
+     buttons: [{
             extend: 'colvis',
-            className: 'is-primary is-outlined my-2'
-        }],
+             className: 'is-primary is-outlined my-2'
+         }],
         order: [[0, 'desc']]//laravel nos devuelve de forma ascendente lo registro y datatble lo ordena de manera desc
     });
-    // Insert at the top left of the table
+     //Insert at the top left of the table
     table.buttons().container()
-        .appendTo($('div.column.is-half', table.table().container()).eq(0));
+       .appendTo($('div.column.is-half', table.table().container()).eq(0));
 }
 
 

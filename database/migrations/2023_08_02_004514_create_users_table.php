@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
             $table->id();
-            $table->string('nombres');
-            $table->string('apellidos');
             $table->string('usuario')->unique();
             $table->string('password');
-            $table->string('foto')->nullable();
             $table->boolean('status');
+            $table->unsignedBigInteger('id_personal');
             $table->rememberToken();
             $table->timestamps();
+           
+            $table->foreign('id_personal')->references('id')->on('personals');
         });
     }
 

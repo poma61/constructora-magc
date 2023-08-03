@@ -14,11 +14,18 @@
      <div class="menu-block">
          <div class="sidebar-menu">
              <div class="user-image-sidebar">
-
+                 @php
+                     $user_all = Auth::user()
+                         ->onPersonal()
+                         ->first();
+                 @endphp
                  <img class="user_img"
-                     src="https://img.freepik.com/foto-gratis/concepto-emociones-personas-foto-cabeza-hombre-guapo-aspecto-serio-barba-confiado-decidido_1258-26730.jpg"
+                     src="{{ asset('storage/'.$user_all->foto) }}"
                      alt="" height="100" width="100" />
-                 <span class="user_name">{{ Auth::user()->nombres }} {{ Auth::user()->apellidos }}</span>
+                 <span class="user_name">
+
+                     {{ $user_all->nombres }} {{ $user_all->apellido_paterno }} {{ $user_all->apellido_materno }}
+                 </span>
              </div>
 
              <ul id="accordion-menu">
@@ -82,10 +89,10 @@
                          <span class="as-icon bi bi-person-bounding-box"></span><span class="mtext">Personal</span>
                      </a>
                  </li>
-                
+
                  <li>
-                     <a href="{{ route('r-user-view') }}" class="unfold-toggle no-arrow">
-                         <span class="as-icon bi bi-people"></span><span class="mtext">Personal</span>
+                     <a href="{{ route('r-user-view', 'Santa-Cruz') }}" class="unfold-toggle no-arrow">
+                         <span class="as-icon bi bi-people"></span><span class="mtext">Usuarios</span>
                      </a>
                  </li>
 

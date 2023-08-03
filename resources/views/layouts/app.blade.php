@@ -14,10 +14,10 @@
     <!-- CSS -->
 
     <link rel="stylesheet" type="text/css" href="{{ asset('src/font/bootstrap-icons.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('src/css/style.css') }}" media="all" />
     <link rel="stylesheet" type="text/css" href="{{ asset('src/css/bulma.css') }}" media="all" />
     <link rel="stylesheet" type="text/css" href="{{ asset('src/css/animate.css') }}" media="all" />
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+      <link rel="stylesheet" type="text/css" href="{{ asset('src/css/style.css') }}" media="all" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="icon" href="{{ asset('src/images/logo-empresa.jpeg') }}" />
     @yield('template_css')
 
@@ -29,12 +29,10 @@
     @include('components.sidebar')
 
     <div class="as-container-page">
-        <div class="mi-content">
             @yield('template_content')
-        </div>
     </div>
     <script src="{{ asset('src/plugins/jquery-3.7/jquery-3.7.js') }}"></script>
-    <script src="{{ asset('src/js/script.js') }}"></script>
+    
     <script src="{{ asset('src/plugins/sweetalert2/sweetalert2.all.js') }}"></script>
     <script src="{{ asset('src/js/Config.js') }}"></script>
     <script src="{{ asset('src/js/auth/Auth.js') }}"></script>
@@ -42,9 +40,9 @@
 
     <script src="{{ asset('/src/plugins/axios/Axios.min.js') }}"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script src="{{ asset('/src/plugins/toastr/ToastConfig.js') }}"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="{{ asset('/src/plugins/toastr/ToastConfig.js') }}"></script>
+<script src="{{ asset('src/js/script.js') }}"></script>
     @yield('template_js')
 </body>
 

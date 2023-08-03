@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PersonalRequest;
 use App\Models\Ciudad;
 use App\Models\Personal;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 use Throwable;
@@ -17,27 +18,25 @@ class PersonalController extends Controller
     public function indexView(string $nombre_ciudad)
     {
         try {
-            $personal = null;
+            $personal = false;
             $ciudad = Ciudad::all();
 
             //el nombre_ciudad debe ser el mismo que esta en la base de datos
             foreach ($ciudad as $row => $val) {
                 //verificamos si la ciudad existe en la base de datos 
                 if ($val->city_name == $nombre_ciudad) {
-                    $personal = Personal::join("ciudades", "ciudades.id", "=", "personals.id_ciudad")
-                        ->select("personals.*")
-                        ->where('status', true)
-                        ->where('ciudades.city_name', "=", $nombre_ciudad)
-                        ->orderBy('id', 'ASC')
-                        ->get();
+                   $personal=true;
+                   break;
                 }
             }
 
-            if ($personal == null) {
-                return view('error-page-view');
+            if ($personal) {
+                return view('personal/personal-view', ["city" => $nombre_ciudad]);
             }
 
-            return view('personal/personal-view', ["city" => $nombre_ciudad]);
+            return view('error-page-view');
+          
+
         } catch (Throwable $th) {
             return view('error-page-view');
         }
@@ -208,11 +207,18 @@ class PersonalController extends Controller
             $personal->status = false;
             $personal->save();
 
+            //como tiene una relacion con la tabla users
+            //entonces tambien eliminamos de la tabla usuarios
+            $user = User::where('id_personal', $id)->first();
+            $user->status=false;
+            $user->save();
+            
             return response()->json([
                 'status' => true,
                 'message' => 'Registro Eliminado!',
                 'type' => 'destroy',
             ], 200);
+
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
