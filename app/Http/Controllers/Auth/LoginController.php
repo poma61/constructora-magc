@@ -27,13 +27,13 @@ class LoginController extends Controller
 
         if ($user != null) {
             if (Hash::check($request->input("password"), $user->password)) {
-                if ($remember) {
-                    $rememberToken = Str::random(60);
-                    $user->remember_token = $rememberToken;
-                    $user->update();
-                    Cookie::queue('remember_token', $rememberToken, 1440); // Guardar el token en una cookie durante 24 horas
-
-                }
+                // if ($remember) {
+                //     $rememberToken = Str::random(60);
+                //     $user->remember_token = $rememberToken;
+                //     $user->update();
+                //     Cookie::queue('remember_token', $rememberToken, 1440); // Guardar el token en una cookie durante 24 horas
+                // }
+                
                 Auth::login($user);
 
                 return redirect()->route("r-home");

@@ -9,6 +9,7 @@ class Personal {
             apellido_paterno: '',
             apellido_materno: '',
             cargo: '',
+            grup_number: '',
             ci: '',
             ci_expedido: '',
             telefono: null,

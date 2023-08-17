@@ -2,27 +2,33 @@
 @section('title', 'MAGC | Personal')
 
 @section('template_css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link href="{{ asset('src/css/data-table-bulma.css') }}" rel="stylesheet">
 @endsection
 
 @section('template_content')
 
-    <div class="card">
+    <div class="card mt-5">
         <div class="card-content">
+            <h1 class="as-main-title is-size-5 has-text-white animate__animated animate__fadeInRightBig">
+                Administracion del personal
+            </h1>
 
             @include('components/personal/personal-tabs')
 
             <div class="columns is-desktop">
                 <div class="column">
-                    <button class="button is-info icon-text" id="new-form"><span class="icon"> <i
-                                class="bi bi-plus-square"></i></span>
+                    <button class="button is-info icon-text" id="new-form">
+                        <span class="icon">
+                            <span class="mdi mdi-pencil-plus"></span>
+                        </span>
                         <span>Nuevo</span></button>
                 </div>
 
             </div>
 
-            <div id="table-container"   >
-                <table id="table-records" class="table  is-striped is-hoverable has-background-info-light"  style="width:100%"  >
+            <div id="table-container" class="as-table animate__animated animate__fadeInLeftBig">
+                <table id="table-records" class="table  is-striped is-hoverable" style="width:100%">
 
                 </table>
             </div>
@@ -32,23 +38,13 @@
 
 
 @section('template_js')
-    <script src="{{ asset('src/plugins/data-table/DataTableBulma1.13.js') }}"></script>
-      <script src="{{ asset('src/js/personal/PersonalRender.js') }}"  type="module"></script>
-    <script>
-        // Carga el archivo Spanish.json de forma síncrona
-        var es_json = {{ Js::from(asset('src/plugins/data-table/es.json')) }};
-        $.ajax({
-            url: es_json,
-            dataType: "json",
-            async: false,
-            success: function(data) {
-                translations = data;
-                // Configuración de la traducción global al español
-                $.extend(true, $.fn.dataTable.defaults, {
-                    language: translations,
 
-                });
-            }
-        });
-    </script>
+    <script src="{{ asset('/src/plugins/axios/Axios.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="{{ asset('/src/plugins/toastr/ToastConfig.js') }}"></script>
+
+    <script src="{{ asset('src/plugins/data-table/DataTableBulma1.13.js') }}"></script>
+    <script src="{{ asset('src/js/personal/PersonalRender.js') }}" type="module"></script>
+    <script src="{{ asset('src/plugins/data-table/DataTableConfig.js') }}"></script>
+
 @endsection

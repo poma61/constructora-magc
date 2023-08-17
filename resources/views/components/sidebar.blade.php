@@ -19,9 +19,8 @@
                          ->onPersonal()
                          ->first();
                  @endphp
-                 <img class="user_img"
-                     src="{{ asset('storage/'.$user_all->foto) }}"
-                     alt="" height="100" width="100" />
+                 <img class="user_img" src="{{ asset('storage/' . $user_all->foto) }}" alt="" height="100"
+                     width="100" />
                  <span class="user_name">
 
                      {{ $user_all->nombres }} {{ $user_all->apellido_paterno }} {{ $user_all->apellido_materno }}
@@ -39,63 +38,35 @@
 
                  <li>
                      <a href="{{ route('r-home') }}" class="unfold-toggle no-arrow">
-                         <i class="as-icon bi bi-4-square"></i> <span class="mtext">Inicio</span>
+                         <i class="as-icon mdi mdi-home-circle-outline is-size-4"></i>
+                         <span>Inicio</span>
                      </a>
                  </li>
                  <li>
-                     <div class="unfold-divider"></div>
-                 </li>
-
-
-                 <li class="unfold">
-                     <a href="javascript:;" class="unfold-toggle">
-                         <i class="as-icon bi bi-aspect-ratio"></i><span class="mtext">Forms</span>
-                     </a>
-                     <ul class="submenu">
-                         <li>
-                             <a href="#">
-                                 <i class="bi bi-aspect-ratio"></i><span> Form Basic</span>
-                             </a>
-                         </li>
-                         <li>
-                             <a href="#">
-                                 <i class="bi bi-aspect-ratio"></i><span> Form Basic</span>
-                             </a>
-                         </li>
-                         <li>
-                             <a href="#">
-                                 <i class="bi bi-aspect-ratio"></i><span> Form Basic</span>
-                             </a>
-                         </li>
-
-                     </ul>
-                 </li>
-
-
-                 <li>
-                     <a href="calendar.html" class="unfold-toggle no-arrow">
-                         <span class="as-icon bi bi-calendar4-week"></span><span class="mtext">Calendar</span>
-                     </a>
-                 </li>
-                 <li>
-                     <div class="unfold-divider"></div>
-                 </li>
-                 <li>
-                     <div class="sidebar-small-cap">Extra</div>
-                 </li>
-
-                 <li>
-                     <a href="{{ route('r-personal-index-view', 'Santa-Cruz') }}" class="unfold-toggle no-arrow">
-                         <span class="as-icon bi bi-person-bounding-box"></span><span class="mtext">Personal</span>
+                     <a href="{{ route('r-cliente-index-view') }}" class="unfold-toggle no-arrow">
+                         <i class="as-icon mdi mdi-table-account is-size-4"></i>
+                         <span>Clientes</span>
                      </a>
                  </li>
 
-                 <li>
-                     <a href="{{ route('r-user-view', 'Santa-Cruz') }}" class="unfold-toggle no-arrow">
-                         <span class="as-icon bi bi-people"></span><span class="mtext">Usuarios</span>
-                     </a>
-                 </li>
+                 @if (Auth::user()->role == 'Administrador')
+                     <li>
+                         <div class="unfold-divider"></div>
+                     </li>
+                     <li>
+                         <a href="{{ route('r-personal-index-view', 'Santa-Cruz') }}" class="unfold-toggle no-arrow">
+                             <span class="as-icon  mdi mdi-badge-account-outline is-size-4"></span>
+                             <span>Personal</span>
+                         </a>
+                     </li>
 
+                     <li>
+                         <a href="{{ route('r-user-view', 'Santa-Cruz') }}" class="unfold-toggle no-arrow">
+                             <span class="as-icon mdi mdi-home-account is-size-4"></span>
+                             <span>Usuarios</span>
+                         </a>
+                     </li>
+                 @endif
              </ul>
          </div>
      </div>

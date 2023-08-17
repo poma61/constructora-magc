@@ -8,11 +8,12 @@
     "devDependencies": {
         "axios": "^1.4.0",
         "laravel-vite-plugin": "^0.7.5",
+        "sass": "^1.65.1",
         "vite": "^4.0.0"
     },
     "dependencies": {
         "@vitejs/plugin-vue": "^4.2.3",
-        "bulma-block-list": "^0.7.0",
-        "vue": "^3.3.4"
+        "vue": "^3.3.4",
+        "vuetify": "^3.3.11"
     }
 }

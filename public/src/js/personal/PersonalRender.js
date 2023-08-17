@@ -8,7 +8,7 @@ function html(datos) {
         <p class="control has-icons-left">
             <input class="input " type="text" placeholder="Escriba aquí..." name="nombres" value="${datos.nombres}">
             <span class="icon is-small is-left has-text-info">
-                <i class="bi bi-filetype-txt"></i>
+               <span class="mdi mdi-text-box-check"></span>
             </span>
         </p>
     </div>
@@ -19,7 +19,7 @@ function html(datos) {
             <input class="input" type="text" placeholder="Escriba aquí..." name="apellido_paterno"
                 value="${datos.apellido_paterno}">
             <span class="icon is-small is-left has-text-info">
-                <i class="bi bi-filetype-txt"></i>
+               <span class="mdi mdi-text-box-check"></span>
             </span>
         </p>
     </div>
@@ -30,7 +30,7 @@ function html(datos) {
             <input class="input" type="text" placeholder="Escriba aquí..." name="apellido_materno"
                 value="${datos.apellido_materno}">
             <span class="icon is-small is-left has-text-info">
-                <i class="bi bi-filetype-txt"></i>
+               <span class="mdi mdi-text-box-check"></span>
             </span>
         </p>
     </div>
@@ -42,7 +42,7 @@ function html(datos) {
                 <p class="control has-icons-left">
                     <input class="input" type="text" placeholder="Escriba aquí..." name="ci" value="${datos.ci}">
                     <span class="icon is-small is-left has-text-info">
-                        <i class="bi bi-filetype-txt"></i>
+                       <span class="mdi mdi-text-box-check"></span>
                     </span>
                 </p>
 
@@ -55,20 +55,20 @@ function html(datos) {
                 <div class="select">
                     <select name="ci_expedido">
                         <option value="">--Seleccione una opcion--</option>
-                        <option value="SC" ${datos.ci_expedido=='SC' ? "selected" : "" }>SC</option>
-                        <option value="CH" ${datos.ci_expedido=='CH' ? "selected" : "" }>CH</option>
-                        <option value="CB" ${datos.ci_expedido=='CB' ? "selected" : "" }>CB</option>
-                        <option value="PT" ${datos.ci_expedido=='PT' ? "selected" : "" }>PT</option>
-                        <option value="BN" ${datos.ci_expedido=='BN' ? "selected" : "" }>BN</option>
-                        <option value="LP" ${datos.ci_expedido=='LP' ? "selected" : "" }>LP</option>
-                        <option value="PA" ${datos.ci_expedido=='PA' ? "selected" : "" }>PA</option>
-                        <option value="TJ" ${datos.ci_expedido=='TJ' ? "selected" : "" }>TJ</option>
-                        <option value="OR" ${datos.ci_expedido=='OR' ? "selected" : "" }>OR</option>
-                        <option value="S/E" ${datos.ci_expedido=='S/E' ? "selected" : "" }>S/E</option>
+                        <option value="SC" ${datos.ci_expedido == 'SC' ? "selected" : ""}>SC</option>
+                        <option value="CH" ${datos.ci_expedido == 'CH' ? "selected" : ""}>CH</option>
+                        <option value="CB" ${datos.ci_expedido == 'CB' ? "selected" : ""}>CB</option>
+                        <option value="PT" ${datos.ci_expedido == 'PT' ? "selected" : ""}>PT</option>
+                        <option value="BN" ${datos.ci_expedido == 'BN' ? "selected" : ""}>BN</option>
+                        <option value="LP" ${datos.ci_expedido == 'LP' ? "selected" : ""}>LP</option>
+                        <option value="PA" ${datos.ci_expedido == 'PA' ? "selected" : ""}>PA</option>
+                        <option value="TJ" ${datos.ci_expedido == 'TJ' ? "selected" : ""}>TJ</option>
+                        <option value="OR" ${datos.ci_expedido == 'OR' ? "selected" : ""}>OR</option>
+                        <option value="S/E" ${datos.ci_expedido == 'S/E' ? "selected" : ""}>S/E</option>
                     </select>
                 </div>
                 <div class="icon is-small is-left has-text-info">
-                    <i class="bi bi-filetype-txt"></i>
+                   <span class="mdi mdi-text-box-check"></span>
                 </div>
             </div>
         </div>
@@ -79,7 +79,7 @@ function html(datos) {
         <p class="control has-icons-left">
             <input class="input" type="number" placeholder="Escriba aquí..." name="telefono" value="${datos.telefono}">
             <span class="icon is-small is-left has-text-info">
-                <i class="bi bi-123 "></i>
+            <span class="mdi mdi-numeric-9-plus-circle"></span>
             </span>
         </p>
     </div>
@@ -96,11 +96,31 @@ function html(datos) {
         <p class="control has-icons-left">
             <input class="input" type="text" placeholder="Escriba aquí..." name="cargo" value="${datos.cargo}">
             <span class="icon is-small is-left has-text-info">
-                <i class="bi bi-filetype-txt"></i>
+               <span class="mdi mdi-text-box-check"></span>
             </span>
         </p>
 
     </div>
+
+    <div class="field">
+        <label class="label has-text-info">Administra grupo</label>
+        <div class="select is-multiple" style="width:100%">
+            <select multiple size="5" style="width:100%" name="grup_number">
+            <option value="01"  ${datos.grup_number == '01' ? 'selected' : ''} >01</option>
+            <option value="02"  ${datos.grup_number == '02' ? 'selected' : ''} >02</option>
+            <option value="03"  ${datos.grup_number == '03' ? 'selected' : ''} >03</option>
+            <option value="04"  ${datos.grup_number == '04' ? 'selected' : ''} >04</option>
+            <option value="05"  ${datos.grup_number == '05' ? 'selected' : ''} >05</option>
+            <option value="06"  ${datos.grup_number == '06' ? 'selected' : ''} >06</option>
+            <option value="07"  ${datos.grup_number == '07' ? 'selected' : ''} >07</option>
+            <option value="08"  ${datos.grup_number == '08' ? 'selected' : ''} >08</option>
+            <option value="09"  ${datos.grup_number == '09' ? 'selected' : ''} >09</option>
+            <option value="10"  ${datos.grup_number == '10' ? 'selected' : ''} >10</option>
+            <option value="todos"  ${datos.grup_number == 'todos' ? 'selected' : ''} >todos</option>
+            </select>
+        </div>
+    </div>
+
 
     <div class="field mt-3">
         <div class="file is-primary">
@@ -108,7 +128,7 @@ function html(datos) {
                 <input class="file-input" type="file" name="foto" id="file-foto">
                 <span class="file-cta">
                     <span class="file-icon">
-                        <i class="bi bi-file-earmark-person"></i>
+                    <span class="mdi mdi-upload"></span>
                     </span>
                     <span class="file-label">
                         Subir foto
@@ -135,7 +155,7 @@ import SweetAlert from '/src/js/util/SweetAlert.js';
 import DateFormart from '/src/js/util/DateFormat.js';
 import ImageVisualize from '/src/js/util/ImageVisualize.js';
 
-const url_web = "/personal";
+const url_web = "/microservice/personal";
 
 // Obtener la URL
 const parsed_url = new URL(window.location.href);
@@ -145,27 +165,8 @@ const city = parsed_url.pathname.split('/').pop();;
 
 async function initDataTable() {
     const personal = new Personal(city, url_web);
-
     await personal.index();
-    // Crear el tfoot y agregarlo a la tabla
-    const tfootHtml = `
-        <tfoot>
-            <tr>
-                <th>N°</th>
-                <th>Nombre</th>
-                <th>Apellido paterno</th>
-                <th>Apellido materno</th>
-                <th>Cargo</th>
-                <th>CI</th>
-                <th>Telefono</th>
-                <th>Direccion</th>
-                <th>Foto</th>
-                <th>Creado el</th>
-                <th>Acciones</th>
-            </tr>
-        </tfoot> 
-        `;
-    $('#table-records').append(tfootHtml);
+
     const table = $('#table-records').DataTable({
         data: personal.getRecords(),
         columns: [
@@ -175,7 +176,7 @@ async function initDataTable() {
                 title: 'N°',
                 render: function (data, type, row, meta) {
                     //meta.row no es lo mismo que meta.row => data-rowindex="${meta.row}
-                    //meta.row no es lo mismo que meta.row => data-           
+                    //meta.row no es lo mismo que meta.row => data-
                     return meta.row + 1; // Se suma 1 para empezar desde 1 en lugar de 0
                 }
             },
@@ -193,6 +194,13 @@ async function initDataTable() {
             },
             { data: 'telefono', title: 'Telefono' },
             { data: 'direccion', title: 'Direccion' },
+            {
+                data: null,
+                title: 'Administra grupo',
+                render: function (data, type, row, meta) {
+                    return `<span class="tag is-primary as-font-9">${data.grup_number}</span>`
+                }
+            },
             {
                 data: null,
                 title: 'Foto',
@@ -222,40 +230,33 @@ async function initDataTable() {
                     <div class="columns">
                          <div class="column is-2 ">
                              <button class="button is-rounded is-primary edit-record" data-id="${data}"   data-rowindex="${meta.row}">
-                             <i class="bi bi-pencil"></i>
+                             <span class="mdi mdi-pencil"></span>
                              </button>
-                       
                          </div>
                          <div class="column is-2 mx-2">
                               <button  class="button is-rounded is-danger delete-record" data-id="${data}"  data-rowindex="${meta.row}">
-                              <i class="bi bi-trash3"></i>
+                              <span class="mdi mdi-delete-sweep"></span>
                               </button>
                          </div>
-                    </div>                       
+                    </div>
                     `;
                 }
             },
 
-        ],    
-       responsive: true,
-      autoWidth: true,
-      fixedHeader:true,
-       lengthMenu: [10, 25, 50, 100],
-     buttons: [{
-            extend: 'colvis',
-             className: 'is-primary is-outlined my-2'
-         }],
-        order: [[0, 'desc']]//laravel nos devuelve de forma ascendente lo registro y datatble lo ordena de manera desc
+        ],
+        responsive: true,
+        autoWidth: true,
+        lengthMenu: [10, 25, 50, 100],
+        order: [[0, 'desc']], //laravel nos devuelve de forma ascendente lo registro y datatble lo ordena de manera desc
+
     });
-     //Insert at the top left of the table
-    table.buttons().container()
-       .appendTo($('div.column.is-half', table.table().container()).eq(0));
+
 }
 
 
 function save(type, data_table_row_index, obj_datos) {
     const table = $("#table-records").DataTable();
-    let savedNValue = null;
+
     switch (type) {
         case 'create':
 
@@ -266,17 +267,15 @@ function save(type, data_table_row_index, obj_datos) {
             // Actualizar el DataTable con los nuevos datos
             table.row(data_table_row_index).data(obj_datos);
             //para evitar que la columna N° se cambia a un numero enviamos un parametro null a la columna N° que es '0'
-            //es un comportamiento raro por que N° es un contador automatico, por eso hay ese comportamiento raro 
+            //es un comportamiento raro por que N° es un contador automatico, por eso hay ese comportamiento raro
             table.cell(data_table_row_index, 0).data(null);
             table.draw(false);
             break;
         case 'destroy':
-            table.row(data_table_row_index).remove().draw(false); // Elimina la fila si obj_datos es nulo       
+            table.row(data_table_row_index).remove().draw(false); // Elimina la fila si obj_datos es nulo
             break;
         default: console.log("No se pudo realizar ningun accion en el data table");
     }
-
-
 
 }
 
@@ -288,10 +287,13 @@ function showForm(personal, data_table_row_index) {
     Swal.fire({
         title: title + ` | <span class='as-text-color-100'>  ${ciudad_parse} </span>`,
         html: html(personal.getFill()),
+
         showConfirmButton: true,
         showCancelButton: true,
-        cancelButtonText: '<i class="bi bi-x-square"></i> Cancelar',
-        confirmButtonText: '<i class="bi bi-box-arrow-right"></i> Guardar',
+        cancelButtonText: '<i class="mdi mdi-cancel"></i> Cancelar',
+        confirmButtonText: '<i class="mdi mdi-content-save-all"></i> Guardar',
+        buttonsStyling: true,
+
         showClass: {
             popup: 'animate__animated animate__flipInX'
         },
@@ -311,11 +313,12 @@ function showForm(personal, data_table_row_index) {
         },
 
         customClass: {
-            confirmButton: 'button is-link m-1 is-active',
-            cancelButton: 'button is-danger m-1 is-active',
+            confirmButton: 'button is-link m-1',
+            cancelButton: 'button is-danger m-1',
             htmlContainer: 'as-custom-swal-html-container',
             title: 'has-background-info py-2 has-text-white as-swal-title',
             popup: 'as-swal-popup',
+
         },
         preConfirm: () => {
             return new Promise(async (resolve) => {
@@ -340,6 +343,7 @@ function showForm(personal, data_table_row_index) {
                     if (response.type == 'create') {
                         save('create', data_table_row_index, personal.getFill());
                     } else {
+                     
                         save('update', data_table_row_index, personal.getFill());
                     }
                     resolve(true);
@@ -368,8 +372,6 @@ function showForm(personal, data_table_row_index) {
 $(document).ready(function () {
 
     initDataTable();
-
-
     $('#new-form').click(function () {
         const personal_obj = new Personal(city, url_web);
         showForm(personal_obj, null);
@@ -381,7 +383,7 @@ $(document).ready(function () {
         const data_id = $(this).data('id')
         const data_table_row_index = $(this).data('rowindex')
         await personal_obj.edit(data_id);
-
+      
         showForm(personal_obj, data_table_row_index);
     });
 

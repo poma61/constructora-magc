@@ -1,0 +1,371 @@
+<template>
+    <div class="buttons">
+        <v-btn @click="newForm()" color="orange-darken-2" class="as-hover__box-shadow">
+            <v-icon icon="mdi-note-plus-outline"></v-icon>&nbsp;Nuevo registro
+        </v-btn>
+    </div>
+    <div class="card">
+        <v-text-field v-model="buscar" append-inner-icon="mdi-magnify" clearable label="Buscar Registros..."
+            color="orange-darken-2" />
+
+        <v-data-table :hover="true" :items="data" :headers="columns" :loading="change_table"
+            :items-per-page-options="items_per_page_options" :show-current-page="true" :fixed-header="true" :search="buscar"
+            page-text="{0}-{1} de {2}" :height="500" :sort-by="[{ key: 'id', order: 'desc' }]">
+
+            <template v-slot:item.estado="{ item }">
+                <span class="tag is-danger as-font-9 m-1" v-if="item.columns.estado == 'Cancelada'">
+                    {{ item.columns.estado }}
+                </span>
+                <span class="tag is-link as-font-9 m-1" v-if="item.columns.estado == 'Programada'">
+                    {{ item.columns.estado }}
+                </span>
+                <span class="tag is-info as-font-9 m-1" v-if="item.columns.estado == 'Por reprogramar'">
+                    {{ item.columns.estado }}
+                </span>
+                <span class="tag is-warning as-font-9 m-1" v-if="item.columns.estado == 'Se llevo a cabo'">
+                    {{ item.columns.estado }}
+                </span>
+                <span class="tag is-success as-font-9 m-1" v-if="item.columns.estado == 'Firma de contrato'">
+                    {{ item.columns.estado }}
+                </span>
+                <span class="tag is-primary as-font-9 m-1" v-if="item.columns.estado == 'Otro'">
+                    {{ item.columns.estado }}
+                </span>
+
+            </template>
+
+            <template v-slot:item.created_at="{ item }">
+                <span class="tag is-primary as-font-9 m-1">
+                    {{ date_format.format(new Date(item.columns.created_at)) }}
+                </span>
+            </template>
+
+            <template v-slot:item.responsables="{ item }">
+                <v-btn color="orange-darken-2" class="as-hover__box-shadow m-1" icon="mdi-badge-account"
+                    @click="openClienteResponsable(item.raw)" />
+
+            </template>
+
+            <template v-slot:item.actions="{ item }">
+                <v-btn @click="editForm(item.raw)" class="has-background-success has-text-white m-1 as-hover__box-shadow"
+                    icon="mdi-pencil" />
+                <v-btn @click="openDeleteData(item.raw)"
+                    class="has-background-danger has-text-white m-1 as-hover__box-shadow" icon="mdi-delete" />
+            </template>
+
+        </v-data-table>
+    </div>
+    <FormCliente @saveParent="save()" @closeDialogFormParent="closeDialogForm" :item_cliente_parent="item_cliente"
+        :message_errors_field_parent="message_errors_field" :dialog_form_parent="dialog_form" :city_parent="city"
+        :group_parent="group" />
+
+    <v-snackbar v-model="snackbar_message_response.value" :timeout="2000" :color="snackbar_message_response.color"
+        location="top right">
+        <div class="is-flex is-justify-content-center is-align-items-center">
+            <v-icon :icon="snackbar_message_response.icon" size="50" />
+            <p class="is-size-6">{{ snackbar_message_response.text }}</p>
+        </div>
+    </v-snackbar>
+
+    <v-dialog v-model="dialog_delete" persistent transition="dialog-bottom-transition" max-width="500px">
+        <div class="card">
+            <div class="card-content">
+                <div class="is-flex is-justify-content-center is-align-items-center is-flex-direction-column">
+                    <v-icon icon="mdi-file-question" size="90"
+                        class="has-text-warning animate__animated animate__flip"></v-icon>
+                    <p class="is-size-4 has-text-centered">
+                        ¿Esta seguro(a) de eliminar el regitro seleccionado?
+                    </p>
+                </div>
+            </div>
+
+            <div class="is-flex  is-justify-content-center  is-align-items-center p-2" style="width: 100%;">
+                <div class="m-1">
+                    <v-btn class="has-background-success has-text-white as-hover__box-shadow" @click="confirmDeleteData()">
+                        <v-icon icon="mdi-content-save-all"></v-icon>&nbsp;Aceptar
+                    </v-btn>
+                </div>
+                <div class="m-1">
+                    <v-btn class="has-background-danger has-text-white as-hover__box-shadow" @click="closeDialogDelete()">
+                        <v-icon icon="mdi-cancel"></v-icon>&nbsp;Cancelar
+                    </v-btn>
+                </div>
+            </div>
+
+        </div>
+    </v-dialog>
+
+    <v-dialog v-model="dialog_cliente_responsable" max-width="600px" transition="dialog-bottom-transition" persistent>
+        <div class="card">
+            <header class="card-header has-background-success">
+                <p class="card-header-title has-text-white">
+                    <v-icon icon="mdi-badge-account" size="40" />&nbsp;RESPONSABLE
+                </p>
+                <p class="card-header-title has-text-white">
+                    <v-icon icon="mdi-account-group" size="40" />&nbsp;
+                    CLIENTE : {{ item_cliente.nombres + " " + item_cliente.apellido_materno + " " + item_cliente.apellido_materno }}
+                </p>
+            </header>
+         
+            <div class="card-content">
+                <div class="table-container" style="max-height: 40vh; overflow-y: auto;">
+                    <table class="table  is-striped is-hoverable">
+                        <thead>
+                            <th>Nombres</th>
+                            <th>Apellido paterno</th>
+                            <th>Apellido materno</th>
+                            <th>Es responsable desde</th>
+                        </thead>
+                        <tbody v-if="loading_table_cliente_responsable == false">
+                            <tr v-for="row in data_cliente_responable" :key="row.id">
+                                <th>{{ row.nombres }}</th>
+                                <th>{{ row.apellido_paterno }}</th>
+                                <th>{{ row.apellido_materno }}</th>
+                                <th>
+                                    <span class="tag is-primary as-font-9 m-1">
+                                        {{ date_format.format(new Date(row.created_at)) }}
+                                    </span>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="is-flex is-justify-content-end is-align-items-center">
+                <div class="m-2">
+                    <v-btn class="has-background-success has-text-white as-hover__box-shadow"
+                        @click="closeClienteResponsable()">
+                        <v-icon icon="mdi-check-circle" />&nbsp;OK
+                    </v-btn>
+                </div>
+            </div>
+            <progress v-if="loading_table_cliente_responsable" class="progress is-small is-primary m-0"
+                max="100"></progress>
+        </div>
+    </v-dialog>
+</template>
+
+<script>
+import { defineComponent } from 'vue';
+import { VDataTable } from 'vuetify/labs/VDataTable';
+import Cliente from '@/services/Cliente';
+import FormCliente from '@/components/cliente/FormCliente.vue';
+import DateFormat from '@/util/DateFormat';
+
+export default defineComponent({
+    components: {
+        VDataTable,
+        FormCliente,
+    },
+
+    data() {
+        const data = [];
+        const columns = [
+            { title: 'Nombres', key: 'nombres' },
+            { title: 'Apellido Paterno', key: 'apellido_paterno' },
+            { title: 'Apellido Materno', key: 'apellido_materno' },
+            { title: 'N° de contacto', key: 'n_de_contacto', align: 'center' },
+            { title: 'Estado', key: 'estado', align: 'center' },
+            { title: 'Monto inicial', key: 'monto_inicial', align: 'center' },
+            { title: 'Descripcion', key: 'descripcion', align: 'center' },
+            { title: 'Seguimiento', key: 'seguimiento', align: 'center' },
+            { title: 'Fecha de registro', key: 'created_at', align: 'center' },
+            { title: 'Responsables', key: 'responsables', align: 'center' },
+            { title: 'Acciones', key: 'actions', align: 'center' },
+        ];
+        const items_per_page_options = [
+            { value: 10, title: '10' },
+            { value: 25, title: '25' },
+            { value: 50, title: '50' },
+            { value: 100, title: '100' },
+        ];
+        const date_format = new DateFormat();
+        const dialog_form = false;
+        const dialog_delete = false;
+        const dialog_cliente_responsable = false;
+        const buscar = "";
+        const change_table = null;
+        const city = null;
+        const group = null;
+        const item_cliente = {};
+        const index_array = -1;
+        const message_errors_field = {};
+        const snackbar_message_response = { icon: "", value: false, text: "", color: "" };
+        const data_cliente_responable = [];
+        const loading_table_cliente_responsable = false;
+        return {
+            data,
+            columns,
+            change_table,
+            buscar,
+            dialog_delete,
+            dialog_form,
+            dialog_cliente_responsable,
+            items_per_page_options,
+            city,
+            group,
+            item_cliente,
+            index_array,
+            message_errors_field,
+            snackbar_message_response,
+            date_format,
+            data_cliente_responable,
+            loading_table_cliente_responsable,
+        }
+    },//data
+
+
+    methods: {
+        urlParams() {
+            const parse_url = new URL(window.location.href);
+            this.city = parse_url.pathname.split('/')[3];
+            this.group = parse_url.pathname.split('/')[4];
+        },
+        initData() {
+            this.change_table = 'orange-darken-2';
+            setTimeout(async () => {
+                const cliente = new Cliente(this.city, this.group);
+
+                const response = await cliente.index();
+                this.change_table = null;
+                if (response.status) {
+                    this.data = response.records;
+                }
+
+            }, 1000);
+        },
+
+        snackbarMessageView(type, message) {
+            if (type == 'success') {
+                this.snackbar_message_response.icon = "mdi-check-circle-outline";
+                this.snackbar_message_response.color = 'orange-darken-2'
+            } else {
+                this.snackbar_message_response.icon = "mdi-alert";
+                this.snackbar_message_response.color = 'red'
+            }
+            this.snackbar_message_response.text = message;
+            this.snackbar_message_response.value = true;
+
+        },
+
+        clearVars() {
+            this.index_array = -1;
+            this.message_errors_field = {};
+            this.item_cliente = {};
+        },
+
+        closeDialogForm() {
+            this.dialog_form = false;
+            this.clearVars();
+        },
+
+        closeDialogDelete() {
+            this.dialog_delete = false;
+            this.clearVars();
+        },
+
+        newForm() {
+            const cliente = new Cliente(this.city, this.group);
+            this.item_cliente = Object.assign({}, cliente.getFill());
+            this.dialog_form = true;
+        },
+
+        editForm(item) {
+            this.index_array = this.data.indexOf(item);
+            this.item_cliente = Object.assign({}, item);
+            this.dialog_form = true;
+        },
+
+        openDeleteData(item) {
+            this.index_array = this.data.indexOf(item);
+            this.item_cliente = Object.assign({}, item);
+            this.dialog_delete = true;
+        },
+
+        async confirmDeleteData() {
+            const cliente = new Cliente(this.city, this.group);
+            cliente.setFill(this.item_cliente);
+            const response = await cliente.destroy();
+            if (response.status) {
+                this.snackbarMessageView('success', response.message);
+                this.data.splice(this.index_array, 1);
+
+            } else {
+                this.snackbarMessageView('error', response.message);
+
+            }
+            this.closeDialogDelete();
+
+        },
+
+        async save() {
+            const cliente = new Cliente(this.city, this.group);
+            cliente.setFill(this.item_cliente);
+            if (cliente.getFill().id > 0) {
+                //cuando sea update
+                const response = await cliente.update();
+                if (response.status) {
+                    this.snackbarMessageView('success', response.message);
+                    //buscamos el registro y cambiamos valores
+                    Object.assign(this.data[this.index_array], this.item_cliente);
+                    this.closeDialogForm();
+                } else {
+                    if (response.message_errors != undefined) {
+                        this.message_errors_field = response.message_errors;
+                    }
+                    this.snackbarMessageView('error', response.message);
+                }
+            } else {
+                //cuando sea un nuevo registro
+                const response = await cliente.create();
+                if (response.status) {
+                    this.snackbarMessageView('success', response.message);
+                    this.data.push(response.record);
+                    this.closeDialogForm();
+                } else {
+                    this.snackbarMessageView('error', response.message);
+                    if (response.message_errors != undefined) {
+                        this.message_errors_field = response.message_errors;
+                    }
+                }
+
+            }
+
+
+
+        },
+
+        openClienteResponsable(item) {
+            this.dialog_cliente_responsable = true;
+            this.loading_table_cliente_responsable = true;
+            this.item_cliente = Object.assign({}, item);
+            setTimeout(async () => {
+                const cliente = new Cliente(this.city, this.group);
+                const response = await cliente.clienteResponsable(item.id);
+                this.loading_table_cliente_responsable = false;//dejamos de cargar la tabla de cliente responsable
+
+                if (response.status) {
+                    this.data_cliente_responable = response.records;
+
+                } else {
+                    this.snackbarMessageView('error', response.message);
+                }
+
+            }, 1000);
+        },
+
+        closeClienteResponsable() {
+            this.dialog_cliente_responsable = false;
+            this.clearVars();
+        }
+    },//methods
+
+    mounted() {
+        this.urlParams();
+        this.initData();
+    },
+
+});
+
+</script>
+

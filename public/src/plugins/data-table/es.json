@@ -236,8 +236,8 @@
         "renameTitle": "Cambiar Nombre Estado"
     },
     "paginate": {
-        "next": "<i class='bi bi-chevron-double-right'></i>",
-        "previous": "<i class='bi bi-chevron-double-left'></i>"
+        "next": "<span class='mdi mdi-chevron-right'></span>",
+        "previous": "<span class='mdi mdi-chevron-left'></span>"
     }
     
 }

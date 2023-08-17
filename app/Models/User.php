@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+//use function PHPSTORM_META\map;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -15,28 +17,23 @@ class User extends Authenticatable
 
 
     protected $fillable = [
-        'nombres',
-        'apellidos',
         'usuario',
         'password',
-        'foto',
-        'rol',
         'status',
+        'id_personal',
     ];
 
     protected $hidden = [
         'password',
-        'created_at',
         'updated_at',
     ];
 
     //para unir dos tablas en este claso unos a muchos
     // users => muchos  a uno => personals
+
+
     public function onPersonal()
     {
-        return $this->belongsTo(Personal::class,'id_personal');
-
+        return $this->belongsTo(Personal::class, 'id_personal');
     }
-
-    
 }

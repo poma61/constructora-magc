@@ -29,10 +29,11 @@ class PersonalRequest extends FormRequest
             'apellido_paterno' => 'required',
             'apellido_materno' => 'required',
             'cargo' => 'required',
-            'ci' => 'required',
+            'ci' => 'required|unique:personals',
             'ci_expedido' => 'required',
-            'telefono' => 'required',
+            'telefono' => 'required|numeric',
             'direccion' => 'required',
+            'grup_number' => 'required',
         ];
         // Si es una solicitud PUT (editar un registro existente), usar 'sometimes' para el campo 'foto'
         if ($this->isMethod('PUT')) {
@@ -42,6 +43,18 @@ class PersonalRequest extends FormRequest
             $rules['foto'] = 'required|mimes:jpeg,png,jpg';
         }
         return $rules;
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'grup_number.required' => 'El campo grupo es requerido.',
+        ];
     }
 
     protected function failedValidation(Validator $validator): HttpResponseException
