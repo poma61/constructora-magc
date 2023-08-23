@@ -3,8 +3,8 @@
         <div class="card">
             <div class="card-header has-background-success">
                 <p class="card-header-title has-text-white">
-                        <v-icon icon="mdi-account-group" size="50" />
-                        &nbsp;REGISTRAR CLIENTE |&nbsp;
+                    <v-icon icon="mdi-account-group" size="50" />
+                    &nbsp;REGISTRAR CLIENTE |&nbsp;
                     <!--  fg-->
                 <nav class="breadcrumb" aria-label="breadcrumbs">
                     <ul>
@@ -51,6 +51,10 @@
                         :error-messages="getViewMessageErrorsField('n_de_contacto')" />
 
 
+                    <v-textarea label="Descripcion" v-model="props.item_cliente_parent.descripcion" color="orange-darken-2"
+                        append-inner-icon="mdi-text-box-edit" clearable
+                        :error-messages="getViewMessageErrorsField('descripcion')" />
+
                     <v-autocomplete label="Estado"
                         :items="['Cancelada', 'Programada', 'Por reprogramar', 'Se llevo a cabo', 'Firma de contrato', 'Otro']"
                         v-model="props.item_cliente_parent.estado" color="orange-darken-2"
@@ -61,14 +65,19 @@
                         v-model="props.item_cliente_parent.monto_inicial" append-inner-icon="mdi-text-box-edit" clearable
                         :error-messages="getViewMessageErrorsField('monto_inicial')" />
 
-                    <v-textarea label="Descripcion" v-model="props.item_cliente_parent.descripcion" color="orange-darken-2"
+                    <v-text-field label="Hora reunion" v-model="props.item_cliente_parent.hora_reunion" type="time"
                         append-inner-icon="mdi-text-box-edit" clearable
-                        :error-messages="getViewMessageErrorsField('descripcion')" />
+                        :error-messages="getViewMessageErrorsField('hora_reunion')" />
 
-                        <v-textarea label="Seguimiento" v-model="props.item_cliente_parent.seguimiento" color="orange-darken-2"
+
+                    <v-text-field label="Fecha reunion" v-model="props.item_cliente_parent.fecha_reunion" type="date"
+                        append-inner-icon="mdi-text-box-edit" clearable
+                        :error-messages="getViewMessageErrorsField('fecha_reunion')" />
+
+                    <v-textarea label="Seguimiento" v-model="props.item_cliente_parent.seguimiento" color="orange-darken-2"
                         append-inner-icon="mdi-text-box-edit" clearable
                         :error-messages="getViewMessageErrorsField('seguimiento')" />
-                        
+
                 </div>
             </div>
             <div class="is-flex is-justify-content-end is-align-items-center p-2">
@@ -79,7 +88,7 @@
                         <v-icon icon="mdi-content-save-all" />&nbsp;Guardar
                     </v-btn>
                 </div>
-                
+
                 <div class="m-1">
                     <v-btn class="has-background-danger has-text-white as-hover__box-shadow"
                         @click="closeDialogFormChild()">

@@ -1,7 +1,6 @@
 @extends('layouts/app')
 @section('title', 'MAGC | Clientes')
 
-
 @section('template_content')
     <div class="card mt-5">
         <div class="card-content">
@@ -32,14 +31,15 @@
                 </ul>
             </nav>
 
-            @include('components/cliente/cliente-group-options')
-
+              @include('components/cliente/cliente-group-options')
             <div id="app"></div>
         </div>
     </div>
 
 @endsection
 
+
+
 @section('template_js')
-    @vite('resources/js/clienteBoard.js')
+  @vite('resources/js/clienteGantt.js')
 @endsection

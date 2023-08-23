@@ -10,8 +10,10 @@ class Cliente {
             apellido_materno: "",
             n_de_contacto: "",
             estado: "",
-            monto_inicial: "",
             descripcion: "",
+            monto_inicial: "",
+            hora_reunion:"",
+            fecha_reunion:"",
             seguimiento: "",
         };
 
@@ -119,6 +121,46 @@ class Cliente {
         } catch (error) {
             return error.response.data;
 
+        }
+    }
+
+    async graphicEstado() {
+        try {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/graphic-estado', {
+                ciudad: this.city,
+                grupo: this.grupo,
+            }, this.config);
+            return resolve.data;
+        } catch (error) {
+            return error.response.data;
+        }
+    }
+
+    async calendarMeeting() {
+        try {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/calendar-meeting', {
+                ciudad: this.city,
+                grupo: this.grupo,
+            }, this.config);
+            return resolve.data;
+            
+        } catch (error) {
+            return error.response.data;
+        }
+    }
+
+
+    async ganttMeeting() {
+        try {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/gantt-meeting', {
+                ciudad: this.city,
+                grupo: this.grupo,
+            }, this.config);
+            
+            return resolve.data;
+            
+        } catch (error) {
+            return error.response.data;
         }
     }
 

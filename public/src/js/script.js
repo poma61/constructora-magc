@@ -129,14 +129,14 @@ $(document).ready(function () {
 	});
 
 	
-	// $(window).on("resize", function () {
-	// 	var w = $(window).width();
-	// 	if ($(window).width() > 1200) {
-	// 		$(".left-side-bar").removeClass("open");
-	// 		$(".menu-icon").removeClass("open");
-	// 		$(".mobile-menu-overlay").removeClass("show");
-	// 	}
-	// });
+	$(window).on("resize", function () {
+		var w = $(window).width();
+		if ($(window).width() > 1200) {
+			$(".left-side-bar").removeClass("open");
+			$(".menu-icon").removeClass("open");
+			$(".mobile-menu-overlay").removeClass("show");
+		}
+	});
 
 	// sidebar menu Active Class
 	$("#accordion-menu").each(function () {

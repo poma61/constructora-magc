@@ -1,10 +1,6 @@
 @extends('layouts/app')
 @section('title', 'MAGC | Clientes')
 
-@section('template_css')
-
-@endsection
-
 @section('template_content')
     <div class="card mt-5">
         <div class="card-content">
@@ -35,23 +31,8 @@
                 </ul>
             </nav>
 
-            <div class="buttons">
-                <a href="{{ route('r-tablero-cliente-grupo-view', [$city, $grupo_active]) }}"
-                    class="panel-block button is-success my-1 @if (request()->route()->getName() == 'r-tablero-cliente-grupo-view') is-outlined @endif">
-                    Tablero
-                </a>
-                <a href="{{ route('r-grafico-cliente-grupo-view', [$city, $grupo_active]) }}"
-                    class="panel-block button is-success my-1 @if (request()->route()->getName() == 'r-grafico-cliente-grupo-view') is-outlined @endif">
-                    Grafico
-                </a>
-                <a class="panel-block button is-success my-1">
-                    Calendario
-                </a>
-                <a class="panel-block button is-success my-1">
-                    Gantt
-                </a>
-            </div>
-            
+              @include('components/cliente/cliente-group-options')
+            <div id="app"></div>
         </div>
     </div>
 
@@ -60,5 +41,5 @@
 
 
 @section('template_js')
-
+  @vite('resources/js/clienteChart.js')
 @endsection

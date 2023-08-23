@@ -25,3 +25,5 @@ const application = createApp(Application);
 application.config.globalProperties.$app = app; // Agrega la configuración como propiedad global
 application.use(vuetify).mount('#app');
 
+
+

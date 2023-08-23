@@ -1,5 +1,60 @@
 <template>
     <div class="buttons">
+        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
+            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Enero
+        </v-btn>
+
+        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1" variant="outlined">
+            <v-icon icon="mdi-calendar-check-outline"></v-icon>&nbsp;Febrero
+        </v-btn>
+
+        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
+            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Marzo
+        </v-btn>
+
+        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
+            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Abril
+        </v-btn>
+
+        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
+            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Mayo
+        </v-btn>
+
+        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
+            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Junio
+        </v-btn>
+
+        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
+            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Julio
+        </v-btn>
+
+
+        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
+            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Agosto
+        </v-btn>
+
+
+        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
+            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Septiembre
+        </v-btn>
+
+
+        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
+            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Octubre
+        </v-btn>
+
+
+        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
+            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Noviembre
+        </v-btn>
+
+
+        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
+            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Diciembre
+        </v-btn>
+
+    </div>
+    <div class="buttons">
         <v-btn @click="newForm()" color="orange-darken-2" class="as-hover__box-shadow">
             <v-icon icon="mdi-note-plus-outline"></v-icon>&nbsp;Nuevo registro
         </v-btn>
@@ -103,12 +158,15 @@
                 </p>
                 <p class="card-header-title has-text-white">
                     <v-icon icon="mdi-account-group" size="40" />&nbsp;
-                    CLIENTE : {{ item_cliente.nombres + " " + item_cliente.apellido_materno + " " + item_cliente.apellido_materno }}
+                    CLIENTE : {{ item_cliente.nombres + " " + item_cliente.apellido_materno + " " +
+                        item_cliente.apellido_materno }}
                 </p>
             </header>
-         
+            <progress v-if="loading_table_cliente_responsable" class="progress is-small is-primary m-0"
+                max="100"></progress>
             <div class="card-content">
                 <div class="table-container" style="max-height: 40vh; overflow-y: auto;">
+
                     <table class="table  is-striped is-hoverable">
                         <thead>
                             <th>Nombres</th>
@@ -139,8 +197,7 @@
                     </v-btn>
                 </div>
             </div>
-            <progress v-if="loading_table_cliente_responsable" class="progress is-small is-primary m-0"
-                max="100"></progress>
+
         </div>
     </v-dialog>
 </template>
@@ -229,7 +286,10 @@ export default defineComponent({
                 const response = await cliente.index();
                 this.change_table = null;
                 if (response.status) {
+                    this.snackbarMessageView('success', response.message);
                     this.data = response.records;
+                } else {
+                    this.snackbarMessageView('error', response.message);
                 }
 
             }, 1000);
@@ -238,7 +298,7 @@ export default defineComponent({
         snackbarMessageView(type, message) {
             if (type == 'success') {
                 this.snackbar_message_response.icon = "mdi-check-circle-outline";
-                this.snackbar_message_response.color = 'orange-darken-2'
+                this.snackbar_message_response.color = 'success'
             } else {
                 this.snackbar_message_response.icon = "mdi-alert";
                 this.snackbar_message_response.color = 'red'
@@ -351,7 +411,7 @@ export default defineComponent({
                     this.snackbarMessageView('error', response.message);
                 }
 
-            }, 1000);
+            }, 1500);
         },
 
         closeClienteResponsable() {

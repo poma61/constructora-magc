@@ -46,11 +46,21 @@ Route::group(['middleware' => ['auth']], function () {
 Route::group(['middleware' => ['auth','check.city.access','check.grup.access']], function () {
     Route::get('/cliente/tablero/{ciudad}/{grupo}', [ClienteController::class, 'tableroView'])->name('r-tablero-cliente-grupo-view');
     Route::get('/cliente/grafico/{ciudad}/{grupo}', [ClienteController::class, 'graficoView'])->name('r-grafico-cliente-grupo-view');
+    Route::get('/cliente/calendario/{ciudad}/{grupo}', [ClienteController::class, 'calendarioView'])->name('r-calendario-cliente-grupo-view');
+    Route::get('/cliente/gantt/{ciudad}/{grupo}', [ClienteController::class, 'ganttView'])->name('r-gantt-cliente-grupo-view');
     Route::post('/microservice/ciudad/grupo/cliente/index', [ClienteController::class, 'index']);
     Route::post('/microservice/ciudad/grupo/cliente/create', [ClienteController::class, 'create']);
     Route::put('/microservice/ciudad/grupo/cliente/update', [ClienteController::class, 'update']);
     Route::post('/microservice/ciudad/grupo/cliente/destroy', [ClienteController::class, 'destroy']);
     Route::post('/microservice/ciudad/grupo/cliente/record-cliente-responsable', [ClienteController::class, 'recordClienteResponsable']);
+    Route::post('/microservice/ciudad/grupo/cliente/graphic-estado',[ClienteController::class, 'graphicEstado']);
+    Route::post('/microservice/ciudad/grupo/cliente/calendar-meeting',[ClienteController::class, 'calendarMeeting']);
+    Route::post('/microservice/ciudad/grupo/cliente/gantt-meeting',[ClienteController::class, 'ganttMeeting']);
 });
 
 
+Route::group(['middleware'=>['auth']],function(){
+//Route::get('/contrato/tablero')
+
+
+});

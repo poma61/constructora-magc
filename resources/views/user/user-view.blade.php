@@ -24,5 +24,5 @@
 
 @section('template_js')
 
- @vite('resources/js/user.js')
+ @vite('resources/js/userBoard.js')
 @endsection

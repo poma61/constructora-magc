@@ -8,12 +8,10 @@ use App\Models\Cliente;
 use App\Models\ClienteResponsable;
 use App\Models\Grupo;
 use App\Models\Responsable;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 use Throwable;
-
 
 
 class ClienteController extends Controller
@@ -55,7 +53,11 @@ class ClienteController extends Controller
             $user = Auth::user()->onPersonal()->first();
             $grupo = Grupo::where('id', $user->id_grupo)->first();
 
-            return view('cliente/tablero-grupo-cliente-view', ['grupo' => $grupo->grup_number, 'city' => $verified_ciudad->city_name, 'grupo_active' => $verified_grupo->grup_number]);
+            return view('cliente/tablero-grupo-cliente-view', [
+                'grupo' => $grupo->grup_number,
+                'city' => $verified_ciudad->city_name,
+                'grupo_active' => $verified_grupo->grup_number
+            ]);
         } catch (Throwable $th) {
             return view('error-page-view');
         }
@@ -78,11 +80,72 @@ class ClienteController extends Controller
             $user = Auth::user()->onPersonal()->first();
             $grupo = Grupo::where('id', $user->id_grupo)->first();
 
-            return view('cliente/grafico-grupo-cliente-view', ['grupo' => $grupo->grup_number, 'city' => $verified_ciudad->city_name, 'grupo_active' => $verified_grupo->grup_number]);
+            return view('cliente/grafico-grupo-cliente-view', [
+                'grupo' => $grupo->grup_number,
+                'city' => $verified_ciudad->city_name,
+                'grupo_active' => $verified_grupo->grup_number
+            ]);
         } catch (Throwable $th) {
             return view('error-page-view');
         }
     }
+
+    public function calendarioView(string $city, string $grupo_num)
+    {
+        try {
+            $verified_ciudad = Ciudad::where('city_name', $city)->first();
+            $verified_grupo = Grupo::where('grup_number', $grupo_num)->first();
+            //verificamos si los parametros de la Url son validos
+            //la opcion 'todos' es valida porque existe en la base de datos
+            //pero cuando no existe el grupo 'todos' , si nos hace referencia 
+            // que tiene acceso a los grupos del 1 al 10, entonces desde ese punto 
+            //no dejamos entrar a la vista si el parametro de la url es todos 
+            if ($verified_ciudad == null || $verified_grupo == null || $grupo_num == 'todos') {
+                return view('error-page-view');
+            }
+
+            $user = Auth::user()->onPersonal()->first();
+            $grupo = Grupo::where('id', $user->id_grupo)->first();
+
+            return view('cliente/calendar-grupo-cliente-view', [
+                'grupo' => $grupo->grup_number,
+                'city' => $verified_ciudad->city_name,
+                'grupo_active' => $verified_grupo->grup_number
+            ]);
+        } catch (Throwable $th) {
+            return view('error-page-view');
+        }
+    }
+
+
+
+    public function ganttView(string $city, string $grupo_num)
+    {
+        try {
+            $verified_ciudad = Ciudad::where('city_name', $city)->first();
+            $verified_grupo = Grupo::where('grup_number', $grupo_num)->first();
+            //verificamos si los parametros de la Url son validos
+            //la opcion 'todos' es valida porque existe en la base de datos
+            //pero cuando no existe el grupo 'todos' , si nos hace referencia 
+            // que tiene acceso a los grupos del 1 al 10, entonces desde ese punto 
+            //no dejamos entrar a la vista si el parametro de la url es todos 
+            if ($verified_ciudad == null || $verified_grupo == null || $grupo_num == 'todos') {
+                return view('error-page-view');
+            }
+
+            $user = Auth::user()->onPersonal()->first();
+            $grupo = Grupo::where('id', $user->id_grupo)->first();
+
+            return view('cliente/gantt-grupo-cliente-view', [
+                'grupo' => $grupo->grup_number,
+                'city' => $verified_ciudad->city_name,
+                'grupo_active' => $verified_grupo->grup_number
+            ]);
+        } catch (Throwable $th) {
+            return view('error-page-view');
+        }
+    }
+
 
     /**
      * Display a listing of the resource.
@@ -92,16 +155,6 @@ class ClienteController extends Controller
         try {
 
             $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
-            $grupo = Grupo::where('grup_number', $request->input('grupo'))->first();
-            //de esta manera verificamos si los parametros de la url son validos  yq ue existen en la base de datos
-            if ($ciudad == null || $grupo == null) {
-                return response()->json([
-                    'status' => false,
-                    'records' => [],
-                    'message' => 'No existe la ciudad y/o el grupo',
-                ], 500);
-            }
-
             //Podriamos haber sacado el id del grupo del Auth::user()->onPersonal()
             //pero  se hace mas extenso el codigo ya que a que validar... si e administrador...
             //si administra los todos los grupos, entonces hagaramos directamente de la url
@@ -142,16 +195,6 @@ class ClienteController extends Controller
     {
         try {
             $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
-            $grupo = Grupo::where('grup_number', $request->input('grupo'))->first();
-            //de esta manera verificamos si los parametros de la url son validos
-            if ($ciudad == null || $grupo == null) {
-                return response()->json([
-                    'status' => false,
-                    'records' => [],
-                    'message' => 'No existe la ciudad y/o el grupo.',
-                ], 500);
-            }
-
             $cliente = new Cliente($request->except('ciudad', 'grupo'));
 
             //tambien se podria haber sacado el id del grupo del Auth::user()->onPersonal()
@@ -302,6 +345,99 @@ class ClienteController extends Controller
                 'message' => $th->getMessage(),
                 'records' => [],
             ], 200);
+        }
+    }
+    public function graphicEstado(Request $request)
+    {
+        try {
+            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
+            //Podriamos haber sacado el id del grupo del Auth::user()->onPersonal()
+            //pero  se hace mas extenso el codigo ya que a que validar... si e administrador...
+            //si administra los todos los grupos, entonces hagaramos directamente de la url
+            //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es      
+            //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo                  
+            $grupo_obj1 = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
+
+
+            $cliente = Cliente::where('status', true)
+                ->where('id_grupo', $grupo_obj1->id)
+                ->select('estado', DB::raw('COUNT(estado) as total'))
+                ->groupBy('estado')
+                ->get();
+
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OK',
+                'records' => $cliente,
+            ], 200);
+        } catch (Throwable $th) {
+
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'records' => [],
+            ], 500);
+        }
+    }
+
+    public function  calendarMeeting(Request $request)
+    {
+        try {
+            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
+            //Podriamos haber sacado el id del grupo del Auth::user()->onPersonal()
+            //pero  se hace mas extenso el codigo ya que a que validar... si e administrador...
+            //si administra los todos los grupos, entonces hagaramos directamente de la url
+            //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es      
+            //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo                  
+            $grupo = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
+            $cliente = Cliente::where('status', true)
+                ->where('id_grupo', $grupo->id)
+                ->select('nombres', 'apellido_paterno', 'apellido_materno', 'hora_reunion', 'fecha_reunion')->get();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OK',
+                'records' => $cliente,
+            ], 200);
+        } catch (Throwable $th) {
+
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'records' => [],
+            ], 500);
+        }
+    }
+
+
+    public function ganttMeeting(Request $request)
+    {
+
+        try {
+            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
+            //Podriamos haber sacado el id del grupo del Auth::user()->onPersonal()
+            //pero  se hace mas extenso el codigo ya que a que validar... si e administrador...
+            //si administra los todos los grupos, entonces hagaramos directamente de la url
+            //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es      
+            //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo   
+            $grupo = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
+            $cliente = Cliente::where('status', true)
+                ->where('id_grupo', $grupo->id)
+                ->select('nombres', 'apellido_paterno', 'apellido_materno', 'fecha_reunion', 'hora_reunion')
+                ->get();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OK',
+                'records' => $cliente,
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'records' => [],
+            ], 500);
         }
     }
 }//class

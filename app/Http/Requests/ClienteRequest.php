@@ -28,10 +28,13 @@ class ClienteRequest extends FormRequest
             'nombres' => 'required',
             'apellido_paterno' => 'required',
             'apellido_materno' => 'required',
-            'n_de_contacto'=>'required|numeric',
+            'n_de_contacto' => 'required|numeric',
             'estado' => 'required',
-            'monto_inicial' => 'required|numeric',
             'descripcion' => 'required',
+            'monto_inicial' => 'required|numeric',
+            'fecha_reunion' => 'required|date',
+            'hora_reunion' => 'required',
+
             'seguimiento' => 'required',
         ];
 

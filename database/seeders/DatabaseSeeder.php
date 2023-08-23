@@ -155,9 +155,9 @@ class DatabaseSeeder extends Seeder
 
 
         Personal::create([
-            'nombres' => 'Carlos',
-            'apellido_paterno' => 'poma',
-            'apellido_materno' => 'muñoz',
+            'nombres' => 'Admin',
+            'apellido_paterno' => 'ap paterno',
+            'apellido_materno' => 'ap materno',
             'cargo' => 'Sin especificar',
             'ci' => 654321,
             'ci_expedido' => 'OR',
@@ -166,11 +166,11 @@ class DatabaseSeeder extends Seeder
             'status' => true,
             'foto' => 'imagenes/img-user.jpg',
             'id_ciudad' => 1,
-            'id_grupo' => 1,
+            'id_grupo' => 11,
         ]);
 
         User::create([
-            'usuario' => 'admin',
+            'usuario' => 'admin@gmail.com',
             'status' => true,
             'password' => '$2y$10$jjDb4siaEWs3Iw.sFqFwquRENoM/Lsi.IK6WL5L9fXF/x1GXKPfFq', //1234
             'id_personal' => 1,

@@ -49,6 +49,13 @@
                      </a>
                  </li>
 
+                  <li>
+                     <a href="{{ route('r-contrato-index-view') }}" class="unfold-toggle no-arrow">
+                         <i class="as-icon mdi mdi-table-account is-size-4"></i>
+                         <span>Contratos</span>
+                     </a>
+                 </li>
+
                  @if (Auth::user()->role == 'Administrador')
                      <li>
                          <div class="unfold-divider"></div>

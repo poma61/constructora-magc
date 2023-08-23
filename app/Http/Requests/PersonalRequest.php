@@ -29,7 +29,7 @@ class PersonalRequest extends FormRequest
             'apellido_paterno' => 'required',
             'apellido_materno' => 'required',
             'cargo' => 'required',
-            'ci' => 'required|unique:personals',
+            'ci' => 'required|unique:personals,ci,' . $this->input('id'),
             'ci_expedido' => 'required',
             'telefono' => 'required|numeric',
             'direccion' => 'required',

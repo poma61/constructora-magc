@@ -18,13 +18,16 @@ return new class extends Migration
             $table->string('nombres');
             $table->string('apellido_paterno');
             $table->string('apellido_materno');
-            $table->string('n_de_contacto',100);//string ya que los numeros telefonicos suelen ser grandes cifras
-            $table->string('estado',100);
-            $table->double('monto_inicial',20,2);
+            $table->string('n_de_contacto', 100); //string ya que los numeros telefonicos suelen ser grandes cifras
+            $table->string('estado', 100);
             $table->longText('descripcion');
+            $table->double('monto_inicial', 20, 2);
+            $table->date('fecha_reunion');
+            $table->time('hora_reunion');
             $table->longText('seguimiento');
+
             $table->unsignedBigInteger('id_grupo');
-            $table->boolean('status');          
+            $table->boolean('status');
             $table->timestamps();
 
             $table->foreign('id_grupo')->references('id')->on('grupos');

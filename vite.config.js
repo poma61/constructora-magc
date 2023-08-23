@@ -5,8 +5,12 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/user.js', 'resources/js/cliente.js'],
-            refresh: true,           
+            input: [
+                'resources/js/clienteBoard.js',
+                'resources/js/clienteChart.js',
+                'resources/js/userBoard.js',
+            ],
+            refresh: true,
         }),
         vue({
             template: {
@@ -22,5 +26,5 @@ export default defineConfig({
             'vue': 'vue/dist/vue.esm-bundler.js'
         },
     },
-   
 });
+

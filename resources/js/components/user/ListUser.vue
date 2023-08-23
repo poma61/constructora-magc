@@ -153,7 +153,10 @@ export default defineComponent({
 
       const respuesta = await usuario.index();
       if (respuesta.status) {
+        this.snackbarMessageView('success', respuesta.message)
         this.registros = respuesta.records;
+      }else{
+        this.snackbarMessageView('error', respuesta.message)
       }
 
     },//initData
