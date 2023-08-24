@@ -1,64 +1,120 @@
 <template>
+    <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+        <ul>
+            <li>
+                <div class="has-text-info">
+                    <span class="icon is-small">
+                        <span class="mdi mdi-calendar-clock"></span>
+                    </span>
+                    <span>Fechas de reunion</span>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
     <div class="buttons">
-        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
-            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Enero
-        </v-btn>
+        <div class="control has-icons-left">
+            <div class="select is-info">
+                <select v-model="select_year" @click="initData()">
+                    <option value="2015">2015</option>
+                    <option value="2016">2016</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                    <option value="2030">2030</option>
+                    <option value="2031">2031</option>
+                    <option value="2032">2032</option>
+                    <option value="2033">2033</option>
+                </select>
+            </div>
+            <div class="icon is-small is-left">
+                <span class="mdi mdi-calendar-cursor has-text-info is-size-4"></span>
+            </div>
+        </div>
+    </div>
 
-        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1" variant="outlined">
-            <v-icon icon="mdi-calendar-check-outline"></v-icon>&nbsp;Febrero
-        </v-btn>
+    <div class="buttons">
+        <button @click="selectMont('todos')" :class="['button is-info', { 'is-light': month === 'todos' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Todos
+        </button>
 
-        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
-            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Marzo
-        </v-btn>
+        <button @click="selectMont('enero')" :class="['button is-info', { 'is-light': month === 'enero' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Enero
+        </button>
 
-        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
-            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Abril
-        </v-btn>
+        <button @click="selectMont('febrero')" :class="['button is-info', { 'is-light': month === 'febrero' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Febrero
+        </button>
 
-        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
-            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Mayo
-        </v-btn>
+        <button @click="selectMont('marzo')" :class="['button is-info', { 'is-light': month === 'marzo' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Marzo
+        </button>
 
-        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
-            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Junio
-        </v-btn>
+        <button @click="selectMont('abril')" :class="['button is-info', { 'is-light': month === 'abril' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Abril
+        </button>
 
-        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
-            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Julio
-        </v-btn>
+        <button @click="selectMont('mayo')" :class="['button is-info', { 'is-light': month === 'mayo' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Mayo
+        </button>
 
+        <button @click="selectMont('junio')" :class="['button is-info', { 'is-light': month === 'junio' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Junio
+        </button>
 
-        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
-            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Agosto
-        </v-btn>
-
-
-        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
-            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Septiembre
-        </v-btn>
-
-
-        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
-            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Octubre
-        </v-btn>
+        <button @click="selectMont('julio')" :class="['button is-info', { 'is-light': month === 'julio' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Julio
+        </button>
 
 
-        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
-            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Noviembre
-        </v-btn>
+        <button @click="selectMont('agosto')" :class="['button is-info', { 'is-light': month === 'agosto' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Agosto
+        </button>
 
 
-        <v-btn @click="" color="blue-darken-1"  class="as-hover__box-shadow m-1">
-            <v-icon icon="mdi mdi-calendar-check-outline"></v-icon>&nbsp;Diciembre
-        </v-btn>
+        <button @click="selectMont('septiembre')" :class="['button is-info', { 'is-light': month === 'septiembre' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Septiembre
+        </button>
+
+
+        <button @click="selectMont('octubre')" :class="['button is-info', { 'is-light': month === 'octubre' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Octubre
+        </button>
+
+
+        <button @click="selectMont('noviembre')" :class="['button is-info', { 'is-light': month === 'noviembre' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Noviembre
+        </button>
+
+
+        <button @click="selectMont('diciembre')" :class="['button is-info', { 'is-light': month === 'diciembre' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Diciembre
+        </button>
 
     </div>
-    <div class="buttons">
-        <v-btn @click="newForm()" color="orange-darken-2" class="as-hover__box-shadow">
+
+    <div class="buttons" v-if="month == 'todos'">
+        <v-btn @click="newForm()" color="yellow-darken-2" class="as-hover__box-shadow">
             <v-icon icon="mdi-note-plus-outline"></v-icon>&nbsp;Nuevo registro
         </v-btn>
     </div>
+
+    <div class="buttons" v-if="month != 'todos'">
+        <v-btn @click="generateReportExcel()" color="orange-darken-2" class="as-hover__box-shadow">
+            <v-icon icon="mdi-file-document-multiple-outline"></v-icon>&nbsp;Generar Reporte
+        </v-btn>
+    </div>
+
     <div class="card">
         <v-text-field v-model="buscar" append-inner-icon="mdi-magnify" clearable label="Buscar Registros..."
             color="orange-darken-2" />
@@ -89,9 +145,16 @@
 
             </template>
 
-            <template v-slot:item.created_at="{ item }">
+            <template v-slot:item.fecha_reunion="{ item }">
                 <span class="tag is-primary as-font-9 m-1">
-                    {{ date_format.format(new Date(item.columns.created_at)) }}
+                    {{ date_format.formatDate(item.columns.fecha_reunion) }}
+                </span>
+            </template>
+
+
+            <template v-slot:item.hora_reunion="{ item }">
+                <span class="tag is-primary as-font-9 m-1">
+                    {{ date_format.formatHour(item.columns.hora_reunion) }}
                 </span>
             </template>
 
@@ -181,7 +244,7 @@
                                 <th>{{ row.apellido_materno }}</th>
                                 <th>
                                     <span class="tag is-primary as-font-9 m-1">
-                                        {{ date_format.format(new Date(row.created_at)) }}
+                                        {{ date_format.formatDateHour(row.created_at) }}
                                     </span>
                                 </th>
                             </tr>
@@ -208,6 +271,9 @@ import { VDataTable } from 'vuetify/labs/VDataTable';
 import Cliente from '@/services/Cliente';
 import FormCliente from '@/components/cliente/FormCliente.vue';
 import DateFormat from '@/util/DateFormat';
+import { month } from 'vue-cal/dist/i18n/en.cjs';
+import fileDownload from 'js-file-download';
+
 
 export default defineComponent({
     components: {
@@ -216,7 +282,11 @@ export default defineComponent({
     },
 
     data() {
+        const fecha_actual = new Date();
+        const anio_actual = fecha_actual.getFullYear();
         const data = [];
+        const select_year = anio_actual;
+        const month = "todos";
         const columns = [
             { title: 'Nombres', key: 'nombres' },
             { title: 'Apellido Paterno', key: 'apellido_paterno' },
@@ -226,7 +296,8 @@ export default defineComponent({
             { title: 'Monto inicial', key: 'monto_inicial', align: 'center' },
             { title: 'Descripcion', key: 'descripcion', align: 'center' },
             { title: 'Seguimiento', key: 'seguimiento', align: 'center' },
-            { title: 'Fecha de registro', key: 'created_at', align: 'center' },
+            { title: 'Fecha reunion', key: 'fecha_reunion', align: 'center' },
+            { title: 'Hora reunion', key: 'hora_reunion', align: 'center' },
             { title: 'Responsables', key: 'responsables', align: 'center' },
             { title: 'Acciones', key: 'actions', align: 'center' },
         ];
@@ -252,6 +323,8 @@ export default defineComponent({
         const loading_table_cliente_responsable = false;
         return {
             data,
+            select_year,
+            month,
             columns,
             change_table,
             buscar,
@@ -278,16 +351,22 @@ export default defineComponent({
             this.city = parse_url.pathname.split('/')[3];
             this.group = parse_url.pathname.split('/')[4];
         },
+        selectMont(mes) {
+            this.month = mes;
+            this.initData();
+        }
+        ,
         initData() {
+
             this.change_table = 'orange-darken-2';
             setTimeout(async () => {
                 const cliente = new Cliente(this.city, this.group);
-
-                const response = await cliente.index();
+                const response = await cliente.index(this.select_year, this.month);
                 this.change_table = null;
                 if (response.status) {
                     this.snackbarMessageView('success', response.message);
                     this.data = response.records;
+
                 } else {
                     this.snackbarMessageView('error', response.message);
                 }
@@ -380,6 +459,7 @@ export default defineComponent({
                 const response = await cliente.create();
                 if (response.status) {
                     this.snackbarMessageView('success', response.message);
+
                     this.data.push(response.record);
                     this.closeDialogForm();
                 } else {
@@ -417,12 +497,24 @@ export default defineComponent({
         closeClienteResponsable() {
             this.dialog_cliente_responsable = false;
             this.clearVars();
+        },
+
+        async generateReportExcel() {
+            const cliente = new Cliente(this.city, this.group);
+            const response = await cliente.generateExcel(this.select_year, this.month);  
+
+            if (response.status == 200) {
+                fileDownload(response.data, `${this.city}-Grupo-${this.group}-${this.month}-${this.select_year}-cliente.xlsx`);
+            } else {
+                this.snackbarMessageView('error', response.message)
+            }
+
         }
     },//methods
 
     mounted() {
         this.urlParams();
-        this.initData();
+        this.initData(this.select_year, this.month);
     },
 
 });

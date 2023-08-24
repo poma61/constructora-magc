@@ -152,7 +152,7 @@ function html(datos) {
 import Personal from '/src/js/personal/Personal.js';
 import ValidateError from '/src/js/util/ValidateError.js';
 import SweetAlert from '/src/js/util/SweetAlert.js';
-import DateFormart from '/src/js/util/DateFormat.js';
+import DateFormat from '/src/js/util/DateFormat.js';
 import ImageVisualize from '/src/js/util/ImageVisualize.js';
 
 const url_web = "/microservice/personal";
@@ -166,8 +166,8 @@ const city = parsed_url.pathname.split('/').pop();;
 async function initDataTable() {
     const personal = new Personal(city, url_web);
     await personal.index();
-
-    const table = $('#table-records').DataTable({
+    const date_format = new DateFormat();
+    $('#table-records').DataTable({
         data: personal.getRecords(),
         columns: [
             {
@@ -216,7 +216,7 @@ async function initDataTable() {
                 data: null,
                 title: 'Creado el',
                 render: function (data, type, row, meta) {
-                    return `<span class="tag is-link as-font-9">${DateFormart.format(new Date(data.created_at))}</span>`
+                    return `<span class="tag is-link as-font-9">${date_format.formatDateHour(data.created_at)}</span>`
 
                 }
             },
@@ -343,7 +343,7 @@ function showForm(personal, data_table_row_index) {
                     if (response.type == 'create') {
                         save('create', data_table_row_index, personal.getFill());
                     } else {
-                     
+
                         save('update', data_table_row_index, personal.getFill());
                     }
                     resolve(true);
@@ -383,7 +383,7 @@ $(document).ready(function () {
         const data_id = $(this).data('id')
         const data_table_row_index = $(this).data('rowindex')
         await personal_obj.edit(data_id);
-      
+
         showForm(personal_obj, data_table_row_index);
     });
 

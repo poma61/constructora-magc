@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ClienteExport;
 use App\Http\Requests\ClienteRequest;
+
 use App\Models\Ciudad;
 use App\Models\Cliente;
 use App\Models\ClienteResponsable;
 use App\Models\Grupo;
 use App\Models\Responsable;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Throwable;
-
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClienteController extends Controller
 {
@@ -34,7 +37,6 @@ class ClienteController extends Controller
             return view('error-page-view');
         }
     }
-
 
     public function tableroView(string $city, string $grupo_num)
     {
@@ -118,7 +120,6 @@ class ClienteController extends Controller
     }
 
 
-
     public function ganttView(string $city, string $grupo_num)
     {
         try {
@@ -146,11 +147,10 @@ class ClienteController extends Controller
         }
     }
 
-
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function tableroIndex(Request $request)
     {
         try {
 
@@ -160,25 +160,43 @@ class ClienteController extends Controller
             //si administra los todos los grupos, entonces hagaramos directamente de la url
             //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es      
             //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo                  
-            $grupo_obj1 = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
+            $grupo = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
 
-            $cliente = Cliente::where('id_grupo', $grupo_obj1->id)
-                ->where('status', true)
-                ->get();
+            $meses = [
+                'enero' => '01',
+                'febrero' => '02',
+                'marzo' => '03',
+                'abril' => '04',
+                'mayo' => '05',
+                'junio' => '06',
+                'julio' => '07',
+                'agosto' => '08',
+                'septiembre' => '09',
+                'octubre' => '10',
+                'noviembre' => '11',
+                'diciembre' => '12',
+            ];
 
-            if ($cliente == null) {
-                return response()->json([
-                    'status' => true,
-                    'records' => [],
-                    'message' => 'OK',
-                ], 200);
+            if ($request->input('month') == 'todos') {
+                $cliente = Cliente::where('id_grupo', $grupo->id)
+                    ->where('status', true)
+                    ->whereYear('fecha_reunion', $request->input('year'))
+                    ->get();
             } else {
-                return response()->json([
-                    'status' => true,
-                    'records' => $cliente,
-                    'message' => 'OK',
-                ], 200);
+                $cliente = Cliente::where('id_grupo', $grupo->id)
+                    ->where('status', true)
+                    ->whereYear('fecha_reunion', $request->input('year'))
+                    ->whereMonth('fecha_reunion', $meses[$request->input('month')])
+                    ->get();
             }
+
+
+            return response()->json([
+                'status' => true,
+                'records' => $cliente,
+                'message' => 'OK',
+
+            ], 200);
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -191,7 +209,7 @@ class ClienteController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(ClienteRequest $request)
+    public function rowTableroCreate(ClienteRequest $request)
     {
         try {
             $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
@@ -237,12 +255,10 @@ class ClienteController extends Controller
         }
     }
 
-
-
     /**
      * Update the specified resource in storage.
      */
-    public function update(ClienteRequest $request)
+    public function rowTableroUpdate(ClienteRequest $request)
     {
         try {
             $cliente = Cliente::where('status', true)->where('id', $request->input('id'))->first();
@@ -279,11 +295,10 @@ class ClienteController extends Controller
         }
     }
 
-
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function  rowTableroDestroy(Request $request)
     {
         try {
             $cliente = Cliente::find($request->input('id'));
@@ -356,14 +371,39 @@ class ClienteController extends Controller
             //si administra los todos los grupos, entonces hagaramos directamente de la url
             //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es      
             //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo                  
-            $grupo_obj1 = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
+            $grupo = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
 
+            $meses = [
+                'enero' => '01',
+                'febrero' => '02',
+                'marzo' => '03',
+                'abril' => '04',
+                'mayo' => '05',
+                'junio' => '06',
+                'julio' => '07',
+                'agosto' => '08',
+                'septiembre' => '09',
+                'octubre' => '10',
+                'noviembre' => '11',
+                'diciembre' => '12',
+            ];
+            if ($request->input('month') == 'todos') {
+                $cliente = Cliente::where('status', true)
+                    ->where('id_grupo', $grupo->id)
+                    ->select('estado', DB::raw('COUNT(estado) as total'))
+                    ->whereYear('fecha_reunion', $request->input('year'))
+                    ->groupBy('estado')
+                    ->get();
+            } else {
+                $cliente = Cliente::where('status', true)
+                    ->where('id_grupo', $grupo->id)
+                    ->select('estado', DB::raw('COUNT(estado) as total'))
+                    ->whereYear('fecha_reunion', $request->input('year'))
+                    ->whereMonth('fecha_reunion', $meses[$request->input('month')])
+                    ->groupBy('estado')
+                    ->get();
+            }
 
-            $cliente = Cliente::where('status', true)
-                ->where('id_grupo', $grupo_obj1->id)
-                ->select('estado', DB::raw('COUNT(estado) as total'))
-                ->groupBy('estado')
-                ->get();
 
 
             return response()->json([
@@ -389,7 +429,8 @@ class ClienteController extends Controller
             //pero  se hace mas extenso el codigo ya que a que validar... si e administrador...
             //si administra los todos los grupos, entonces hagaramos directamente de la url
             //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es      
-            //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo                  
+            //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo
+
             $grupo = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
             $cliente = Cliente::where('status', true)
                 ->where('id_grupo', $grupo->id)
@@ -415,6 +456,22 @@ class ClienteController extends Controller
     {
 
         try {
+
+            $meses = [
+                'enero' => '01',
+                'febrero' => '02',
+                'marzo' => '03',
+                'abril' => '04',
+                'mayo' => '05',
+                'junio' => '06',
+                'julio' => '07',
+                'agosto' => '08',
+                'septiembre' => '09',
+                'octubre' => '10',
+                'noviembre' => '11',
+                'diciembre' => '12',
+            ];
+
             $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
             //Podriamos haber sacado el id del grupo del Auth::user()->onPersonal()
             //pero  se hace mas extenso el codigo ya que a que validar... si e administrador...
@@ -422,10 +479,21 @@ class ClienteController extends Controller
             //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es      
             //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo   
             $grupo = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
-            $cliente = Cliente::where('status', true)
-                ->where('id_grupo', $grupo->id)
-                ->select('nombres', 'apellido_paterno', 'apellido_materno', 'fecha_reunion', 'hora_reunion')
-                ->get();
+
+            if ($request->input('month') == 'todos') {
+                $cliente = Cliente::where('status', true)
+                    ->where('id_grupo', $grupo->id)
+                    ->whereYear('fecha_reunion', $request->input('year'))
+                    ->select('nombres', 'apellido_paterno', 'apellido_materno', 'fecha_reunion', 'hora_reunion')
+                    ->get();
+            } else {
+                $cliente = Cliente::where('status', true)
+                    ->where('id_grupo', $grupo->id)
+                    ->whereYear('fecha_reunion', $request->input('year'))
+                    ->whereMonth('fecha_reunion', $meses[$request->input('month')])
+                    ->select('nombres', 'apellido_paterno', 'apellido_materno', 'fecha_reunion', 'hora_reunion')
+                    ->get();
+            }
 
             return response()->json([
                 'status' => true,
@@ -437,6 +505,70 @@ class ClienteController extends Controller
                 'status' => false,
                 'message' => $th->getMessage(),
                 'records' => [],
+            ], 500);
+        }
+    }
+
+    public function generateExcel(Request $request)
+    {
+        try {
+            $meses = [
+                'enero' => '01',
+                'febrero' => '02',
+                'marzo' => '03',
+                'abril' => '04',
+                'mayo' => '05',
+                'junio' => '06',
+                'julio' => '07',
+                'agosto' => '08',
+                'septiembre' => '09',
+                'octubre' => '10',
+                'noviembre' => '11',
+                'diciembre' => '12',
+            ];
+
+            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
+            //Podriamos haber sacado el id del grupo del Auth::user()->onPersonal()
+            //pero  se hace mas extenso el codigo ya que a que validar... si e administrador...
+            //si administra los todos los grupos, entonces hagaramos directamente de la url
+            //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es      
+            //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo   
+            $grupo = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
+
+
+            $cliente =  Cliente::join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
+            ->join('ciudades','ciudades.id','=','grupos.id_ciudad')
+                ->where('clientes.status', true)
+                ->where('clientes.id_grupo', $grupo->id)
+                ->whereYear('clientes.fecha_reunion', $request->input('year'))
+                ->whereMonth('clientes.fecha_reunion', $meses[$request->input('month')])
+                ->select(
+                    'grupos.grup_number as Grupo',
+                    'ciudades.city_name as Ciudad',
+                    'clientes.nombres as Nombres',
+                    'clientes.apellido_paterno as Apellido paterno',
+                    'clientes.apellido_materno as Apellido materno',
+                    'clientes.n_de_contacto as N° de contacto',
+                    'clientes.estado as Estado',
+                    'clientes.descripcion as Descripcion',
+                    'clientes.monto_inicial as Monto inicial',
+                    DB::raw('DATE_FORMAT(clientes.fecha_reunion, "%d-%m-%Y") as "Fecha de reunion"'), // Formatear la fecha
+                    'clientes.hora_reunion as Hora de reunion',
+                    'clientes.seguimiento as Seguimiento',
+                )
+                ->get();
+
+            // Descargar el archivo Excel directamente usando Excel::download
+            //enviarlo como respues a vue donde axios 
+            return Excel::download(new ClienteExport($cliente), 'archivo.xlsx', \Maatwebsite\Excel\Excel::XLSX, [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => 'attachment; filename=archivo.xlsx'
+            ]);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'excel' => null,
             ], 500);
         }
     }

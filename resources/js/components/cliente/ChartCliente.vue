@@ -1,4 +1,109 @@
 <template>
+      <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+        <ul>
+            <li>
+                <div class="has-text-info">
+                    <span class="icon is-small">
+                        <span class="mdi mdi-calendar-clock"></span>
+                    </span>
+                    <span>Fechas de reunion</span>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="buttons">
+        <div class="control has-icons-left">
+            <div class="select is-info">
+                <select v-model="year" @click="graphicBarEstado()">
+                    <option value="2015">2015</option>
+                    <option value="2016">2016</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                    <option value="2030">2030</option>
+                    <option value="2031">2031</option>
+                    <option value="2032">2032</option>
+                    <option value="2033">2033</option>
+                </select>
+            </div>
+            <div class="icon is-small is-left">
+                <span class="mdi mdi-calendar-cursor has-text-info is-size-4"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <button @click="selectMont('todos')" :class="['button is-info', { 'is-light': month === 'todos' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Todos
+        </button>
+
+        <button @click="selectMont('enero')" :class="['button is-info', { 'is-light': month === 'enero' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Enero
+        </button>
+
+        <button @click="selectMont('febrero')" :class="['button is-info', { 'is-light': month === 'febrero' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Febrero
+        </button>
+
+        <button @click="selectMont('marzo')" :class="['button is-info', { 'is-light': month === 'marzo' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Marzo
+        </button>
+
+        <button @click="selectMont('abril')" :class="['button is-info', { 'is-light': month === 'abril' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Abril
+        </button>
+
+        <button @click="selectMont('mayo')" :class="['button is-info', { 'is-light': month === 'mayo' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Mayo
+        </button>
+
+        <button @click="selectMont('junio')" :class="['button is-info', { 'is-light': month === 'junio' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Junio
+        </button>
+
+        <button @click="selectMont('julio')" :class="['button is-info', { 'is-light': month === 'julio' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Julio
+        </button>
+
+
+        <button @click="selectMont('agosto')" :class="['button is-info', { 'is-light': month === 'agosto' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Agosto
+        </button>
+
+
+        <button @click="selectMont('septiembre')" :class="['button is-info', { 'is-light': month === 'septiembre' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Septiembre
+        </button>
+
+
+        <button @click="selectMont('octubre')" :class="['button is-info', { 'is-light': month === 'octubre' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Octubre
+        </button>
+
+
+        <button @click="selectMont('noviembre')" :class="['button is-info', { 'is-light': month === 'noviembre' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Noviembre
+        </button>
+
+
+        <button @click="selectMont('diciembre')" :class="['button is-info', { 'is-light': month === 'diciembre' }]">
+            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Diciembre
+        </button>
+
+    </div>
+
+
     <apexchart type="bar" :height="500" :options="chartOptions" :series="series"></apexchart>
 </template>
 
@@ -22,6 +127,9 @@ export default defineComponent({
             timeOut: 3000,
             hideDuration: 100,
         };
+        const anio_actual = new Date();
+        const year = anio_actual.getFullYear();
+        const month = "todos";
         const colores = ['#F14668', '#485FC7', '#4994D2', '#FFE08A', '#85D7B2', '#00D1B2'];
         const estados = [
             'Cancelada',//0
@@ -81,7 +189,9 @@ export default defineComponent({
             series,
             city,
             group,
-            estados
+            estados,
+            year,
+            month
         };
     },//data
 
@@ -102,10 +212,15 @@ export default defineComponent({
             }
         },
 
+        selectMont(mes) {
+            this.month = mes;
+            this.graphicBarEstado();
+        },
+
         async graphicBarEstado() {
 
             const cliente = new Cliente(this.city, this.group);
-            const response = await cliente.graphicEstado();
+            const response = await cliente.graphicEstado(this.year, this.month);
             const estado_totales = {};
             response.records.forEach(item => {
                 estado_totales[item.estado] = item.total;
@@ -114,7 +229,7 @@ export default defineComponent({
             const records = this.estados.map(item => estado_totales[item] || 0);
 
             if (response.status) {
-             
+
                 this.series = [{
                     data: records
                 }];
@@ -129,7 +244,7 @@ export default defineComponent({
     mounted() {
 
         this.urlParams();
-        this.graphicBarEstado();
+        this.graphicBarEstado(this.year, this.month);
     }
 
 

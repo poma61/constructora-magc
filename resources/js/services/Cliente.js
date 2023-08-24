@@ -12,8 +12,8 @@ class Cliente {
             estado: "",
             descripcion: "",
             monto_inicial: "",
-            hora_reunion:"",
-            fecha_reunion:"",
+            hora_reunion: "",
+            fecha_reunion: "",
             seguimiento: "",
         };
 
@@ -37,11 +37,13 @@ class Cliente {
     getFill() {
         return this.cliente;
     }
-    async index() {
+    async index(filter_year, filter_month) {
         try {
             const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/index', {
                 ciudad: this.city,//enviamos estos parametros para que el middleware  check.city.access y check.grup.access
                 grupo: this.grupo,
+                year: filter_year,
+                month: filter_month,
             }, this.config);
 
             return resolve.data;
@@ -124,11 +126,13 @@ class Cliente {
         }
     }
 
-    async graphicEstado() {
+    async graphicEstado(filter_year, filter_month) {
         try {
             const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/graphic-estado', {
                 ciudad: this.city,
                 grupo: this.grupo,
+                year: filter_year,
+                month: filter_month,
             }, this.config);
             return resolve.data;
         } catch (error) {
@@ -143,24 +147,56 @@ class Cliente {
                 grupo: this.grupo,
             }, this.config);
             return resolve.data;
-            
+
         } catch (error) {
             return error.response.data;
         }
     }
 
 
-    async ganttMeeting() {
+    async ganttMeeting(filter_year, filter_month) {
         try {
             const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/gantt-meeting', {
                 ciudad: this.city,
                 grupo: this.grupo,
+                year: filter_year,
+                month: filter_month,
             }, this.config);
-            
+
             return resolve.data;
-            
+
         } catch (error) {
             return error.response.data;
+        }
+    }
+
+    async generateExcel(filter_year, filter_month) {
+        try {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/generate-excel', {
+                ciudad: this.city,
+                grupo: this.grupo,
+                year: filter_year,
+                month: filter_month,
+
+            }, {
+                responseType: 'blob',
+            });
+            // como es devuelve archivo blob en data entonces por eso pasamos directo
+            return resolve;
+
+        } catch (error) {
+            //como es un json envuelto en blob por la configuracion de axios  responseType: 'blob', entonces accedemos el json
+            const content_type = error.response.headers['content-type'];
+
+            if (content_type.toLowerCase().indexOf('application/json') !== -1) {
+                // La respuesta es un Blob que contiene un JSON, necesitamos extraer el JSON
+                const blob = await error.response.data;
+                const json_text = await new Response(blob).text();
+                const response_data = JSON.parse(json_text);
+                return response_data;
+            }
+
+
         }
     }
 

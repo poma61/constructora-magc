@@ -33,7 +33,7 @@
                      <div class="unfold-divider"></div>
                  </li>
                  <li>
-                     <div class="sidebar-small-cap">Administracion</div>
+                     <div class="sidebar-small-cap">Principal</div>
                  </li>
 
                  <li>
@@ -42,6 +42,14 @@
                          <span>Inicio</span>
                      </a>
                  </li>
+
+                 <li>
+                     <div class="unfold-divider"></div>
+                 </li>
+                 <li>
+                     <div class="sidebar-small-cap">Clientes</div>
+                 </li>
+
                  <li>
                      <a href="{{ route('r-cliente-index-view') }}" class="unfold-toggle no-arrow">
                          <i class="as-icon mdi mdi-table-account is-size-4"></i>
@@ -49,17 +57,78 @@
                      </a>
                  </li>
 
-                  <li>
-                     <a href="{{ route('r-contrato-index-view') }}" class="unfold-toggle no-arrow">
-                         <i class="as-icon mdi mdi-table-account is-size-4"></i>
+                 <li>
+                     <a href="{{ route('r-contrato-ciudad') }}" class="unfold-toggle no-arrow">
+                         <i class="as-icon mdi mdi-file-account-outline is-size-4"></i>
                          <span>Contratos</span>
                      </a>
                  </li>
 
+                 <li>
+                     <div class="unfold-divider"></div>
+                 </li>
+                 <li>
+                     <div class="sidebar-small-cap">Empresa</div>
+                 </li>
+
+                 <li>
+                     <a href="{{ route('r-control-de-obra-ciudad') }}" class="unfold-toggle no-arrow">
+                         <i class="as-icon mdi mdi-file-tree is-size-4"></i>
+                         <span>Control de obras</span>
+                     </a>
+                 </li>
+
+                 <li>
+                     <a href="{{ route('r-contable-ciudad') }}" class="unfold-toggle no-arrow">
+                         <i class="as-icon mdi mdi-counter is-size-4"></i>
+                         <span>Contable</span>
+                     </a>
+                 </li>
+
+                 <li>
+                     <a href="{{ route('r-inventario-ciudad') }}" class="unfold-toggle no-arrow">
+                         <i class="as-icon mdi mdi-file-table-box-outline is-size-4"></i>
+                         <span>Inventario</span>
+                     </a>
+                 </li>
+
+
+                 <li>
+                     <div class="unfold-divider"></div>
+                 </li>
+                 <li>
+                     <div class="sidebar-small-cap">Operaciones</div>
+                 </li>
+
+                 <li>
+                     <a href="#" class="unfold-toggle no-arrow">
+                         <i class="as-icon mdi mdi-file-table-box-outline is-size-4"></i>
+                         <span>CCD Economicas</span>
+                     </a>
+                 </li>
+
+                 <li>
+                     <a href="#" class="unfold-toggle no-arrow">
+                         <i class="as-icon mdi mdi-file-table-box-outline is-size-4"></i>
+                         <span>CCD Estandar</span>
+                     </a>
+                 </li>
+
+                 <li>
+                     <a href="#" class="unfold-toggle no-arrow">
+                         <i class="as-icon mdi mdi-file-table-box-outline is-size-4"></i>
+                         <span>CCD Lujos</span>
+                     </a>
+                 </li>
+                 {{-- opciones del menu solo cuando es rol administrador --}}
                  @if (Auth::user()->role == 'Administrador')
                      <li>
                          <div class="unfold-divider"></div>
                      </li>
+                     <li>
+                         <div class="sidebar-small-cap">Administracion</div>
+                     </li>
+
                      <li>
                          <a href="{{ route('r-personal-index-view', 'Santa-Cruz') }}" class="unfold-toggle no-arrow">
                              <span class="as-icon  mdi mdi-badge-account-outline is-size-4"></span>
@@ -74,6 +143,7 @@
                          </a>
                      </li>
                  @endif
+
              </ul>
          </div>
      </div>

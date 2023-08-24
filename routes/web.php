@@ -6,6 +6,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ContratoController;
+use App\Http\Controllers\ContableController;
+use App\Http\Controllers\ControlDeObrasController;
+use App\Http\Controllers\InventarioController;
 
 //middleware('guest') si el usuario esta autenticado no permite que el usuario acceda a la vista login
 //entonces esto redirige a la vista principal donde se configura en la siguiente ruta del archivo php
@@ -43,24 +47,47 @@ Route::group(['middleware' => ['auth', 'check.role.access']], function () {
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/cliente/view', [ClienteController::class, 'indexView'])->name('r-cliente-index-view');
 });
-Route::group(['middleware' => ['auth','check.city.access','check.grup.access']], function () {
+Route::group(['middleware' => ['auth', 'check.city.access', 'check.grup.access']], function () {
     Route::get('/cliente/tablero/{ciudad}/{grupo}', [ClienteController::class, 'tableroView'])->name('r-tablero-cliente-grupo-view');
     Route::get('/cliente/grafico/{ciudad}/{grupo}', [ClienteController::class, 'graficoView'])->name('r-grafico-cliente-grupo-view');
     Route::get('/cliente/calendario/{ciudad}/{grupo}', [ClienteController::class, 'calendarioView'])->name('r-calendario-cliente-grupo-view');
     Route::get('/cliente/gantt/{ciudad}/{grupo}', [ClienteController::class, 'ganttView'])->name('r-gantt-cliente-grupo-view');
-    Route::post('/microservice/ciudad/grupo/cliente/index', [ClienteController::class, 'index']);
-    Route::post('/microservice/ciudad/grupo/cliente/create', [ClienteController::class, 'create']);
-    Route::put('/microservice/ciudad/grupo/cliente/update', [ClienteController::class, 'update']);
-    Route::post('/microservice/ciudad/grupo/cliente/destroy', [ClienteController::class, 'destroy']);
+    Route::post('/microservice/ciudad/grupo/cliente/index', [ClienteController::class, 'tableroIndex']);
+    Route::post('/microservice/ciudad/grupo/cliente/create', [ClienteController::class, 'rowTableroCreate']);
+    Route::put('/microservice/ciudad/grupo/cliente/update', [ClienteController::class, 'rowTableroUpdate']);
+    Route::post('/microservice/ciudad/grupo/cliente/destroy', [ClienteController::class, 'rowTableroDestroy']);
     Route::post('/microservice/ciudad/grupo/cliente/record-cliente-responsable', [ClienteController::class, 'recordClienteResponsable']);
-    Route::post('/microservice/ciudad/grupo/cliente/graphic-estado',[ClienteController::class, 'graphicEstado']);
-    Route::post('/microservice/ciudad/grupo/cliente/calendar-meeting',[ClienteController::class, 'calendarMeeting']);
-    Route::post('/microservice/ciudad/grupo/cliente/gantt-meeting',[ClienteController::class, 'ganttMeeting']);
+    Route::post('/microservice/ciudad/grupo/cliente/graphic-estado', [ClienteController::class, 'graphicEstado']);
+    Route::post('/microservice/ciudad/grupo/cliente/calendar-meeting', [ClienteController::class, 'calendarMeeting']);
+    Route::post('/microservice/ciudad/grupo/cliente/gantt-meeting', [ClienteController::class, 'ganttMeeting']);
+    Route::post('/microservice/ciudad/grupo/cliente/generate-excel', [ClienteController::class, 'generateExcel']);
 });
 
 
-Route::group(['middleware'=>['auth']],function(){
-//Route::get('/contrato/tablero')
-
-
+//Contratos
+Route::get('/contrato/ciudad', [ContratoController::class, 'viewCiudad'])->middleware('auth')->name('r-contrato-ciudad');
+Route::group(['middleware' => ['auth', 'check.city.access']], function () {
+    Route::get('/contrato/tablero/{ciudad}', [ContratoController::class, 'viewTablero'])->name('r-contrato-tablero');
+    Route::get('/contrato/grafico/{ciudad}', [ContratoController::class, 'viewGrafico'])->name('r-contrato-grafico');
+    Route::get('/contrato/calendario/{ciudad}', [ContratoController::class, 'viewCalendario'])->name('r-contrato-calendario');
+    Route::get('/contrato/gantt/{ciudad}', [ContratoController::class, 'viewGantt'])->name('r-contrato-gantt');
+    Route::post('/contrato/ciudad/tablero-index', [ContratoController::class, 'tableroIndex']);
+    Route::post('/contrato/ciudad/tablero-create', [ContratoController::class, 'rowTableroCreate']);
+    Route::put('/contrato/ciudad/tablero-update', [ContratoController::class, 'rowTableroUpdate']);
+    Route::post('/contrato/ciudad/tablero-destroy', [ContratoController::class, 'rowTableroDestroy']);
 });
+
+
+
+//control de obras
+Route::get('/control-de-obra/ciudad', [ControlDeObrasController::class, 'viewCiudad'])->middleware('auth')->name('r-control-de-obra-ciudad');
+
+
+//Contable
+Route::get('/contable/ciudad', [ContableController::class, 'viewCiudad'])->middleware('auth')->name('r-contable-ciudad');
+
+
+//Inventario
+Route::get('/inventario/ciudad', [InventarioController::class, 'viewCiudad'])->middleware('auth')->name('r-inventario-ciudad');
+
+

@@ -7,35 +7,36 @@
                 </p>
             </header>
             <div class="card-content as-form">
+                <form>
                     <div class="is-flex is-flex-direction-column">
 
                         <v-text-field color="orange-darken-2" label="Ciudad" v-model="props.item_user_parent.ciudad"
                             readonly />
 
                         <v-text-field color="cyan-darken-2" label="Usuario" v-model="props.item_user_parent.usuario"
-                            :error-messages="getValidateErrors('usuario')" />
+                            :error-messages="getValidateErrors('usuario')"    autocomplete="none"/>
 
                         <v-text-field color="cyan-darken-2" label="Contraseña" :type="show ? 'text' : 'password'"
                             :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'" @click:append-inner="show = !show"
-                            v-model="props.item_user_parent.password"   :error-messages="getValidateErrors('password')" />
+                            v-model="props.item_user_parent.password" :error-messages="getValidateErrors('password')"    autocomplete="none"/>
 
 
-                        <v-radio-group v-model="props.item_user_parent.role" label="Rol" inline 
-                        :error-messages="getValidateErrors('role')" 
-                        >
+                        <v-radio-group v-model="props.item_user_parent.role" label="Rol" inline
+                            :error-messages="getValidateErrors('role')">
                             <v-radio label="Normal" value="Normal" color="cyan-darken-2"></v-radio>
                             <v-radio label="Administrador" value="Administrador" color="cyan-darken-2"></v-radio>
 
                         </v-radio-group>
-                      
+
                         <v-text-field color="cyan-darken-2" label="Personal" readonly
-                            v-model="props.item_user_parent.nombre_completo_personal"  :error-messages="getValidateErrors('id_personal')"/>
+                            v-model="props.item_user_parent.nombre_completo_personal"
+                            :error-messages="getValidateErrors('id_personal')" />
 
                         <div class="columns">
                             <div class="column is-four-fifths">
                                 <v-text-field density="compact" label="Buscar Personal" prepend-inner-icon="mdi-magnify"
                                     color="cyan-darken-2" v-model="ci" :loading="change_search_personal"
-                                    @keyup.enter="searchPersonal()" placeholder="Introduzca el CI del personal"/>
+                                    @keyup.enter="searchPersonal()" placeholder="Introduzca el CI del personal" />
                             </div>
 
                             <div class="column">
@@ -44,6 +45,7 @@
                             </div>
                         </div>
                     </div>
+                </form>
             </div>
 
             <div class="is-flex  is-justify-content-center  is-align-items-center p-2" style="width: 100%;">
@@ -60,13 +62,13 @@
             </div>
 
         </div>
-        
+
         <v-snackbar v-model="snackbar_search_personal.value" :timeout="2500" color="cyan-darken-2">
             <div class="is-flex is-justify-content-center is-align-items-center">
                 <v-icon icon="mdi-alert" size="50" />
                 <p class="is-size-6">
                     No se encontro ningun registro para&nbsp;
-                    <span class="has-text-weight-bold">{{snackbar_search_personal.text }}</span>
+                    <span class="has-text-weight-bold">{{ snackbar_search_personal.text }}</span>
                 </p>
             </div>
         </v-snackbar>
@@ -87,7 +89,7 @@ export default defineComponent({
         const snackbar_search_personal = { value: false, text: "" };
         const change_search_personal = null;
 
-        return { show,  ci, snackbar_search_personal, change_search_personal }
+        return { show, ci, snackbar_search_personal, change_search_personal }
     },//data
 
     setup(props, { emit }) {
@@ -118,7 +120,7 @@ export default defineComponent({
             this.change_search_personal = 'cyan';
             setTimeout(async () => {
                 const response = await usuario.buscarPersonal(this.ci);
-                this.change_search_personal = null;           
+                this.change_search_personal = null;
                 if (response.status) {
                     this.props.item_user_parent.nombre_completo_personal = `${response.record.nombres} ${response.record.apellido_paterno} ${response.record.apellido_materno}`;
                     this.props.item_user_parent.id_personal = response.record.id;

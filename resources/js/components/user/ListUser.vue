@@ -27,7 +27,7 @@
           <td>{{ item.columns.ciudad }}</td>
           <td>{{ item.columns.role }}</td>
           <td>
-            <span class="tag is-primary as-font-9 m-1"> {{ date_format.format(new Date(item.columns.created_at)) }}</span>
+            <span class="tag is-primary as-font-9 m-1"> {{ date_format.formatDateHour(item.columns.created_at) }}</span>
           </td>
           <td>
             <v-btn @click="editForm(item.raw)" class="m-1" color="cyan-darken-2" icon="mdi-pencil">

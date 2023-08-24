@@ -1,5 +1,18 @@
 
 <template>
+      <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+        <ul>
+            <li>
+                <div class="has-text-info">
+                    <span class="icon is-small">
+                        <span class="mdi mdi-calendar-clock"></span>
+                    </span>
+                    <span>Fechas de reunion</span>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
     <vue-cal style="min-height: 80vh" locale="es" active-view="year" :events="data_events" events-on-month-view="short"
         :disable-views="['years']" events-count-on-year-view />
 </template>
