@@ -19,7 +19,7 @@
                          ->onPersonal()
                          ->first();
                  @endphp
-                 <img class="user_img" src="{{ asset('storage/' . $user_all->foto) }}" alt="" height="100"
+                 <img class="user_img" src="{{ asset( $user_all->foto) }}" alt="" height="100"
                      width="100" />
                  <span class="user_name">
 

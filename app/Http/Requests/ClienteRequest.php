@@ -29,12 +29,13 @@ class ClienteRequest extends FormRequest
             'apellido_paterno' => 'required',
             'apellido_materno' => 'required',
             'n_de_contacto' => 'required|numeric',
+            'ci' => 'required|unique:clientes,ci,'.$this->input('id'),
+            'ci_expedido' => 'required',
             'estado' => 'required',
             'descripcion' => 'required',
             'monto_inicial' => 'required|numeric',
             'fecha_reunion' => 'required|date',
-            'hora_reunion' => 'required',
-
+            'hora_reunion' => 'required',           
             'seguimiento' => 'required',
         ];
 

@@ -1,5 +1,5 @@
 <template>
-      <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+    <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
         <ul>
             <li>
                 <div class="has-text-info">
@@ -102,9 +102,9 @@
         </button>
 
     </div>
-
-
-    <apexchart type="bar" :height="500" :options="chartOptions" :series="series"></apexchart>
+    <div class="box p-0">
+        <apexchart type="bar" :height="500" :options="chartOptions" :series="series"></apexchart>
+    </div>
 </template>
 
 <script>

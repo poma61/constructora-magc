@@ -23,8 +23,12 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            'vue': 'vue/dist/vue.esm-bundler.js'
+            'vue': 'vue/dist/vue.esm-bundler.js',
+            'vue-i18n': 'vue-i18n/dist/vue-i18n.esm-bundler.js', // Agrega esta línea
+           // 'es': 'vuetify/lib/locale/es.mjs', // Agrega esta línea
         },
     },
+ 
+    
 });
 

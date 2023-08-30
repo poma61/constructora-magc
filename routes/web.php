@@ -71,12 +71,14 @@ Route::group(['middleware' => ['auth', 'check.city.access']], function () {
     Route::get('/contrato/grafico/{ciudad}', [ContratoController::class, 'viewGrafico'])->name('r-contrato-grafico');
     Route::get('/contrato/calendario/{ciudad}', [ContratoController::class, 'viewCalendario'])->name('r-contrato-calendario');
     Route::get('/contrato/gantt/{ciudad}', [ContratoController::class, 'viewGantt'])->name('r-contrato-gantt');
-    Route::post('/contrato/ciudad/tablero-index', [ContratoController::class, 'tableroIndex']);
-    Route::post('/contrato/ciudad/tablero-create', [ContratoController::class, 'rowTableroCreate']);
-    Route::put('/contrato/ciudad/tablero-update', [ContratoController::class, 'rowTableroUpdate']);
-    Route::post('/contrato/ciudad/tablero-destroy', [ContratoController::class, 'rowTableroDestroy']);
+    Route::post('/microservice/contrato/ciudad/tablero-index', [ContratoController::class, 'tableroIndex']);
+    Route::post('/microservice/contrato/ciudad/tablero-create', [ContratoController::class, 'rowTableroCreate']);
+    Route::put('/microservice/contrato/ciudad/tablero-update', [ContratoController::class, 'rowTableroUpdate']);
+    Route::post('/microservice/contrato/ciudad/tablero-destroy', [ContratoController::class, 'rowTableroDestroy']);
+    Route::post('/microservice/contrato/ciudad/buscar-cliente', [ContratoController::class, 'buscarCliente']);
+    Route::post('/microservice/contrato/ciudad/by-id-detalle-contrato', [ContratoController::class, 'rowTableroByIdDetalleContrato']);
+   
 });
-
 
 
 //control de obras
@@ -89,5 +91,3 @@ Route::get('/contable/ciudad', [ContableController::class, 'viewCiudad'])->middl
 
 //Inventario
 Route::get('/inventario/ciudad', [InventarioController::class, 'viewCiudad'])->middleware('auth')->name('r-inventario-ciudad');
-
-

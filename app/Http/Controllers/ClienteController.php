@@ -535,28 +535,51 @@ class ClienteController extends Controller
             //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo   
             $grupo = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
 
+            if ($request->input('month') == 'todos') {
+                $cliente =  Cliente::join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
+                    ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
+                    ->where('clientes.status', true)
+                    ->where('clientes.id_grupo', $grupo->id)
+                    ->whereYear('clientes.fecha_reunion', $request->input('year'))
+                    ->select(
+                        'grupos.grup_number as Grupo',
+                        'ciudades.city_name as Ciudad',
+                        'clientes.nombres as Nombres',
+                        'clientes.apellido_paterno as Apellido paterno',
+                        'clientes.apellido_materno as Apellido materno',
+                        'clientes.n_de_contacto as N° de contacto',
+                        'clientes.estado as Estado',
+                        'clientes.descripcion as Descripcion',
+                        'clientes.monto_inicial as Monto inicial',
+                        DB::raw('DATE_FORMAT(clientes.fecha_reunion, "%d-%m-%Y") as "Fecha de reunion"'), // Formatear la fecha
+                        'clientes.hora_reunion as Hora de reunion',
+                        'clientes.seguimiento as Seguimiento',
+                    )
+                    ->get();
+            } else {
+                $cliente =  Cliente::join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
+                    ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
+                    ->where('clientes.status', true)
+                    ->where('clientes.id_grupo', $grupo->id)
+                    ->whereYear('clientes.fecha_reunion', $request->input('year'))
+                    ->whereMonth('clientes.fecha_reunion', $meses[$request->input('month')])
+                    ->select(
+                        'grupos.grup_number as Grupo',
+                        'ciudades.city_name as Ciudad',
+                        'clientes.nombres as Nombres',
+                        'clientes.apellido_paterno as Apellido paterno',
+                        'clientes.apellido_materno as Apellido materno',
+                        'clientes.n_de_contacto as N° de contacto',
+                        'clientes.estado as Estado',
+                        'clientes.descripcion as Descripcion',
+                        'clientes.monto_inicial as Monto inicial',
+                        DB::raw('DATE_FORMAT(clientes.fecha_reunion, "%d-%m-%Y") as "Fecha de reunion"'), // Formatear la fecha
+                        'clientes.hora_reunion as Hora de reunion',
+                        'clientes.seguimiento as Seguimiento',
+                    )
+                    ->get();
+            }
 
-            $cliente =  Cliente::join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
-            ->join('ciudades','ciudades.id','=','grupos.id_ciudad')
-                ->where('clientes.status', true)
-                ->where('clientes.id_grupo', $grupo->id)
-                ->whereYear('clientes.fecha_reunion', $request->input('year'))
-                ->whereMonth('clientes.fecha_reunion', $meses[$request->input('month')])
-                ->select(
-                    'grupos.grup_number as Grupo',
-                    'ciudades.city_name as Ciudad',
-                    'clientes.nombres as Nombres',
-                    'clientes.apellido_paterno as Apellido paterno',
-                    'clientes.apellido_materno as Apellido materno',
-                    'clientes.n_de_contacto as N° de contacto',
-                    'clientes.estado as Estado',
-                    'clientes.descripcion as Descripcion',
-                    'clientes.monto_inicial as Monto inicial',
-                    DB::raw('DATE_FORMAT(clientes.fecha_reunion, "%d-%m-%Y") as "Fecha de reunion"'), // Formatear la fecha
-                    'clientes.hora_reunion as Hora de reunion',
-                    'clientes.seguimiento as Seguimiento',
-                )
-                ->get();
 
             // Descargar el archivo Excel directamente usando Excel::download
             //enviarlo como respues a vue donde axios 

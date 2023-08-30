@@ -103,25 +103,22 @@
 
     </div>
 
-    <div class="buttons" v-if="month == 'todos'">
-        <v-btn @click="newForm()" color="yellow-darken-2" class="as-hover__box-shadow">
+    <div class="buttons">
+        <v-btn @click="newForm()" color="yellow-darken-2" class="m-1 as-hover__box-shadow" v-if="month == 'todos'">
             <v-icon icon="mdi-note-plus-outline"></v-icon>&nbsp;Nuevo registro
         </v-btn>
-    </div>
-
-    <div class="buttons" v-if="month != 'todos'">
-        <v-btn @click="generateReportExcel()" color="orange-darken-2" class="as-hover__box-shadow">
-            <v-icon icon="mdi-file-document-multiple-outline"></v-icon>&nbsp;Generar Reporte
+        <v-btn @click="generateReportExcel()" color="orange-darken-2" class="m-1 as-hover__box-shadow">
+            <v-icon icon="mdi-file-document-multiple-outline"></v-icon>&nbsp;Reporte excel
         </v-btn>
     </div>
 
-    <div class="card">
+    <div class="box p-0">
         <v-text-field v-model="buscar" append-inner-icon="mdi-magnify" clearable label="Buscar Registros..."
             color="orange-darken-2" />
 
         <v-data-table :hover="true" :items="data" :headers="columns" :loading="change_table"
             :items-per-page-options="items_per_page_options" :show-current-page="true" :fixed-header="true" :search="buscar"
-            page-text="{0}-{1} de {2}" :height="500" :sort-by="[{ key: 'id', order: 'desc' }]">
+            :height="500" :sort-by="[{ key: 'id', order: 'desc' }]">
 
             <template v-slot:item.estado="{ item }">
                 <span class="tag is-danger as-font-9 m-1" v-if="item.columns.estado == 'Cancelada'">
@@ -171,6 +168,8 @@
                     class="has-background-danger has-text-white m-1 as-hover__box-shadow" icon="mdi-delete" />
             </template>
 
+            
+
         </v-data-table>
     </div>
     <FormCliente @saveParent="save()" @closeDialogFormParent="closeDialogForm" :item_cliente_parent="item_cliente"
@@ -192,7 +191,7 @@
                     <v-icon icon="mdi-file-question" size="90"
                         class="has-text-warning animate__animated animate__flip"></v-icon>
                     <p class="is-size-4 has-text-centered">
-                        ¿Esta seguro(a) de eliminar el regitro seleccionado?
+                        ¿Esta seguro(a) de eliminar el registro seleccionado?
                     </p>
                 </div>
             </div>
@@ -271,9 +270,7 @@ import { VDataTable } from 'vuetify/labs/VDataTable';
 import Cliente from '@/services/Cliente';
 import FormCliente from '@/components/cliente/FormCliente.vue';
 import DateFormat from '@/util/DateFormat';
-import { month } from 'vue-cal/dist/i18n/en.cjs';
 import fileDownload from 'js-file-download';
-
 
 export default defineComponent({
     components: {
@@ -292,6 +289,8 @@ export default defineComponent({
             { title: 'Apellido Paterno', key: 'apellido_paterno' },
             { title: 'Apellido Materno', key: 'apellido_materno' },
             { title: 'N° de contacto', key: 'n_de_contacto', align: 'center' },
+
+            { title: 'CI', key: 'ci_all', value: (item) => `${item.ci} ${item.ci_expedido}` },
             { title: 'Estado', key: 'estado', align: 'center' },
             { title: 'Monto inicial', key: 'monto_inicial', align: 'center' },
             { title: 'Descripcion', key: 'descripcion', align: 'center' },
@@ -501,10 +500,11 @@ export default defineComponent({
 
         async generateReportExcel() {
             const cliente = new Cliente(this.city, this.group);
-            const response = await cliente.generateExcel(this.select_year, this.month);  
+            const response = await cliente.generateExcel(this.select_year, this.month);
 
             if (response.status == 200) {
                 fileDownload(response.data, `${this.city}-Grupo-${this.group}-${this.month}-${this.select_year}-cliente.xlsx`);
+                this.snackbarMessageView('success', 'Archivo Excel Generado!');
             } else {
                 this.snackbarMessageView('error', response.message)
             }

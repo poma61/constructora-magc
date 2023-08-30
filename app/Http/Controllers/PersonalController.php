@@ -8,14 +8,16 @@ use App\Models\Grupo;
 use App\Models\Personal;
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 use Throwable;
 
-class PersonalController extends Controller{
+class PersonalController extends Controller
+{
     /**
      * Display a listing of the resource.
      */
-    public function indexView(string $nombre_ciudad){
+    public function indexView(string $nombre_ciudad)
+    {
         try {
             $personal = false;
             $ciudad = Ciudad::all();
@@ -40,7 +42,8 @@ class PersonalController extends Controller{
     }
 
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         try {
             $nombre_ciudad = $request->input('ciudad');
             $personal = null;
@@ -85,7 +88,8 @@ class PersonalController extends Controller{
     /**
      * Show the form for creating a new resource.
      */
-    public function create(PersonalRequest $request){
+    public function create(PersonalRequest $request)
+    {
         try {
 
             $record_success = false;
@@ -94,7 +98,7 @@ class PersonalController extends Controller{
 
             $record_success = false;
 
-            $imagen_path = $request->file('foto')->store('imagenes', 'images');
+            $imagen_path = $request->file('foto')->store('imagenes', 'public');
 
             //el nombre_ciudad debe ser el mismo que esta en la base de datos
             foreach ($ciudad as $row => $val) {
@@ -106,7 +110,7 @@ class PersonalController extends Controller{
                         $personal = new Personal($request->except('ciudad', 'foto', 'grupo'));
                         $personal->id_ciudad = $id_city;
                         $personal->status = true;
-                        $personal->foto = $imagen_path;
+                        $personal->foto = 'storage/' . $imagen_path;
                         $personal->id_grupo = $grupo['id'];
                         $personal->save();
                         //agregamos el grupo.. al modelo personal..para que se visualize el cambio en el datatable
@@ -180,9 +184,12 @@ class PersonalController extends Controller{
             $personal = Personal::where('id', $id)->where('status', true)->first();
             $personal->fill($request->except('foto', 'grupo'));
 
+            $antiguo_foto_path = null;
             if ($request->file('foto') != null) {
-                $imagen_path = $request->file('foto')->store('imagenes', 'images');
-                $personal->foto = $imagen_path;
+                $antiguo_foto_path = $personal->foto;
+                //creamos el nuevo path de la nueva imagen
+                $imagen_path = $request->file('foto')->store('imagenes', 'public');
+                $personal->foto = 'storage/' . $imagen_path;
             }
 
             $grup_number = $request->input('grup_number');
@@ -193,6 +200,10 @@ class PersonalController extends Controller{
             //agregamos el grupo.. al modelo personal..para que se visualize el cambio en el datatable
             $personal->grup_number = $grup_number;
 
+            if ($antiguo_foto_path  != null) {
+                //si todo es ok eliminamos la antigua imagen 
+                Storage::disk('public')->delete(str_replace("storage/", "", $antiguo_foto_path));
+            }
 
             return response()->json([
                 'status' => true,
@@ -223,8 +234,8 @@ class PersonalController extends Controller{
 
             //como tiene una relacion con la tabla users
             //entonces tambien eliminamos de la tabla usuarios
-            $user = User::where('id_personal', $id)->update(['status'=>false]);
-  
+            $user = User::where('id_personal', $id)->update(['status' => false]);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Registro Eliminado!',

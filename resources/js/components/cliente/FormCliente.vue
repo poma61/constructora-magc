@@ -51,6 +51,18 @@
                         :error-messages="getViewMessageErrorsField('n_de_contacto')" />
 
 
+                        <v-text-field label="CI" color="orange-darken-2"
+                        v-model="props.item_cliente_parent.ci" append-inner-icon="mdi-text-box-edit" clearable
+                        :error-messages="getViewMessageErrorsField('ci')" />
+
+
+                        <v-autocomplete label="CI expedido"
+                        :items="['SC', 'CH', 'CB', 'PT', 'BN', 'LP', 'PA','TJ','OR','S/E']"
+                        v-model="props.item_cliente_parent.ci_expedido" color="orange-darken-2"
+                        append-inner-icon="mdi-text-box-edit" clearable
+                        :error-messages="getViewMessageErrorsField('ci_expedido')" />
+
+
                     <v-textarea label="Descripcion" v-model="props.item_cliente_parent.descripcion" color="orange-darken-2"
                         append-inner-icon="mdi-text-box-edit" clearable
                         :error-messages="getViewMessageErrorsField('descripcion')" />
@@ -58,7 +70,7 @@
                     <v-autocomplete label="Estado"
                         :items="['Cancelada', 'Programada', 'Por reprogramar', 'Se llevo a cabo', 'Firma de contrato', 'Otro']"
                         v-model="props.item_cliente_parent.estado" color="orange-darken-2"
-                        append-inner-icon="mdi-text-box-edit" clearable=""
+                        append-inner-icon="mdi-text-box-edit" clearable
                         :error-messages="getViewMessageErrorsField('estado')" />
 
                     <v-text-field label="Monto inicial" color="orange-darken-2"

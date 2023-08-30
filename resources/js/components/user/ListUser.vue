@@ -11,16 +11,15 @@
   </div>
   <div class="card">
     <v-text-field v-model="buscar_registros" append-inner-icon="mdi-file-search-outline" clearable
-      label="Buscar Registros" color="cyan-darken-2" >
+      label="Buscar Registros" color="cyan-darken-2">
     </v-text-field>
-    
-    <v-data-table   :hover="true" :headers="headers" :items="registros"  :loading="change"
+
+    <v-data-table :hover="true" :headers="headers" :items="registros" :loading="change"
       :items-per-page-options="items_per_page_options" :show-current-page="true" :fixed-header="true"
-      :search="buscar_registros" page-text="{0}-{1} de {2}" :height="500" :sort-by="[{ key: 'id', order: 'desc' }]"
-      >
-     
-      <template v-slot:item="{ item }" >
-        <tr   >
+      :search="buscar_registros" :height="500" :sort-by="[{ key: 'id', order: 'desc' }]">
+
+      <template v-slot:item="{ item }">
+        <tr>
           <td>{{ item.columns.nombres }} </td>
           <td>{{ item.columns.apellido_paterno }}</td>
           <td>{{ item.columns.apellido_materno }}</td>
@@ -62,7 +61,8 @@
       <div class="card-content">
         <div class="content">
           <div class="is-flex is-justify-content-center is-align-items-center  is-flex-direction-column">
-            <v-icon icon="mdi-file-question-outline" size="90" color="warning" class="animate__animated animate__bounce"/>
+            <v-icon icon="mdi-file-question-outline" size="90" color="warning"
+              class="animate__animated animate__bounce" />
             <p class="is-size-4 has-text-centered">¿Desea eliminar el registro seleccionado?</p>
           </div>
         </div>
@@ -71,7 +71,7 @@
       <div class="is-flex  is-justify-content-center  is-align-items-center p-2" style="width: 100%;">
         <div class="m-1">
           <v-btn variant="outlined" color="cyan-darken-1" @click="confirmDeleteItem()">
-            <v-icon icon="mdi-content-save-all" ></v-icon>&nbsp;Aceptar
+            <v-icon icon="mdi-content-save-all"></v-icon>&nbsp;Aceptar
           </v-btn>
         </div>
         <div class="m-1">
@@ -83,7 +83,6 @@
 
     </div>
   </v-dialog>
-  
 </template>
   
 <script>
@@ -113,7 +112,7 @@ export default defineComponent({
     const snackbar_message_response = { value: false, text: "", icon: "", color: "" };
     const dialog_delete = false;
     const headers = [
-      { title: 'Nombres', key: 'nombres',  divider: true, },
+      { title: 'Nombres', key: 'nombres', divider: true, },
       { title: 'Apellido Paterno', key: 'apellido_paterno', divider: true, },
       { title: 'Apellido Materno', key: 'apellido_materno', divider: true, },
       { title: 'Ciudad', key: 'ciudad', divider: true, },
@@ -155,7 +154,7 @@ export default defineComponent({
       if (respuesta.status) {
         this.snackbarMessageView('success', respuesta.message)
         this.registros = respuesta.records;
-      }else{
+      } else {
         this.snackbarMessageView('error', respuesta.message)
       }
 

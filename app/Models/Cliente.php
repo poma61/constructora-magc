@@ -13,6 +13,8 @@ class Cliente extends Model
         'apellido_paterno',
         'apellido_materno',
         'n_de_contacto',
+        'ci',
+        'ci_expedido',
         'personal_responsable',
         'id_personal_responsable',
         'estado',

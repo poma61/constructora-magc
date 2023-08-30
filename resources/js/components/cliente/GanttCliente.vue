@@ -1,5 +1,5 @@
 <template>
-      <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+    <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
         <ul>
             <li>
                 <div class="has-text-info">
@@ -103,8 +103,9 @@
 
     </div>
 
-
-    <div ref="chartContainer"></div>
+    <div class="box p-0">
+        <div ref="chartContainer"></div>
+    </div>
 </template>
 
 <script setup>
@@ -203,7 +204,7 @@ const refreshDataGantt = () => {
 const initDataGantt = async () => {
     const cliente = new Cliente(city.value, group.value);
     const response = await cliente.ganttMeeting(year.value, month.value);
-   
+
     if (response.status) {
 
         response.records.forEach(item => {
@@ -220,7 +221,7 @@ const initDataGantt = async () => {
             );
 
         });
-    
+
         viewToast('success', response.message);
     } else {
         viewToast('error', response.message);

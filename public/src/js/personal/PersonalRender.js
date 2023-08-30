@@ -139,7 +139,7 @@ function html(datos) {
         <div class="is-flex is-justify-content-center  mt-2">
             <figure class="image is-180x180">
                 <img id="img-view"
-                    src="${(datos.foto == null) ? BASE_URL + '/src/images/image-preview.png' : BASE_URL + '/storage/' + datos.foto}">
+                    src="${(datos.foto == null) ? BASE_URL + '/src/images/image-preview.png' : BASE_URL + '/' + datos.foto}">
             </figure>
 
         </div>
@@ -207,7 +207,7 @@ async function initDataTable() {
                 render: function (data, type, row, meta) {
                     return `
                     <figure class="image is-64x64">
-                        <img class="is-rounded" src="${BASE_URL}/storage/${data.foto}">
+                        <img class="is-rounded" src="${BASE_URL}/${data.foto}">
                     </figure>
                   `
                 }

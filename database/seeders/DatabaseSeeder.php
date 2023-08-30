@@ -164,7 +164,7 @@ class DatabaseSeeder extends Seeder
             'telefono' => 1234567,
             'direccion' => 'La Paz - Bolivia',
             'status' => true,
-            'foto' => 'imagenes/img-user.jpg',
+            'foto' => 'storage/imagenes/img-user.jpg',
             'id_ciudad' => 1,
             'id_grupo' => 11,
         ]);

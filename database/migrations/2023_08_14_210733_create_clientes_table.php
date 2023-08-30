@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('apellido_materno');
             $table->string('n_de_contacto', 100); //string ya que los numeros telefonicos suelen ser grandes cifras
             $table->string('estado', 100);
+            $table->string('ci', 100);
+            $table->string('ci_expedido', 10);
             $table->longText('descripcion');
             $table->double('monto_inicial', 20, 2);
             $table->date('fecha_reunion');

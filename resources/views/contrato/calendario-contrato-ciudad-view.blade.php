@@ -27,8 +27,3 @@
         </div>
     </div>
 @endsection
-
-
-@section('template_js')
-    @vite('resources/js/contratoBoard.js')
-@endsection

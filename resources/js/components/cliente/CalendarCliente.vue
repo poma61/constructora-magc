@@ -77,7 +77,7 @@ export default defineComponent({
         addHour(hora_actual) {
             const tiempo_actual = new Date(`2000-01-01T${hora_actual}`)
             tiempo_actual.setHours(tiempo_actual.getHours() + 1);
-            tiempo_actual.setMinutes(tiempo_actual.getMinutes() + 30);
+            tiempo_actual.setMinutes(tiempo_actual.getMinutes() + 10);
 
             const hora = tiempo_actual.getHours();
             const minutos = tiempo_actual.getMinutes();

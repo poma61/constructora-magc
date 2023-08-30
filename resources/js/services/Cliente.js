@@ -9,6 +9,8 @@ class Cliente {
             apellido_paterno: "",
             apellido_materno: "",
             n_de_contacto: "",
+            ci: "",
+            ci_expedido: "",
             estado: "",
             descripcion: "",
             monto_inicial: "",
@@ -26,6 +28,14 @@ class Cliente {
         this.grupo = grupo;
     }
 
+    setCity(city) {
+        this.city = city;
+    }
+
+    getCity() {
+        return this.city;
+    }
+
     setFill(cli) {
         Object.entries(this.cliente).forEach(([key]) => {
             if (Object.prototype.hasOwnProperty.call(cli, key)) {
@@ -37,6 +47,7 @@ class Cliente {
     getFill() {
         return this.cliente;
     }
+    
     async index(filter_year, filter_month) {
         try {
             const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/index', {
