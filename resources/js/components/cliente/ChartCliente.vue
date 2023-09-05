@@ -15,7 +15,7 @@
     <div class="buttons">
         <div class="control has-icons-left">
             <div class="select is-info">
-                <select v-model="year" @click="graphicBarEstado()">
+                <select v-model="year" @click="graphicBarPieEstado()">
                     <option value="2015">2015</option>
                     <option value="2016">2016</option>
                     <option value="2017">2017</option>
@@ -103,7 +103,11 @@
 
     </div>
     <div class="box p-0">
-        <apexchart type="bar" :height="500" :options="chartOptions" :series="series"></apexchart>
+        <apexchart type="bar" :height="500" :options="chart_options_bar" :series="series_bar"></apexchart>
+    </div>
+
+    <div class="box my-2 p-0 is-flex is-justify-content-center">
+        <apexchart type="pie" :width="600" :options="chart_options_pie" :series="series_pie"></apexchart>
     </div>
 </template>
 
@@ -130,7 +134,7 @@ export default defineComponent({
         const anio_actual = new Date();
         const year = anio_actual.getFullYear();
         const month = "todos";
-        const colores = ['#F14668', '#485FC7', '#4994D2', '#FFE08A', '#85D7B2', '#00D1B2'];
+        const colores = ['#F14668', '#485FC7', '#4994D2', '#FFE08A', '#85D7B2', '#7A7A7A'];
         const estados = [
             'Cancelada',//0
             'Programada',//1
@@ -139,7 +143,27 @@ export default defineComponent({
             'Firma de contrato',//4
             'Otro'//5
         ];
-        const chartOptions = {
+        const chart_options_pie = {
+            chart: {
+                width: 380,
+                type: 'pie',
+            },
+            colors: colores,
+            labels: [estados[0], estados[1], estados[2], estados[3], estados[4], estados[5]],
+            responsive: [{
+                breakpoint: 650,// se vuleve responsive cuando el window width sea 600
+                options: {
+                    chart: {
+                        width: 400
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        const chart_options_bar = {
             chart: {
                 type: 'bar',
                 events: {
@@ -171,7 +195,6 @@ export default defineComponent({
                     [estados[3]],
                     [estados[4]],
                     [estados[5]],
-
                 ],
                 labels: {
                     style: {
@@ -180,13 +203,17 @@ export default defineComponent({
                 }
             },
 
-        };//charts option
-        const series = [];
+        };
+
+        const series_pie = [];
+        const series_bar = [];
         const city = null;
         const group = null;
         return {
-            chartOptions,
-            series,
+            chart_options_bar,
+            chart_options_pie,
+            series_bar,
+            series_pie,
             city,
             group,
             estados,
@@ -214,11 +241,10 @@ export default defineComponent({
 
         selectMont(mes) {
             this.month = mes;
-            this.graphicBarEstado();
+            this.graphicBarPieEstado();
         },
 
-        async graphicBarEstado() {
-
+        async graphicBarPieEstado() {
             const cliente = new Cliente(this.city, this.group);
             const response = await cliente.graphicEstado(this.year, this.month);
             const estado_totales = {};
@@ -229,10 +255,11 @@ export default defineComponent({
             const records = this.estados.map(item => estado_totales[item] || 0);
 
             if (response.status) {
-
-                this.series = [{
+                this.series_bar = [{
                     data: records
                 }];
+
+               this.series_pie=records;
                 this.viewToast('success', response.message)
             } else {
                 this.viewToast('error', response.message)
@@ -242,11 +269,9 @@ export default defineComponent({
 
     },//methods
     mounted() {
-
         this.urlParams();
-        this.graphicBarEstado(this.year, this.month);
+        this.graphicBarPieEstado(this.year, this.month);
     }
-
 
 });
 

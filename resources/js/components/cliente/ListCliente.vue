@@ -13,6 +13,13 @@
     </nav>
 
     <div class="buttons">
+        <v-btn @click="newForm()" color="orange-darken-2" class="m-1 as-hover__box-shadow" 
+            :disabled="month== 'todos' ? false : true">
+            <v-icon icon="mdi-note-plus-outline"></v-icon>&nbsp;Nuevo registro
+        </v-btn>
+    </div>
+
+    <div class="buttons">
         <div class="control has-icons-left">
             <div class="select is-info">
                 <select v-model="select_year" @click="initData()">
@@ -104,9 +111,6 @@
     </div>
 
     <div class="buttons">
-        <v-btn @click="newForm()" color="yellow-darken-2" class="m-1 as-hover__box-shadow" v-if="month == 'todos'">
-            <v-icon icon="mdi-note-plus-outline"></v-icon>&nbsp;Nuevo registro
-        </v-btn>
         <v-btn @click="generateReportExcel()" color="orange-darken-2" class="m-1 as-hover__box-shadow">
             <v-icon icon="mdi-file-document-multiple-outline"></v-icon>&nbsp;Reporte excel
         </v-btn>
@@ -136,7 +140,7 @@
                 <span class="tag is-success as-font-9 m-1" v-if="item.columns.estado == 'Firma de contrato'">
                     {{ item.columns.estado }}
                 </span>
-                <span class="tag is-primary as-font-9 m-1" v-if="item.columns.estado == 'Otro'">
+                <span class="tag has-background-grey has-text-white as-font-9 m-1" v-if="item.columns.estado == 'Otro'">
                     {{ item.columns.estado }}
                 </span>
 
@@ -147,7 +151,6 @@
                     {{ date_format.formatDate(item.columns.fecha_reunion) }}
                 </span>
             </template>
-
 
             <template v-slot:item.hora_reunion="{ item }">
                 <span class="tag is-primary as-font-9 m-1">
@@ -168,9 +171,17 @@
                     class="has-background-danger has-text-white m-1 as-hover__box-shadow" icon="mdi-delete" />
             </template>
 
-            
+            <template v-slot:tfoot>
+                <tr>
+                    <td colspan="6"></td>
+                    <td><span class="tag has-background-grey-ligth m-1 as-font-9">Total= {{ sumMontoInicial.toFixed(2)
+                    }}</span></td>
+                    <td colspan="4"></td>
+                </tr>
+            </template>
 
         </v-data-table>
+
     </div>
     <FormCliente @saveParent="save()" @closeDialogFormParent="closeDialogForm" :item_cliente_parent="item_cliente"
         :message_errors_field_parent="message_errors_field" :dialog_form_parent="dialog_form" :city_parent="city"
@@ -321,6 +332,7 @@ export default defineComponent({
         const data_cliente_responable = [];
         const loading_table_cliente_responsable = false;
         return {
+
             data,
             select_year,
             month,
@@ -343,6 +355,11 @@ export default defineComponent({
         }
     },//data
 
+    computed: {
+        sumMontoInicial() {
+            return this.data.reduce((total, item) => total + Number(item.monto_inicial), 0);
+        },
+    },
 
     methods: {
         urlParams() {
@@ -353,8 +370,7 @@ export default defineComponent({
         selectMont(mes) {
             this.month = mes;
             this.initData();
-        }
-        ,
+        },
         initData() {
 
             this.change_table = 'orange-darken-2';
@@ -437,6 +453,7 @@ export default defineComponent({
         },
 
         async save() {
+
             const cliente = new Cliente(this.city, this.group);
             cliente.setFill(this.item_cliente);
             if (cliente.getFill().id > 0) {
@@ -503,8 +520,8 @@ export default defineComponent({
             const response = await cliente.generateExcel(this.select_year, this.month);
 
             if (response.status == 200) {
-                fileDownload(response.data, `${this.city}-Grupo-${this.group}-${this.month}-${this.select_year}-cliente.xlsx`);
-                this.snackbarMessageView('success', 'Archivo Excel Generado!');
+                fileDownload(response.data, `${this.city}-grupo-${this.group}-${this.month}-${this.select_year}-cliente.xlsx`);
+                this.snackbarMessageView('success', 'Archivo excel generado!');
             } else {
                 this.snackbarMessageView('error', response.message)
             }

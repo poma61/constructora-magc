@@ -1,12 +1,8 @@
 import { createApp } from 'vue'
-import Application from '@/components/cliente/GanttCliente.vue'
+import MainApplication from '@/components/cliente/GanttCliente.vue'
 import 'toastr/build/toastr.min.css';
 
 
-
- 
-
-
-const application = createApp(Application);
+const application = createApp(MainApplication);
 application.mount('#app');
 

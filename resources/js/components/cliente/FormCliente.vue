@@ -5,7 +5,7 @@
                 <p class="card-header-title has-text-white">
                     <v-icon icon="mdi-account-group" size="50" />
                     &nbsp;REGISTRAR CLIENTE |&nbsp;
-                    <!--  fg-->
+                 
                 <nav class="breadcrumb" aria-label="breadcrumbs">
                     <ul>
                         <li>
@@ -26,7 +26,7 @@
                         </li>
                     </ul>
                 </nav>
-                <!-- df -->
+              
                 </p>
 
             </div>
@@ -138,7 +138,6 @@ export default defineComponent({
 
     computed: {
         getViewMessageErrorsField() {
-
             return function (property) {
                 if (this.props.message_errors_field_parent[property]) {
                     return this.message_errors_field_parent[property][0];

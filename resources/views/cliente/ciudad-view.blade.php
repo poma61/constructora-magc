@@ -7,7 +7,7 @@
     <div class="card mt-5">
 
         <div class="card-content">
-            <h1 class="as-main-title is-size-5 has-text-white animate__animated animate__jello">
+            <h1 class="as-main-title as-background-orange is-size-5 has-text-centered has-text-white animate__animated animate__jello">
                 Administracion de clientes por ciudades
             </h1>
             {{-- ciudades --}}

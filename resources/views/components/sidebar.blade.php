@@ -19,7 +19,7 @@
                          ->onPersonal()
                          ->first();
                  @endphp
-                 <img class="user_img" src="{{ asset( $user_all->foto) }}" alt="" height="100"
+                 <img class="user_img" src="{{ asset($user_all->foto) }}" alt="" height="100"
                      width="100" />
                  <span class="user_name">
 
@@ -68,7 +68,7 @@
                      <div class="unfold-divider"></div>
                  </li>
                  <li>
-                     <div class="sidebar-small-cap">Empresa</div>
+                     <div class="sidebar-small-cap">Construccion</div>
                  </li>
 
                  <li>
@@ -79,9 +79,9 @@
                  </li>
 
                  <li>
-                     <a href="{{ route('r-contable-ciudad') }}" class="unfold-toggle no-arrow">
+                     <a href="{{ route('r-finanzas-de-construccion-ciudad') }}" class="unfold-toggle no-arrow">
                          <i class="as-icon mdi mdi-counter is-size-4"></i>
-                         <span>Contable</span>
+                         <span>Finanzas de construccion</span>
                      </a>
                  </li>
 
@@ -120,6 +120,22 @@
                          <span>CCD Lujos</span>
                      </a>
                  </li>
+                 <li>
+                     <div class="unfold-divider"></div>
+                 </li>
+
+                 <li>
+                     <div class="sidebar-small-cap">Otros</div>
+                 </li>
+
+                 <li>
+                     <a href="#" class="unfold-toggle no-arrow">
+                         <span class="as-icon mdi mdi-dishwasher is-size-4"></span>
+                         <span>Diseño</span>
+                     </a>
+                 </li>
+
+
                  {{-- opciones del menu solo cuando es rol administrador --}}
                  @if (Auth::user()->role == 'Administrador')
                      <li>

@@ -127,7 +127,7 @@ toastr.options = {
 const anio_actual = new Date();
 const year = ref(anio_actual.getFullYear());
 const month = ref("todos");
-const colores = ref(['#F14668', '#485FC7', '#4994D2', '#FFE08A', '#85D7B2', '#00D1B2']);
+const colores = ref(['#F14668', '#485FC7', '#4994D2', '#FFE08A', '#85D7B2', '#7A7A7A']);
 const city = ref("");
 const chart = ref(null);
 const group = ref("");
@@ -253,3 +253,5 @@ onMounted(() => {
 });
 
 </script>
+
+

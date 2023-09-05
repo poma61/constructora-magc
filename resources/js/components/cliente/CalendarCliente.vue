@@ -1,6 +1,6 @@
 
 <template>
-      <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+    <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
         <ul>
             <li>
                 <div class="has-text-info">
@@ -14,7 +14,9 @@
     </nav>
 
     <vue-cal style="min-height: 80vh" locale="es" active-view="year" :events="data_events" events-on-month-view="short"
-        :disable-views="['years']" events-count-on-year-view />
+        :disable-views="['years']" events-count-on-year-view show-time-in-cells
+        :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
+        :drag-to-create-threshold="0" />
 </template>
 
 <script>
@@ -74,6 +76,9 @@ export default defineComponent({
             }
         },
 
+        //lo creamos para agregar a la hora de reunion 1 hora y 10 minutos.. porque solo asi se muestra
+        //en la vista los atributos... si no tiene un rango de hora final grande
+        //entonces ya no se muestra los atributos Ejemplo => "Juan carlos 19.30"
         addHour(hora_actual) {
             const tiempo_actual = new Date(`2000-01-01T${hora_actual}`)
             tiempo_actual.setHours(tiempo_actual.getHours() + 1);
@@ -110,8 +115,6 @@ export default defineComponent({
         },
 
     },//methods
-
-
     mounted() {
         this.urlParams();
         this.initCalendarMeeting();
@@ -128,19 +131,17 @@ export default defineComponent({
     color: #fff;
 }
 
+.vuecal__title-bar {
+    background-color: #d0e4f9 !important;
+}
 
-/* Dot indicator */
+/* Dot indicator, indica en year... cuantos eventos hay en cada mes */
 .vuecal__cell-events-count {
     min-width: 20px !important;
     min-height: 20px !important;
     font-size: 20px !important;
     padding: 2px !important;
 }
-
-
-/* .vuecal__event {
-    margin: 1px 0px;
-} */
 
 /* ocultamos la hora final (end) */
 .vuecal__event-time span {

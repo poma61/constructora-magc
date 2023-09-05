@@ -8,19 +8,18 @@ use App\Models\Ciudad;
 use App\Models\Cliente;
 use App\Models\Contrato;
 use App\Models\DetalleContrato;
-use App\Models\Grupo;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ContratoExport;
+
 
 class ContratoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function viewCiudad()
     {
         try {
@@ -53,23 +52,6 @@ class ContratoController extends Controller
         }
     }
 
-    public function viewGrafico(String $city)
-    {
-        try {
-            //verificamos si los paorametros de la url son validos
-            $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
-
-            return view('contrato/grafico-contrato-ciudad-view', [
-                'ciudad' => $ciudad->city_name,
-            ]);
-        } catch (Throwable $th) {
-            return view('error-page-view');
-        }
-    }
-
 
     public function viewCalendario(String $city)
     {
@@ -87,6 +69,7 @@ class ContratoController extends Controller
             return view('error-page-view');
         }
     }
+
 
     public function viewGantt(String $city)
     {
@@ -123,8 +106,6 @@ class ContratoController extends Controller
                 'noviembre' => '11',
                 'diciembre' => '12',
             ];
-
-
             if ($request->input('month') == 'todos') {
                 $contrato = Contrato::join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
                     ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
@@ -133,7 +114,7 @@ class ContratoController extends Controller
                     ->where('clientes.status', true)
                     ->where('contratos.status', true)
                     ->where('ciudades.city_name',  $request->input('ciudad'))
-                    ->whereYear('fecha_firma_contrato', $request->input('year'))
+                    ->whereYear('contratos.fecha_firma_contrato', $request->input('year'))
                     ->get();
             } else {
                 $contrato = Contrato::join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
@@ -143,8 +124,8 @@ class ContratoController extends Controller
                     ->where('clientes.status', true)
                     ->where('contratos.status', true)
                     ->where('ciudades.city_name',  $request->input('ciudad'))
-                    ->whereYear('fecha_firma_contrato', $request->input('year'))
-                    ->whereMonth('fecha_firma_contrato', $meses[$request->input('month')])
+                    ->whereYear('contratos.fecha_firma_contrato', $request->input('year'))
+                    ->whereMonth('contratos.fecha_firma_contrato', $meses[$request->input('month')])
                     ->get();
             }
 
@@ -162,9 +143,7 @@ class ContratoController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+  
     public function rowTableroCreate(ContratoAllRequest $request)
     {
         try {
@@ -215,6 +194,8 @@ class ContratoController extends Controller
         ];
 
         //obtenemos ultimo contrato registrato por ciudad
+        //y no necesitamos verificar el status
+        // ya que aunque el registro se haya eliminado igualmente contatos los registros de contratos para generar un n_contrato
         $ultimo_contrato_id = Contrato::join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
             ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
             ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
@@ -238,9 +219,7 @@ class ContratoController extends Controller
         return  "{$year}/{$num_result}_{$ciudades_key[$ciudad]}";
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+  
     public function rowTableroUpdate(ContratoAllRequest $request,)
     {
         try {
@@ -276,9 +255,8 @@ class ContratoController extends Controller
             ], 500);
         }
     }
-    /**
-     * Remove the specified resource from storage.
-     */
+
+
     public function rowTableroDestroy(Request $request)
     {
         try {
@@ -386,4 +364,106 @@ class ContratoController extends Controller
         Storage::disk('public')->put($pdf_path,  $pdf->download()->getOriginalContent());
         return  'storage/' . $pdf_path;
     }
-}
+
+    public function generateExcel(Request $request)
+    {
+        try {
+            // Descargar el archivo Excel directamente usando Excel::download
+            //enviarlo como respuesta de tipo blob
+            return Excel::download(new ContratoExport($request), 'archivo.xlsx', \Maatwebsite\Excel\Excel::XLSX, [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => 'attachment; filename=archivo.xlsx'
+            ]);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+
+
+    public function  calendarContract(Request $request)
+    {
+        try {
+            $contrato = Contrato::join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
+                ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
+                ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
+                ->select('clientes.nombres', 'clientes.apellido_paterno', 'clientes.apellido_materno', 'contratos.fecha_firma_contrato')
+                ->where('clientes.status', true)
+                ->where('contratos.status', true)
+                ->where('ciudades.city_name',  $request->input('ciudad'))
+                ->get();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OK',
+                'records' => $contrato,
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'records' => [],
+            ], 500);
+        }
+    }
+
+
+    public function ganttContract(Request $request)
+    {
+        try {
+            $meses = [
+                'enero' => '01',
+                'febrero' => '02',
+                'marzo' => '03',
+                'abril' => '04',
+                'mayo' => '05',
+                'junio' => '06',
+                'julio' => '07',
+                'agosto' => '08',
+                'septiembre' => '09',
+                'octubre' => '10',
+                'noviembre' => '11',
+                'diciembre' => '12',
+            ];
+
+            if ($request->input('month') == 'todos') {
+                $contrato = Contrato::join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
+                    ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
+                    ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
+                    ->select('clientes.nombres', 'clientes.apellido_paterno', 'clientes.apellido_materno', 'contratos.fecha_firma_contrato','contratos.n_contrato')
+                    ->where('clientes.status', true)
+                    ->where('contratos.status', true)
+                    ->where('ciudades.city_name',  $request->input('ciudad'))
+                    ->whereYear('contratos.fecha_firma_contrato', $request->input('year'))
+                    ->get();
+            } else {
+                $contrato = Contrato::join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
+                    ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
+                    ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
+                    ->select('clientes.nombres', 'clientes.apellido_paterno', 'clientes.apellido_materno', 'contratos.fecha_firma_contrato','contratos.n_contrato')
+                    ->where('clientes.status', true)
+                    ->where('contratos.status', true)
+                    ->where('ciudades.city_name',  $request->input('ciudad'))
+                    ->whereYear('contratos.fecha_firma_contrato', $request->input('year'))
+                    ->whereMonth('contratos.fecha_firma_contrato', $meses[$request->input('month')])
+                    ->get();
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OK',
+                'records' => $contrato,
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'records' => [],
+            ], 500);
+        }
+    }
+    
+}//class

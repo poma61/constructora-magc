@@ -62,7 +62,7 @@ class Contrato {
     getCity() {
         return this.city;
     }
-    
+
     setFill(type, item_contrato) {
         switch (type) {
             case 'contrato':
@@ -116,7 +116,6 @@ class Contrato {
         return numero_literal.replace(/(Pesos|M\.N\.)/gi, '').trim();
     }
 
-
     async index(filter_year, filter_month) {
 
         try {
@@ -132,7 +131,6 @@ class Contrato {
         }
     }
 
-
     async create() {
         try {
             const contrato_all = Object.assign({}, this.getFill('contrato'), this.getFill('detalle_contrato'));
@@ -145,7 +143,6 @@ class Contrato {
             return error.response.data;
         }
     }
-
 
     async update() {
         this.config.headers['X-HTTP-Method-Override'] = 'PUT';
@@ -161,8 +158,6 @@ class Contrato {
         }
     }
 
-
-
     async destroy() {
         try {
             const resolve = await axios.post(app.BASE_URL + '/microservice/contrato/ciudad/tablero-destroy', {
@@ -175,7 +170,6 @@ class Contrato {
             return error.response.data;
         }
     }
-
 
     async buscarCliente(carnet) {
         try {
@@ -191,8 +185,6 @@ class Contrato {
         }
     }
 
-
-
     async byIdDetalleContrato(id) {
         try {
             const resolve = await axios.post(app.BASE_URL + '/microservice/contrato/ciudad/by-id-detalle-contrato', {
@@ -206,6 +198,61 @@ class Contrato {
         }
     }
 
-}
+    async generateExcel(filter_year, filter_month) {
+        try {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/contrato/ciudad/generate-excel', {
+                ciudad: this.city,
+                year: filter_year,
+                month: filter_month,
+            }, {
+                responseType: 'blob',
+            });
+            // como es devuelve archivo blob en data entonces por eso pasamos directo
+            //sin hacer return resolve.data
+            return resolve;
+
+        } catch (error) {
+            //como es un json envuelto en blob por la configuracion de axios  responseType: 'blob', entonces accedemos el json
+            const content_type = error.response.headers['content-type'];
+            if (content_type.toLowerCase().indexOf('application/json') !== -1) {
+                // La respuesta es un Blob que contiene un JSON, necesitamos extraer el JSON
+                const blob = await error.response.data;
+                const json_text = await new Response(blob).text();
+               return  JSON.parse(json_text);
+     
+            }
+        }
+    }
+
+    async calendarContract() {
+        try {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/contrato/ciudad/calendar-contract', {
+                ciudad: this.city,
+            }, this.config);
+            return resolve.data;
+
+        } catch (error) {
+            return error.response.data;
+        }
+    }
+
+
+    async ganttContract(filter_year, filter_month) {
+        try {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/contrato/ciudad/gantt-contract', {
+                ciudad: this.city,
+                year: filter_year,
+                month: filter_month,
+            }, this.config);
+
+            return resolve.data;
+
+        } catch (error) {
+            return error.response.data;
+        }
+    }
+
+
+}//class
 
 export default Contrato;

@@ -7,7 +7,19 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/js/clienteBoard.js',
+                'resources/js/clienteCalendar.js',
                 'resources/js/clienteChart.js',
+                'resources/js/clienteGantt.js',
+                
+                'resources/js/contratistaBoard.js',
+                'resources/js/contratistasCalendar.js',
+                'resources/js/contratistaChart.js',
+                'resources/js/contratistasGantt.js',
+
+                'resources/js/contratoBoard.js',
+                'resources/js/contratoCalendar.js',
+                'resources/js/contratoGantt.js',
+    
                 'resources/js/userBoard.js',
             ],
             refresh: true,
@@ -29,6 +41,5 @@ export default defineConfig({
         },
     },
  
-    
 });
 

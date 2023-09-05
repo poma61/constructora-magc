@@ -1,6 +1,5 @@
 <template>
     <div class="buttons">
-
         <v-btn @click="showDataTable()" color="deep-purple-lighten-2" class="as-hover__box-shadow m-1"
             :variant="show_data_table == true ? 'outlined' : undefined">
             <v-icon icon="mdi-note-plus-outline"></v-icon>&nbsp;Ver tablero
@@ -11,6 +10,7 @@
             :variant="show_form == true ? 'outlined' : undefined" v-if="!edit_form">
             <v-icon icon="mdi-note-plus-outline"></v-icon>&nbsp;Nuevo contrato
         </v-btn>
+
     </div>
     <!-- meses -->
     <div v-if="show_data_table" class="my-4">
@@ -117,45 +117,48 @@
             </button>
 
         </div>
+
+        <div class="buttons">
+            <v-btn @click="generateReportExcel()" color="deep-purple-lighten-2" class="m-1 as-hover__box-shadow">
+                <v-icon icon="mdi-file-document-multiple-outline"></v-icon>&nbsp;Reporte excel
+            </v-btn>
+        </div>
+        <!-- table -->
+        <div class="box p-0">
+            <v-text-field v-model="buscar" append-inner-icon="mdi-magnify" clearable label="Buscar Registros..."
+                color="deep-purple-lighten-2" />
+            <v-data-table :hover="true" :items="data" :headers="columns" :search="buscar" :loading="loading_data_table"
+                :items-per-page-options="items_per_page_options" :show-current-page="true" :fixed-header="true"
+                :height="500" :sort-by="[{ key: 'id', order: 'desc' }]" locale="es">
+
+                <template v-slot:item.fecha_firma_contrato="{ item }">
+                    <span class="tag is-rounded is-info as-font-9 m-1">
+                        {{ date_format.formatDate(item.columns.fecha_firma_contrato) }}
+                    </span>
+                </template>
+
+                <template v-slot:item.fecha_pago_couta_mensual="{ item }">
+                    <span class="tag is-rounded is-warning as-font-9 m-1">
+                        {{ date_format.formatDate(item.columns.fecha_pago_couta_mensual) }}
+                    </span>
+                </template>
+
+                <template v-slot:item.archivo_pdf="{ item }">
+                    <v-btn @click="viewPDF(item.raw)" color="yellow-darken-3" icon="mdi-file-account-outline"
+                        class="m-1 as-hover__box-shadow" variant="outlined" />
+                </template>
+
+
+                <template v-slot:item.actions="{ item }">
+                    <v-btn @click="editForm(item.raw)" color="deep-purple-lighten-2" icon="mdi-pencil"
+                        class="m-1 as-hover__box-shadow" variant="outlined" />
+                    <v-btn @click="openDeleteData(item.raw)" color="red" icon="mdi-delete" class="m-1 as-hover__box-shadow"
+                        variant="outlined" />
+                </template>
+         
+            </v-data-table>
+        </div>
     </div>
-
-    <div class="box p-0" v-if="show_data_table">
-        <v-text-field v-model="buscar" append-inner-icon="mdi-magnify" clearable label="Buscar Registros..."
-            color="deep-purple-lighten-2" />
-        <v-data-table :hover="true" :items="data" :headers="columns" :search="buscar" :loading="loading_data_table"
-            :items-per-page-options="items_per_page_options" :show-current-page="true" :fixed-header="true" :height="500"
-            :sort-by="[{ key: 'id', order: 'desc' }]" locale="es">
-
-            <template v-slot:item.fecha_firma_contrato="{ item }">
-                <span class="tag is-rounded is-info as-font-9 m-1">
-                    {{ date_format.formatDate(item.columns.fecha_firma_contrato) }}
-                </span>
-            </template>
-
-            <template v-slot:item.fecha_pago_couta_mensual="{ item }">
-                <span class="tag is-rounded is-warning as-font-9 m-1">
-                    {{ date_format.formatDate(item.columns.fecha_pago_couta_mensual) }}
-                </span>
-            </template>
-
-            <template v-slot:item.archivo_pdf="{ item }">
-                <v-btn @click="viewPDF(item.raw)" color="yellow-darken-3" icon="mdi-file-account-outline"
-                    class="m-1 as-hover__box-shadow" variant="outlined" />
-            </template>
-
-
-            <template v-slot:item.actions="{ item }">
-                <v-btn @click="editForm(item.raw)" color="deep-purple-lighten-2" icon="mdi-pencil"
-                    class="m-1 as-hover__box-shadow" variant="outlined" />
-                <v-btn @click="openDeleteData(item.raw)" color="red" icon="mdi-delete" class="m-1 as-hover__box-shadow"
-                    variant="outlined" />
-            </template>
-
-
-        </v-data-table>
-
-    </div>
-
     <BoardFormContrato v-if="show_form" :item_contrato_prop="item_contrato"
         :item_detalle_contrato_prop="item_detalle_contrato" :city_prop="city" @newFormEmit="newForm()" />
 
@@ -189,11 +192,11 @@
         </div>
     </v-dialog>
 
-
     <v-dialog v-model="dialog_pdf" persistent transition="dialog-bottom-transition" max-width="950px">
         <div class="card">
             <div class="card-content" style="max-height: 85vh; overflow:auto">
-                <embed :src="contrato_pdf_url" width="890px" height="890px" type="application/pdf" style=" user-select: none;" >
+                <embed :src="contrato_pdf_url" width="890px" height="890px" type="application/pdf"
+                    style=" user-select: none;">
             </div>
             <div class="is-flex  is-justify-content-end  is-align-items-center p-2" style="width: 100%;">
                 <div class="m-1">
@@ -223,6 +226,7 @@ import { onMounted } from 'vue';
 import Contrato from '@/services/Contrato';
 import DateFormat from '@/util/DateFormat';
 import app from "@/config/app.js";
+import fileDownload from 'js-file-download';
 
 //data
 const data = ref([]);
@@ -332,9 +336,9 @@ const closeDialogPDF = () => {
     dialog_pdf.value = false;
     //para evitar que el contenido se distorcione cuando no haya archivo
     // al cerrar el dialog
-    setTimeout(()=>{
-         contrato_pdf_url.value="";
-    },300)
+    setTimeout(() => {
+        contrato_pdf_url.value = "";
+    }, 300)
 };
 
 const confirmDeleteData = async () => {
@@ -383,7 +387,18 @@ const initData = () => {
 
     }, 800);
 
-};
+}
+
+const generateReportExcel = async () => {
+    const contrato = new Contrato(city.value);
+    const response = await contrato.generateExcel(select_year.value, month.value);
+    if (response.status == 200) {
+        fileDownload(response.data, `${city.value}-${month.value}-${select_year.value}-contrato.xlsx`);
+        viewSnackbar('success', 'Archivo excel generado!');
+    } else {
+        viewSnackbar('error', response.message)
+    }
+}
 
 onMounted(() => {
     urlParams();

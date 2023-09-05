@@ -47,7 +47,7 @@ class Cliente {
     getFill() {
         return this.cliente;
     }
-    
+
     async index(filter_year, filter_month) {
         try {
             const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/index', {
@@ -137,6 +137,38 @@ class Cliente {
         }
     }
 
+
+    async generateExcel(filter_year, filter_month) {
+        try {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/generate-excel', {
+                ciudad: this.city,
+                grupo: this.grupo,
+                year: filter_year,
+                month: filter_month,
+
+            }, {
+                responseType: 'blob',
+            });
+            // como es devuelve archivo blob en data entonces por eso pasamos directo
+            return resolve;
+
+        } catch (error) {
+            //como es un json envuelto en blob por la configuracion de axios  responseType: 'blob', entonces accedemos el json
+            const content_type = error.response.headers['content-type'];
+
+            if (content_type.toLowerCase().indexOf('application/json') !== -1) {
+                // La respuesta es un Blob que contiene un JSON, necesitamos extraer el JSON
+                const blob = await error.response.data;
+                const json_text = await new Response(blob).text();
+                const response_data = JSON.parse(json_text);
+                return response_data;
+            }
+
+
+        }
+    }//generateExcel
+
+
     async graphicEstado(filter_year, filter_month) {
         try {
             const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/graphic-estado', {
@@ -181,35 +213,7 @@ class Cliente {
         }
     }
 
-    async generateExcel(filter_year, filter_month) {
-        try {
-            const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/generate-excel', {
-                ciudad: this.city,
-                grupo: this.grupo,
-                year: filter_year,
-                month: filter_month,
 
-            }, {
-                responseType: 'blob',
-            });
-            // como es devuelve archivo blob en data entonces por eso pasamos directo
-            return resolve;
-
-        } catch (error) {
-            //como es un json envuelto en blob por la configuracion de axios  responseType: 'blob', entonces accedemos el json
-            const content_type = error.response.headers['content-type'];
-
-            if (content_type.toLowerCase().indexOf('application/json') !== -1) {
-                // La respuesta es un Blob que contiene un JSON, necesitamos extraer el JSON
-                const blob = await error.response.data;
-                const json_text = await new Response(blob).text();
-                const response_data = JSON.parse(json_text);
-                return response_data;
-            }
-
-
-        }
-    }
 
 }//class
 
