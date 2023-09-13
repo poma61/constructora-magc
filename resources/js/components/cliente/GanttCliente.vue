@@ -104,6 +104,27 @@
     </div>
 
     <div class="box p-0">
+        <x-gantt :data="data_list" style="height: 600px;" locale="es">
+            <x-gantt-column label="Detalles" :width="150">
+                <template v-slot="{ row }">
+                    <div class="is-flex is-justify-content-space-between">
+                        <div style="min-width: 150px" class="mr-2">{{ row.name }}</div>
+                        <div style="min-width: 150px" class="mr-2">{{ date_format.formatDate(row.startDate) }}</div>
+                    </div>
+                </template>
+            </x-gantt-column>
+
+            <XGanttSlider prop="startDate">
+                <template v-slot:content="{ row, $index }">
+                    <div class="gantt-task" :style="{ 'background-color': colores[$index % colores.length] }">
+                        {{ row.name }}
+                    </div>
+                </template>
+            </XGanttSlider>
+        </x-gantt>
+    </div>
+
+    <div class="box p-0">
         <div ref="chartContainer"></div>
     </div>
 </template>
@@ -111,10 +132,11 @@
 <script setup>
 import ApexCharts from "apexcharts";
 import esLocale from 'apexcharts/dist/locales/es.json'; // Importa el módulo de idioma "es" aquí
-import moment from 'moment';
 import toastr from "toastr";
 import Cliente from '@/services/Cliente';
 import { onMounted, ref } from "vue";
+import DateFormat from '@/util/DateFormat';
+
 
 //datas
 toastr.options = {
@@ -124,22 +146,27 @@ toastr.options = {
     timeOut: 3000,
     hideDuration: 100,
 };
-const anio_actual = new Date();
-const year = ref(anio_actual.getFullYear());
+const date_format = ref(new DateFormat());
+const year = ref(new Date().getFullYear());
 const month = ref("todos");
-const colores = ref(['#F14668', '#485FC7', '#4994D2', '#FFE08A', '#85D7B2', '#7A7A7A']);
+const colores = ref(['#F14668', '#485FC7', '#4994D2', '#D99F00', '#85D7B2', '#7A7A7A']);
 const city = ref("");
 const chart = ref(null);
 const group = ref("");
 const indice_aleatorio = ref(-1);
 const series = ref([{ data: [] }]);
+const data_list = ref([]);
 const chartContainer = ref(null);
 const chart_options = {
     chart: {
-        height: 500,
+        height: 600,
         type: 'rangeBar',
         defaultLocale: 'es',
         locales: [esLocale],
+    },
+    fill: {
+        type: 'solid',
+        opacity: 1
     },
     plotOptions: {
         bar: {
@@ -154,10 +181,7 @@ const chart_options = {
         enabled: true,
         formatter: function (val, opts) {
             var label = opts.w.globals.labels[opts.dataPointIndex]
-            var a = moment(val[0])
-            var b = moment(val[1])
-            var diff = b.diff(a, 'days')
-            return label + ': ' + diff + (diff > 1 ? ' days' : ' day')
+            return label;
         },
         style: {
             colors: ['#f3f4f5', '#fff']
@@ -167,7 +191,7 @@ const chart_options = {
         type: 'datetime'
     },
     yaxis: {
-        show: false
+        show: true
     },
     grid: {
         row: {
@@ -184,8 +208,8 @@ const urlParams = () => {
 }
 const addDate = (fecha_actual) => {
     const nueva_fecha = new Date(fecha_actual);
-    // sumamos un dia a la nueva fecha quese creo a partir de la fecha actual
-    nueva_fecha.setDate(nueva_fecha.getDate() + 1);
+    // sumamos un 5 dias a la nueva fecha quese creo a partir de la fecha actual
+    nueva_fecha.setDate(nueva_fecha.getDate() + 5);
     return nueva_fecha.toISOString().split('T')[0];
 }
 
@@ -198,20 +222,29 @@ const selectMont = (mes) => {
 const refreshDataGantt = () => {
     //borramos todos los datos de series y volvemos cargar
     series.value[0].data = [];
+    data_list.value = [];
     initDataGantt();
 };
 
 const initDataGantt = async () => {
+    let id = 0;
     const cliente = new Cliente(city.value, group.value);
     const response = await cliente.ganttMeeting(year.value, month.value);
 
     if (response.status) {
-
         response.records.forEach(item => {
+            id++;
             indice_aleatorio.value = Math.floor(Math.random() * colores.value.length);
 
+            data_list.value.push({
+                index: id,
+                name: `${item.nombres} ${item.apellido_paterno} ${item.apellido_materno}`,
+                startDate: new Date(`${item.fecha_reunion}T00:00:00`),
+                endDate: new Date(addDate(item.fecha_reunion) + 'T00:00:00'),
+            });
+
             series.value[0].data.push({
-                x: `${item.nombres} ${item.apellido_paterno} ${item.apellido_materno}`,
+                x: `${id}-${item.nombres} ${item.apellido_paterno} ${item.apellido_materno}`,
                 y: [
                     new Date(item.fecha_reunion).getTime(),
                     new Date(addDate(item.fecha_reunion)).getTime()
@@ -255,3 +288,20 @@ onMounted(() => {
 </script>
 
 
+<style >
+.gantt-task {
+  display: flex;
+  justify-content: center;
+  height: 15px;
+  border-radius: 3px;
+  color: #fff;
+}
+
+
+.xg-gantt-header-cell,
+.xg-table-header-cell {
+  background-color: #427BB9 !important;
+  text-align: center !important;
+  color: #fff !important;
+}
+</style>

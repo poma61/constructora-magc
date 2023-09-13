@@ -24,8 +24,17 @@ class Cliente {
                 'Assept': 'Application/json'
             }
         }
-        this.city = city;
-        this.grupo = grupo;
+        this.city = "";
+        this.grupo = "";
+
+        if (city != undefined) {
+            this.city = city;
+        }
+
+        if (grupo != undefined) {
+            this.grupo = grupo;
+        }
+
     }
 
     setCity(city) {

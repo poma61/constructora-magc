@@ -20,6 +20,16 @@ export default defineConfig({
                 'resources/js/contratoCalendar.js',
                 'resources/js/contratoGantt.js',
     
+                'resources/js/inventarioBoard.js',
+                'resources/js/inventarioCalendar.js',
+                'resources/js/inventarioChart.js',
+                'resources/js/inventarioGantt.js',
+
+                'resources/js/obraBoard.js',
+                'resources/js/obraCalendar.js',
+                'resources/js/obraChart.js',
+                'resources/js/obraGantt.js',
+
                 'resources/js/userBoard.js',
             ],
             refresh: true,

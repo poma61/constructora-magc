@@ -4,7 +4,7 @@ import app from "@/config/app.js";
 
 class Contratista {
     constructor(city, contratista) {
-        this.city = city;
+        this.city = "";
         this.contratista = {
             id: 0,
             nombres: "",
@@ -22,8 +22,12 @@ class Contratista {
                 'Assept': 'Application/json'
             }
         };
+
         if (contratista != undefined) {
             this.setFill(contratista);
+        }
+        if (city != undefined) {
+            this.city = city;
         }
 
 

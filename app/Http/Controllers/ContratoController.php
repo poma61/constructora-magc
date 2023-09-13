@@ -27,7 +27,7 @@ class ContratoController extends Controller
             $ciudad = Ciudad::where('id', $user->id_ciudad)->first();
             $list_ciudades = Ciudad::all();
             return view('contrato/contrato-ciudad-view', [
-                'ciudad' => $ciudad,
+                'ciudad' => $ciudad->city_name,
                 'list_ciudades' => $list_ciudades,
             ]);
         } catch (Throwable $th) {

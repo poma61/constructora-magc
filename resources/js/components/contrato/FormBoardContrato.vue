@@ -2,7 +2,7 @@
     <div class="box p-0">
         <div class="card-header has-background-info">
             <p class="card-header-title has-text-white">
-                <v-icon icon="mdi-file-account-outline" size="50" />
+                <span class="mdi mdi-file-account-outline is-size-2"></span>
                 &nbsp;REGISTRAR CONTRATO&nbsp;
             </p>
         </div>
@@ -159,7 +159,7 @@
         <div class="is-flex  is-justify-content-end p-2" style="width: 100%;">
             <div class="m-1">
                 <v-btn variant="outlined" color="deep-purple-lighten-2" @click="save()" class="as-hover__box-shadow">
-                    <v-icon icon="mdi-content-save-all"></v-icon>&nbsp;Guardar
+                    <span class="mdi mdi-content-save-all is-size-5"></span>&nbsp;Guardar
                 </v-btn>
             </div>
         </div>
@@ -167,9 +167,9 @@
     </div>
 
     <v-snackbar v-model="snackbar_message_response.value" :timeout="2000" :color="snackbar_message_response.color"
-        location="top right" rounded="pill">
+        location="top right"  min-height="70px">
         <div class="is-flex is-justify-content-center is-align-items-center">
-            <v-icon :icon="snackbar_message_response.icon" size="40" />
+            <span :class="snackbar_message_response.icon"></span>
             <p class="is-size-6">{{ snackbar_message_response.text }}</p>
         </div>
     </v-snackbar>
@@ -211,10 +211,7 @@ const nombreCompletoCliente = computed(() => {
     return `${props.item_contrato_prop.nombres} ${props.item_contrato_prop.apellido_paterno} ${props.item_contrato_prop.apellido_materno}`;
 });
 
-
-
 const searchCliente = () => {
-
     loading_search_cliente.value = 'deep-purple-lighten-2';
     setTimeout(async () => {
         const contrato = new Contrato(props.city_prop);
@@ -237,10 +234,10 @@ const searchCliente = () => {
 const viewSnackbar = (type, message) => {
     if (type == 'success') {
         snackbar_message_response.value.color = 'deep-purple-lighten-2';
-        snackbar_message_response.value.icon = 'mdi-database-check-outline';
+        snackbar_message_response.value.icon = 'mdi mdi-database-check-outline is-size-1';
     } else {
         snackbar_message_response.value.color = 'red';
-        snackbar_message_response.value.icon = 'mdi-alert-box-outline';
+        snackbar_message_response.value.icon = 'mdi mdi-alert-box-outline is-size-1';
     }
     snackbar_message_response.value.value = true;
     snackbar_message_response.value.text = message;
@@ -261,9 +258,7 @@ const descargarPDF = (archivo_url) => {
 }
 
 const save = async () => {
-
     const contrato = new Contrato(props.city_prop, props.item_contrato_prop, props.item_detalle_contrato_prop);
-
     if (contrato.getFill('contrato').id > 0) {
         //para editar registro
         const response = await contrato.update();

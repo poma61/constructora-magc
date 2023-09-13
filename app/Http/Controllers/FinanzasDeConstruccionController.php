@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
 
+
+
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ContratistaExport;
 use App\Http\Requests\HistorialPagoContratistaRequest;
@@ -26,7 +28,7 @@ class FinanzasDeConstruccionController extends Controller
             $ciudad = Ciudad::where('id', $user->id_ciudad)->first();
             $list_ciudades = Ciudad::all();
             return view('finanzas-de-construccion/ciudad-finanzas-de-construccion-view', [
-                'ciudad' => $ciudad,
+                'ciudad' => $ciudad->city_name,
                 'list_ciudades' => $list_ciudades,
             ]);
         } catch (Throwable $th) {
@@ -181,11 +183,13 @@ class FinanzasDeConstruccionController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => "Registro creado!",
+                'record'=>$contratista,
             ], 200);
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage(),
+                'record'=>null,
             ], 500);
         }
     }
@@ -234,19 +238,19 @@ class FinanzasDeConstruccionController extends Controller
             //si el campo a insertar no esta listado en el array $fillable entonces
             //ese campo no se insertara en la base de datos, aunque en $request->all() este ese campo
             //ese campo sera omitido
-            $contrato = Contratista::where('status', true)->where('id', $request->input('id'))->first();
-            $contrato->update($request->all());
+            $contratista = Contratista::where('status', true)->where('id', $request->input('id'))->first();
+            $contratista->update($request->all());
 
             return response()->json([
                 'status' => true,
                 'message' => "Registro modificado exitosamente!",
-                'record' => $contrato,
+                'record' => $contratista,
             ], 200);
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage(),
-                'record' => [],
+                'record' => null,
             ], 500);
         }
     }
@@ -260,7 +264,7 @@ class FinanzasDeConstruccionController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => "Contrato eliminado exitosamente!",
+                'message' => "Registro eliminado exitosamente!",
             ], 200);
         } catch (Throwable $th) {
             return response()->json([

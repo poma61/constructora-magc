@@ -8,7 +8,7 @@ import { createI18n, useI18n } from 'vue-i18n'
 // Vuetify
 import { createVuetify } from 'vuetify'
 //solo importamos los componenetes que utilizaremos para reducir el css 
-import { VDialog, VTextField, VBtn, VSnackbar, VIcon, VTextarea, VAutocomplete } from 'vuetify/components';
+import { VDialog, VTextField, VBtn, VSnackbar, VTextarea, VAutocomplete } from 'vuetify/components';
 import 'vuetify/styles'
 
 // Importa las traducciones desde node_modules
@@ -53,7 +53,6 @@ const vuetify = createVuetify({
     VBtn,
     VSnackbar,
     VAutocomplete,
-    VIcon,
     VTextarea,
   },
 })

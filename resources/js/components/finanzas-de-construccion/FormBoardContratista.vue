@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header has-background-info">
                 <p class="card-header-title has-text-white">
-                    <v-icon icon="mdi-file-account-outline" size="50" />
+                    <span class="mdi mdi-file-account-outline is-size-2"></span>
                     &nbsp;REGISTRAR CONTRATISTA |&nbsp;
                 <nav class="breadcrumb" aria-label="breadcrumbs">
                     <ul>
@@ -71,12 +71,12 @@
             <div class="is-flex  is-justify-content-end p-2" style="width: 100%;">
                 <div class="m-1">
                     <v-btn rounded="xl" color="cyan-darken-1" @click="save()" class="as-hover__box-shadow">
-                        <v-icon icon="mdi-content-save-all"></v-icon>&nbsp;Guardar
+                        <span class="mdi mdi-content-save-all is-size-5"></span>&nbsp;Guardar
                     </v-btn>
                 </div>
                 <div class="m-1">
                     <v-btn rounded="xl" color="red" @click="closeChild()" class="as-hover__box-shadow">
-                        <v-icon icon="mdi-cancel"></v-icon>&nbsp;Cancelar
+                        <span class="mdi mdi-cancel is-size-5"></span>&nbsp;Cancelar
                     </v-btn>
                 </div>
             </div>
@@ -85,9 +85,9 @@
     </v-dialog>
 
     <v-snackbar v-model="snackbar_message_response.active" :timeout="2000" :color="snackbar_message_response.color"
-        location="top right" rounded="pill">
+        location="top right" rounded="pill" min-height="70px">
         <div class="is-flex is-justify-content-center is-align-items-center">
-            <v-icon :icon="snackbar_message_response.icon" size="40" />
+            <span :class="snackbar_message_response.icon"></span>
             <p class="is-size-6">{{ snackbar_message_response.text }}</p>
         </div>
     </v-snackbar>
@@ -102,7 +102,7 @@ import { computed, ref } from 'vue';
 //props
 const props = defineProps(['item_contratista_prop', 'dialog_form_prop', 'city_prop']);
 //emits
-const emit = defineEmits(['closeFormEmit', 'refreshRowDataEmit'])
+const emit = defineEmits(['closeFormEmit', 'refreshRowDataByFormEmit'])
 //emits events
 const closeChild = () => {
     resetTo();
@@ -116,7 +116,7 @@ const save = async () => {
         //para editar registro
         const response = await contratista.update();
         if (response.status) {
-            emit('refreshRowDataEmit', props.item_contratista_prop);
+            emit('refreshRowDataByFormEmit', 'edit', Object.assign({ n_contrato: props.item_contratista_prop.n_contrato }, response.record));
             viewSnackbar('success', response.message);
             closeChild();
         } else {
@@ -130,7 +130,7 @@ const save = async () => {
         //para un nuevo registro
         const response = await contratista.create();
         if (response.status) {
-            emit('refreshRowDataEmit', props.item_contratista_prop);
+            emit('refreshRowDataByFormEmit', 'add', Object.assign({ n_contrato: props.item_contratista_prop.n_contrato }, response.record));
             viewSnackbar('success', response.message);
             closeChild();
         } else {
@@ -151,13 +151,7 @@ const resetTo = () => {
 const loading_search_cliente = ref(null);
 const message_errors_field = ref({});
 const search_n_contrato = ref("");
-
-const snackbar_message_response = ref({
-    active: false,
-    icon: "",
-    color: "",
-    text: "",
-});
+const snackbar_message_response = ref({ active: false, icon: "", color: "", text: "", });
 
 //computed
 const getViewMessageErrorsField = computed(() => {
@@ -192,10 +186,10 @@ const searchContrato = () => {
 const viewSnackbar = (type, message) => {
     if (type == 'success') {
         snackbar_message_response.value.color = 'cyan-darken-1';
-        snackbar_message_response.value.icon = 'mdi-database-check-outline';
+        snackbar_message_response.value.icon = 'mdi mdi-database-check-outline is-size-1';
     } else {
         snackbar_message_response.value.color = 'red';
-        snackbar_message_response.value.icon = 'mdi-alert-box-outline';
+        snackbar_message_response.value.icon = 'mdi mdi-alert-box-outline is-size-1';
     }
     snackbar_message_response.value.active = true;
     snackbar_message_response.value.text = message;

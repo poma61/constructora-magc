@@ -670,9 +670,15 @@
     padding: 15px;
     border-bottom: 1px solid #00000055;
 }
+
 .as-font-9 {
     font-size: 0.9rem !important;
 }
+
+.as-icon-7 {
+    font-size: 7rem !important;
+}
+
 
 @media screen and (max-width: 700px) {
     .as-form {

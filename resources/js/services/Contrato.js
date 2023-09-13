@@ -4,7 +4,7 @@ import { NumerosALetras } from 'numero-a-letras';
 
 class Contrato {
     constructor(city, contrato, detalle_contrato) {
-        this.city = city;
+        this.city = "";
         this.contrato = {
             id: 0,
             id_cliente: "",
@@ -53,6 +53,10 @@ class Contrato {
         if (detalle_contrato != undefined) {
             this.setFill('detalle_contrato', detalle_contrato);
         }
+        if (city != undefined) {
+            this.city = city;
+        }
+
     }
 
     setCity(city) {

@@ -63,12 +63,12 @@
           <div class="is-flex is-justify-content-center is-align-items-center  is-flex-direction-column">
             <v-icon icon="mdi-file-question-outline" size="90" color="warning"
               class="animate__animated animate__bounce" />
-            <p class="is-size-4 has-text-centered">¿Desea eliminar el registro seleccionado?</p>
+            <p class="is-size-5 has-text-centered">¿Desea eliminar el registro seleccionado?</p>
           </div>
         </div>
       </div>
 
-      <div class="is-flex  is-justify-content-center  is-align-items-center p-2" style="width: 100%;">
+      <div class="is-flex is-justify-content-center  is-align-items-center p-2" style="width: 100%;">
         <div class="m-1">
           <v-btn variant="outlined" color="cyan-darken-1" @click="confirmDeleteItem()">
             <v-icon icon="mdi-content-save-all"></v-icon>&nbsp;Aceptar
@@ -219,7 +219,7 @@ export default defineComponent({
         if (response.status) {
           this.message_errors_field = response.message_errors;
           this.snackbarMessageView('success', response.message)
-          //agregamos el rgistro al array de datos
+          //agregamos el registro al array de datos
           this.registros.push(response.record);
           this.closeDialogForm();
         } else {

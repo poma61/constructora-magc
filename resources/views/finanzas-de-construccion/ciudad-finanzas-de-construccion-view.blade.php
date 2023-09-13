@@ -27,7 +27,7 @@
                                 </figure>
                                 <p> {{ $row->city_name }}</p>
 
-                                <a href="{{ route('r-finanzas-de-construccion-tablero', $row->city_name) }}"
+                                <a href="{{ route('r-tablero-finanzas-de-construccion', $row->city_name) }}"
                                     class="button is-success is-rounded">
                                     <span class="icon is-small">
                                         <i class="mdi mdi-check"></i>
@@ -51,7 +51,7 @@
                                     src="{{ asset('src/images/bandera-' . $parse_name_city . '.jpg') }}">
                             </figure>
                             <p>{{ $ciudad }}</p>
-                            <a href="{{ route('r-finanzas-de-construccion-tablero', $ciudad) }}" class="button is-warning is-rounded">
+                            <a href="{{ route('r-tablero-finanzas-de-construccion', $ciudad) }}" class="button is-success is-rounded">
                                 <span class="icon is-small">
                                     <i class="mdi mdi-check"></i>
                                 </span>

@@ -4,7 +4,7 @@ import app from "@/config/app.js";
 
 class HistorialPagoContratista {
     constructor(city, historial_pago_contratista) {
-        this.city = city;
+        this.city = "";
         this.historial_pago_contratista = {
             id: 0,
             id_contratista: "",
@@ -17,9 +17,15 @@ class HistorialPagoContratista {
                 'Assept': 'Application/json'
             }
         };
+        
         if (historial_pago_contratista != undefined) {
             this.setFill(historial_pago_contratista);
         }
+
+        if (city != undefined) {
+            this.city = city;
+        }
+
     }
 
     setCity(city) {

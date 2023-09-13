@@ -3,9 +3,9 @@
         <div class="card">
             <div class="card-header has-background-success">
                 <p class="card-header-title has-text-white">
-                    <v-icon icon="mdi-account-group" size="50" />
+                    <span class="mdi mdi-account-group is-size-2"></span>
                     &nbsp;REGISTRAR CLIENTE |&nbsp;
-                 
+
                 <nav class="breadcrumb" aria-label="breadcrumbs">
                     <ul>
                         <li>
@@ -26,7 +26,7 @@
                         </li>
                     </ul>
                 </nav>
-              
+
                 </p>
 
             </div>
@@ -51,13 +51,12 @@
                         :error-messages="getViewMessageErrorsField('n_de_contacto')" />
 
 
-                        <v-text-field label="CI" color="orange-darken-2"
-                        v-model="props.item_cliente_parent.ci" append-inner-icon="mdi-text-box-edit" clearable
-                        :error-messages="getViewMessageErrorsField('ci')" />
+                    <v-text-field label="CI" color="orange-darken-2" v-model="props.item_cliente_parent.ci"
+                        append-inner-icon="mdi-text-box-edit" clearable :error-messages="getViewMessageErrorsField('ci')" />
 
 
-                        <v-autocomplete label="CI expedido"
-                        :items="['SC', 'CH', 'CB', 'PT', 'BN', 'LP', 'PA','TJ','OR','S/E']"
+                    <v-autocomplete label="CI expedido"
+                        :items="['SC', 'CH', 'CB', 'PT', 'BN', 'LP', 'PA', 'TJ', 'OR', 'S/E']"
                         v-model="props.item_cliente_parent.ci_expedido" color="orange-darken-2"
                         append-inner-icon="mdi-text-box-edit" clearable
                         :error-messages="getViewMessageErrorsField('ci_expedido')" />
@@ -97,14 +96,14 @@
 
                 <div class="m-1">
                     <v-btn class="has-background-success has-text-white as-hover__box-shadow" @click="saveChild()">
-                        <v-icon icon="mdi-content-save-all" />&nbsp;Guardar
+                        <span class="mdi mdi-content-save-all is-size-5"></span>&nbsp;Guardar
                     </v-btn>
                 </div>
 
                 <div class="m-1">
                     <v-btn class="has-background-danger has-text-white as-hover__box-shadow"
                         @click="closeDialogFormChild()">
-                        <v-icon icon="mdi-cancel" />&nbsp;Cancelar
+                        <span class="mdi mdi-cancel is-size is-size-5"></span>&nbsp;Cancelar
                     </v-btn>
                 </div>
             </div>

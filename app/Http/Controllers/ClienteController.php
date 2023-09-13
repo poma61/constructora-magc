@@ -10,7 +10,7 @@ use App\Models\Cliente;
 use App\Models\ClienteResponsable;
 use App\Models\Grupo;
 use App\Models\Responsable;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -203,7 +203,7 @@ class ClienteController extends Controller
         }
     }
 
- 
+
     public function rowTableroCreate(ClienteRequest $request)
     {
         try {
@@ -235,6 +235,12 @@ class ClienteController extends Controller
             $cliente_responsable->id_responsable = $responsable->id;
             $cliente_responsable->save();
 
+            // Formatear la hora antes de incluirla en la respuesta JSON
+            //esto solo se debe   hacer a un update y create
+            // cuando hacemos un update a la base de datos el formato de hora se vuelve asi '23:59' lo mismo pasa al hacer un create
+            //entonces '23:59', ya no es un formato de hora valido
+            $cliente->hora_reunion = Carbon::parse($cliente->hora_reunion)->format('H:i:s');
+
 
             return response()->json([
                 'status' => true,
@@ -250,7 +256,7 @@ class ClienteController extends Controller
         }
     }
 
- 
+
     public function rowTableroUpdate(ClienteRequest $request)
     {
         try {
@@ -259,7 +265,10 @@ class ClienteController extends Controller
 
             //si no encuentro el responsable significa que es un nuevo responsable  el que esta editando este  dato del cliente
             // entonces agreamos al  otro responsable del cliente
-            $verified_responable = Responsable::where('id_personal', $personal->id)->first();
+            $verified_responable = ClienteResponsable::join('responsables', 'responsables.id', '=', 'clientes_responsables.id_responsable')
+                ->where('clientes_responsables.id_cliente', $cliente->id)
+                ->where('responsables.id_personal', $personal->id)->first();
+
             if ($verified_responable == null) {
                 //se crea una tabla extra clientes_responsables
                 $responsable = new Responsable();
@@ -274,16 +283,25 @@ class ClienteController extends Controller
                 $cliente_responsable->id_responsable = $responsable->id;
                 $cliente_responsable->save();
             }
-            $cliente->update($request->except('grupo', 'ciudad'));
+            $cliente->fill($request->except('grupo', 'ciudad'));
+            $cliente->update();
+
+            // Formatear la hora antes de incluirla en la respuesta JSON
+            //esto solo se debe   hacer a un update y create
+            // cuando hacemos un update a la base de datos el formato de hora se vuelve asi '23:59' lo mismo pasa al hacer un create
+            //entonces '23:59', ya no es un formato de hora valido
+            $cliente->hora_reunion = Carbon::parse($cliente->hora_reunion)->format('H:i:s');
 
             return response()->json([
                 'status' => true,
                 'message' => 'Registro modificado exitosamente!',
+                'record' => $cliente,
             ], 200);
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage(),
+                'record' => null,
             ], 500);
         }
     }
@@ -519,5 +537,4 @@ class ClienteController extends Controller
             ], 500);
         }
     }
-    
 }//class

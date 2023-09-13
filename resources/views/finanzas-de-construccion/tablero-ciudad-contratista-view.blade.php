@@ -6,7 +6,7 @@
         <div class="card-content">
             <h1
                 class="as-main-title has-background-info is-size-5 has-text-centered has-text-white animate__animated animate__bounceInDown">
-                Finanzas de construccion | Tablero
+                Finanzas de construccion | Contratista | Tablero
             </h1>
             <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
                 <ul>

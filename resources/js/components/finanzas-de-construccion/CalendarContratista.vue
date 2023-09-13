@@ -33,7 +33,7 @@ export default defineComponent({
         const group = "";
         const class_colors = [
             'has-background-danger',
-            'has-background-warning',
+            'has-background-warning-dark',
             'has-background-success',
             'has-background-info',
             'has-background-link',

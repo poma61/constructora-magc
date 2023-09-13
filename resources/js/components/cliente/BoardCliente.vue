@@ -13,9 +13,9 @@
     </nav>
 
     <div class="buttons">
-        <v-btn @click="newForm()" color="orange-darken-2" class="m-1 as-hover__box-shadow" 
-            :disabled="month== 'todos' ? false : true">
-            <v-icon icon="mdi-note-plus-outline"></v-icon>&nbsp;Nuevo registro
+        <v-btn @click="newForm()" color="orange-darken-2" class="m-1 as-hover__box-shadow"
+            :disabled="month == 'todos' ? false : true">
+            <span class="mdi mdi-note-plus-outline is-size-5"></span>&nbsp;Nuevo registro
         </v-btn>
     </div>
 
@@ -45,74 +45,74 @@
                 </select>
             </div>
             <div class="icon is-small is-left">
-                <span class="mdi mdi-calendar-cursor has-text-info is-size-4"></span>
+                <span class="mdi mdi-calendar-cursor has-text-info is-size-5"></span>
             </div>
         </div>
     </div>
 
     <div class="buttons">
         <button @click="selectMont('todos')" :class="['button is-info', { 'is-light': month === 'todos' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Todos
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Todos
         </button>
 
         <button @click="selectMont('enero')" :class="['button is-info', { 'is-light': month === 'enero' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Enero
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Enero
         </button>
 
         <button @click="selectMont('febrero')" :class="['button is-info', { 'is-light': month === 'febrero' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Febrero
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Febrero
         </button>
 
         <button @click="selectMont('marzo')" :class="['button is-info', { 'is-light': month === 'marzo' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Marzo
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Marzo
         </button>
 
         <button @click="selectMont('abril')" :class="['button is-info', { 'is-light': month === 'abril' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Abril
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Abril
         </button>
 
         <button @click="selectMont('mayo')" :class="['button is-info', { 'is-light': month === 'mayo' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Mayo
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Mayo
         </button>
 
         <button @click="selectMont('junio')" :class="['button is-info', { 'is-light': month === 'junio' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Junio
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Junio
         </button>
 
         <button @click="selectMont('julio')" :class="['button is-info', { 'is-light': month === 'julio' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Julio
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Julio
         </button>
 
 
         <button @click="selectMont('agosto')" :class="['button is-info', { 'is-light': month === 'agosto' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Agosto
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Agosto
         </button>
 
 
         <button @click="selectMont('septiembre')" :class="['button is-info', { 'is-light': month === 'septiembre' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Septiembre
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Septiembre
         </button>
 
 
         <button @click="selectMont('octubre')" :class="['button is-info', { 'is-light': month === 'octubre' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Octubre
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Octubre
         </button>
 
 
         <button @click="selectMont('noviembre')" :class="['button is-info', { 'is-light': month === 'noviembre' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Noviembre
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Noviembre
         </button>
 
 
         <button @click="selectMont('diciembre')" :class="['button is-info', { 'is-light': month === 'diciembre' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Diciembre
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Diciembre
         </button>
 
     </div>
 
     <div class="buttons">
         <v-btn @click="generateReportExcel()" color="orange-darken-2" class="m-1 as-hover__box-shadow">
-            <v-icon icon="mdi-file-document-multiple-outline"></v-icon>&nbsp;Reporte excel
+            <span class="mdi mdi-file-document-multiple-outline is-size-5"></span>&nbsp;Reporte excel
         </v-btn>
     </div>
 
@@ -165,10 +165,12 @@
             </template>
 
             <template v-slot:item.actions="{ item }">
-                <v-btn @click="editForm(item.raw)" class="has-background-success has-text-white m-1 as-hover__box-shadow"
-                    icon="mdi-pencil" />
-                <v-btn @click="openDeleteData(item.raw)"
-                    class="has-background-danger has-text-white m-1 as-hover__box-shadow" icon="mdi-delete" />
+                <div style="width: 150px;">
+                    <v-btn @click="editForm(item.raw)"
+                        class="has-background-success has-text-white m-1 as-hover__box-shadow" icon="mdi-pencil" />
+                    <v-btn @click="openDeleteData(item.raw)"
+                        class="has-background-danger has-text-white m-1 as-hover__box-shadow" icon="mdi-delete" />
+                </div>
             </template>
 
             <template v-slot:tfoot>
@@ -183,14 +185,14 @@
         </v-data-table>
 
     </div>
-    <FormCliente @saveParent="save()" @closeDialogFormParent="closeDialogForm" :item_cliente_parent="item_cliente"
+    <FormBoardCliente @saveParent="save()" @closeDialogFormParent="closeDialogForm" :item_cliente_parent="item_cliente"
         :message_errors_field_parent="message_errors_field" :dialog_form_parent="dialog_form" :city_parent="city"
         :group_parent="group" />
 
     <v-snackbar v-model="snackbar_message_response.value" :timeout="2000" :color="snackbar_message_response.color"
-        location="top right">
+        location="top right" min-height="70px">
         <div class="is-flex is-justify-content-center is-align-items-center">
-            <v-icon :icon="snackbar_message_response.icon" size="50" />
+            <span :class="snackbar_message_response.icon"></span>
             <p class="is-size-6">{{ snackbar_message_response.text }}</p>
         </div>
     </v-snackbar>
@@ -199,9 +201,8 @@
         <div class="card">
             <div class="card-content">
                 <div class="is-flex is-justify-content-center is-align-items-center is-flex-direction-column">
-                    <v-icon icon="mdi-file-question" size="90"
-                        class="has-text-warning animate__animated animate__flip"></v-icon>
-                    <p class="is-size-4 has-text-centered">
+                    <span class="mdi mdi-file-question as-icon-7 has-text-warning animate__animated animate__flip"></span>
+                    <p class="is-size-5 has-text-centered">
                         ¿Esta seguro(a) de eliminar el registro seleccionado?
                     </p>
                 </div>
@@ -210,12 +211,12 @@
             <div class="is-flex  is-justify-content-center  is-align-items-center p-2" style="width: 100%;">
                 <div class="m-1">
                     <v-btn class="has-background-success has-text-white as-hover__box-shadow" @click="confirmDeleteData()">
-                        <v-icon icon="mdi-content-save-all"></v-icon>&nbsp;Aceptar
+                        <span class="mdi mdi-content-save-all is-size-5"></span>&nbsp;Aceptar
                     </v-btn>
                 </div>
                 <div class="m-1">
                     <v-btn class="has-background-danger has-text-white as-hover__box-shadow" @click="closeDialogDelete()">
-                        <v-icon icon="mdi-cancel"></v-icon>&nbsp;Cancelar
+                        <span class="mdi mdi-cancel is-size-5"></span>&nbsp;Cancelar
                     </v-btn>
                 </div>
             </div>
@@ -227,10 +228,10 @@
         <div class="card">
             <header class="card-header has-background-success">
                 <p class="card-header-title has-text-white">
-                    <v-icon icon="mdi-badge-account" size="40" />&nbsp;RESPONSABLE
+                    <span class="mdi mdi-badge-account is-size-2"></span> &nbsp;RESPONSABLE
                 </p>
                 <p class="card-header-title has-text-white">
-                    <v-icon icon="mdi-account-group" size="40" />&nbsp;
+                    <span class="mdi mdi-account-group is-size-2"></span>&nbsp;
                     CLIENTE : {{ item_cliente.nombres + " " + item_cliente.apellido_materno + " " +
                         item_cliente.apellido_materno }}
                 </p>
@@ -266,7 +267,7 @@
                 <div class="m-2">
                     <v-btn class="has-background-success has-text-white as-hover__box-shadow"
                         @click="closeClienteResponsable()">
-                        <v-icon icon="mdi-check-circle" />&nbsp;OK
+                        <span class="mdi mdi-check-circle is-size-5"></span>&nbsp;OK
                     </v-btn>
                 </div>
             </div>
@@ -279,14 +280,14 @@
 import { defineComponent } from 'vue';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 import Cliente from '@/services/Cliente';
-import FormCliente from '@/components/cliente/FormCliente.vue';
+import FormBoardCliente from '@/components/cliente/FormBoardCliente.vue';
 import DateFormat from '@/util/DateFormat';
 import fileDownload from 'js-file-download';
 
 export default defineComponent({
     components: {
         VDataTable,
-        FormCliente,
+        FormBoardCliente,
     },
 
     data() {
@@ -391,10 +392,10 @@ export default defineComponent({
 
         snackbarMessageView(type, message) {
             if (type == 'success') {
-                this.snackbar_message_response.icon = "mdi-check-circle-outline";
+                this.snackbar_message_response.icon = "mdi mdi-check-circle-outline is-size-1";
                 this.snackbar_message_response.color = 'success'
             } else {
-                this.snackbar_message_response.icon = "mdi-alert";
+                this.snackbar_message_response.icon = "mdi mdi-alert is-size-1";
                 this.snackbar_message_response.color = 'red'
             }
             this.snackbar_message_response.text = message;
@@ -453,7 +454,6 @@ export default defineComponent({
         },
 
         async save() {
-
             const cliente = new Cliente(this.city, this.group);
             cliente.setFill(this.item_cliente);
             if (cliente.getFill().id > 0) {
@@ -462,7 +462,8 @@ export default defineComponent({
                 if (response.status) {
                     this.snackbarMessageView('success', response.message);
                     //buscamos el registro y cambiamos valores
-                    Object.assign(this.data[this.index_array], this.item_cliente);
+                    Object.assign(this.data[this.index_array], response.record);
+
                     this.closeDialogForm();
                 } else {
                     if (response.message_errors != undefined) {
@@ -470,12 +471,12 @@ export default defineComponent({
                     }
                     this.snackbarMessageView('error', response.message);
                 }
+
             } else {
                 //cuando sea un nuevo registro
                 const response = await cliente.create();
                 if (response.status) {
                     this.snackbarMessageView('success', response.message);
-
                     this.data.push(response.record);
                     this.closeDialogForm();
                 } else {

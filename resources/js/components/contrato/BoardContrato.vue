@@ -2,13 +2,13 @@
     <div class="buttons">
         <v-btn @click="showDataTable()" color="deep-purple-lighten-2" class="as-hover__box-shadow m-1"
             :variant="show_data_table == true ? 'outlined' : undefined">
-            <v-icon icon="mdi-note-plus-outline"></v-icon>&nbsp;Ver tablero
+            <span class="mdi mdi-note-plus-outline is-size-5"></span>&nbsp;Ver tablero
         </v-btn>
 
 
         <v-btn @click="newForm()" color="deep-purple-lighten-2" class="as-hover__box-shadow m-1 outlined"
             :variant="show_form == true ? 'outlined' : undefined" v-if="!edit_form">
-            <v-icon icon="mdi-note-plus-outline"></v-icon>&nbsp;Nuevo contrato
+            <span class="mdi mdi-note-plus-outline is-size-5"></span>&nbsp;Nuevo contrato
         </v-btn>
 
     </div>
@@ -53,74 +53,74 @@
                     </select>
                 </div>
                 <div class="icon is-small is-left">
-                    <span class="mdi mdi-calendar-cursor has-text-primary is-size-4"></span>
+                    <span class="mdi mdi-calendar-cursor has-text-primary is-size-5"></span>
                 </div>
             </div>
         </div>
 
         <div class="buttons">
             <button @click="selectMont('todos')" :class="['button is-primary', { 'is-light': month == 'todos' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Todos
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Todos
             </button>
 
             <button @click="selectMont('enero')" :class="['button is-primary', { 'is-light': month == 'enero' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Enero
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Enero
             </button>
 
             <button @click="selectMont('febrero')" :class="['button is-primary', { 'is-light': month == 'febrero' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Febrero
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Febrero
             </button>
 
             <button @click="selectMont('marzo')" :class="['button is-primary', { 'is-light': month == 'marzo' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Marzo
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Marzo
             </button>
 
             <button @click="selectMont('abril')" :class="['button is-primary', { 'is-light': month == 'abril' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Abril
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Abril
             </button>
 
             <button @click="selectMont('mayo')" :class="['button is-primary', { 'is-light': month == 'mayo' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Mayo
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Mayo
             </button>
 
             <button @click="selectMont('junio')" :class="['button is-primary', { 'is-light': month == 'junio' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Junio
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Junio
             </button>
 
             <button @click="selectMont('julio')" :class="['button is-primary', { 'is-light': month == 'julio' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Julio
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Julio
             </button>
 
 
             <button @click="selectMont('agosto')" :class="['button is-primary', { 'is-light': month == 'agosto' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Agosto
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Agosto
             </button>
 
 
             <button @click="selectMont('septiembre')" :class="['button is-primary', { 'is-light': month == 'septiembre' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Septiembre
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Septiembre
             </button>
 
 
             <button @click="selectMont('octubre')" :class="['button is-primary', { 'is-light': month == 'octubre' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Octubre
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Octubre
             </button>
 
 
             <button @click="selectMont('noviembre')" :class="['button is-primary', { 'is-light': month == 'noviembre' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Noviembre
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Noviembre
             </button>
 
 
             <button @click="selectMont('diciembre')" :class="['button is-primary', { 'is-light': month == 'diciembre' }]">
-                <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Diciembre
+                <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Diciembre
             </button>
 
         </div>
 
         <div class="buttons">
             <v-btn @click="generateReportExcel()" color="deep-purple-lighten-2" class="m-1 as-hover__box-shadow">
-                <v-icon icon="mdi-file-document-multiple-outline"></v-icon>&nbsp;Reporte excel
+                <span class="mdi mdi-file-document-multiple-outline is-size-5"></span>&nbsp;Reporte excel
             </v-btn>
         </div>
         <!-- table -->
@@ -145,21 +145,23 @@
 
                 <template v-slot:item.archivo_pdf="{ item }">
                     <v-btn @click="viewPDF(item.raw)" color="yellow-darken-3" icon="mdi-file-account-outline"
-                        class="m-1 as-hover__box-shadow" variant="outlined" />
+                        class="m-1 as-hover__box-shadow"  />
                 </template>
 
 
                 <template v-slot:item.actions="{ item }">
-                    <v-btn @click="editForm(item.raw)" color="deep-purple-lighten-2" icon="mdi-pencil"
-                        class="m-1 as-hover__box-shadow" variant="outlined" />
-                    <v-btn @click="openDeleteData(item.raw)" color="red" icon="mdi-delete" class="m-1 as-hover__box-shadow"
-                        variant="outlined" />
+                    <div style="width: 150px;">
+                        <v-btn @click="editForm(item.raw)" color="deep-purple-lighten-2" icon="mdi-pencil"
+                            class="m-1 as-hover__box-shadow" />
+                        <v-btn @click="openDeleteData(item.raw)" color="red" icon="mdi-delete"
+                            class="m-1 as-hover__box-shadow"  />
+                    </div>
                 </template>
-         
+
             </v-data-table>
         </div>
     </div>
-    <BoardFormContrato v-if="show_form" :item_contrato_prop="item_contrato"
+    <FormBoardContrato v-if="show_form" :item_contrato_prop="item_contrato"
         :item_detalle_contrato_prop="item_detalle_contrato" :city_prop="city" @newFormEmit="newForm()" />
 
 
@@ -167,9 +169,8 @@
         <div class="card">
             <div class="card-content">
                 <div class="is-flex is-justify-content-center is-align-items-center is-flex-direction-column">
-                    <v-icon icon="mdi-file-question" size="90"
-                        class="has-text-danger animate__animated animate__flip"></v-icon>
-                    <p class="is-size-4 has-text-centered">
+                    <span class="mdi mdi-file-question as-icon-7 has-text-danger animate__animated animate__flip"></span>
+                    <p class="is-size-5 has-text-centered">
                         ¿Esta seguro(a) de eliminar el registro seleccionado?
                     </p>
                 </div>
@@ -179,12 +180,12 @@
                 <div class="m-1">
                     <v-btn color="deep-purple-lighten-2" @click="confirmDeleteData()" class="m-1 as-hover__box-shadow"
                         variant="outlined">
-                        <v-icon icon="mdi-content-save-all"></v-icon>&nbsp;Aceptar
+                        <span class="mdi mdi-content-save-all is-size-5"></span>&nbsp;Aceptar
                     </v-btn>
                 </div>
                 <div class="m-1">
                     <v-btn color="red" @click="closeDialogDelete()" class="m-1 as-hover__box-shadow" variant="outlined">
-                        <v-icon icon="mdi-cancel"></v-icon>&nbsp;Cancelar
+                        <span class="mdi mdi-cancel is-size-5"></span>&nbsp;Cancelar
                     </v-btn>
                 </div>
             </div>
@@ -202,7 +203,7 @@
                 <div class="m-1">
                     <v-btn color="yellow-darken-3" @click="closeDialogPDF()" class="m-1 as-hover__box-shadow"
                         variant="outlined">
-                        <v-icon icon="mdi-content-save-all"></v-icon>&nbsp;Aceptar
+                        <span class="mdi mdi-content-save-all is-size-5"></span>&nbsp;Aceptar
                     </v-btn>
                 </div>
             </div>
@@ -210,9 +211,9 @@
     </v-dialog>
 
     <v-snackbar v-model="snackbar_message_response.value" :timeout="2000" :color="snackbar_message_response.color"
-        location="top right" rounded="pill">
+        location="top right"  min-height="70px">
         <div class="is-flex is-justify-content-center is-align-items-center">
-            <v-icon :icon="snackbar_message_response.icon" size="40" />
+            <span :class="snackbar_message_response.icon"></span>
             <p class="is-size-6">{{ snackbar_message_response.text }}</p>
         </div>
     </v-snackbar>
@@ -220,7 +221,7 @@
 
 <script setup>
 import { VDataTable } from 'vuetify/labs/VDataTable';
-import BoardFormContrato from '@/components/contrato/BoardFormContrato.vue';
+import FormBoardContrato from '@/components/contrato/FormBoardContrato.vue';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
 import Contrato from '@/services/Contrato';
@@ -270,10 +271,10 @@ const columns = ref([
 const viewSnackbar = (type, message) => {
     if (type == 'success') {
         snackbar_message_response.value.color = 'deep-purple-lighten-2';
-        snackbar_message_response.value.icon = 'mdi-database-check-outline';
+        snackbar_message_response.value.icon = 'mdi mdi-database-check-outline is-size-1';
     } else {
         snackbar_message_response.value.color = 'red';
-        snackbar_message_response.value.icon = 'mdi-alert-box-outline';
+        snackbar_message_response.value.icon = 'mdi mdi-alert-box-outline is-size-1';
     }
     snackbar_message_response.value.value = true;
     snackbar_message_response.value.text = message;

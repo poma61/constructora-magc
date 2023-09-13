@@ -6,7 +6,7 @@
     <div class="card mt-5">
         <div class="card-content">
             <h1
-                class="as-main-title has-background-info is-size-5 has-text-centered has-text-white animate__animated animate__zoomInDown">
+                class="as-main-title has-background-link is-size-5 has-text-centered has-text-white animate__animated animate__zoomInDown">
                 Inventario
             </h1>
 
@@ -26,7 +26,7 @@
                                 </figure>
                                 <p> {{ $row->city_name }}</p>
 
-                                <a href="#"
+                                <a href="{{ route('r-tablero-inventario', $row->city_name) }}"
                                     class="button is-primary is-outlined is-rounded">
                                     <span class="icon is-small">
                                         <i class="mdi mdi-check"></i>
@@ -50,7 +50,7 @@
                                     src="{{ asset('src/images/bandera-' . $parse_name_city . '.jpg') }}">
                             </figure>
                             <p>{{ $ciudad }}</p>
-                            <a href="#"
+                            <a href="{{ route('r-tablero-inventario', $ciudad) }}"
                                 class="button is-primary is-outlined is-rounded">
                                 <span class="icon is-small">
                                     <i class="mdi mdi-check"></i>

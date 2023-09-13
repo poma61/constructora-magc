@@ -1,11 +1,10 @@
 import { createApp } from 'vue'
-import MainApplication from '@/components/cliente/ListCliente.vue'
-
+import MainApplication from '@/components/cliente/BoardCliente.vue'
 
 // Vuetify
 import { createVuetify } from 'vuetify'
 //solo importamos los componenetes que utilizaremos para reducir el css 
-import { VDialog, VTextField, VBtn, VSnackbar,VIcon,VTextarea, VAutocomplete } from 'vuetify/components';
+import { VDialog, VTextField, VBtn, VSnackbar,VTextarea, VAutocomplete } from 'vuetify/components';
 import 'vuetify/styles'
 
 
@@ -56,7 +55,6 @@ const vuetify = new  createVuetify({
     VBtn,
     VSnackbar,
     VAutocomplete,
-    VIcon,
     VTextarea,
   },
  

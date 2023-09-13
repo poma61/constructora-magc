@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('clientes_responsables', function (Blueprint $table) {
+            $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
             $table->id();
             $table->unsignedBigInteger('id_cliente');
             $table->unsignedBigInteger('id_responsable');

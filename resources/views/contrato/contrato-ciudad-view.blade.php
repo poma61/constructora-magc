@@ -34,7 +34,7 @@
                             <div class="list-item-controls">
                                 <div class="buttons is-right">
 
-                                    <a href="{{ route('r-contrato-tablero', $row->city_name) }}"
+                                    <a href="{{ route('r-tablero-contrato', $row->city_name) }}"
                                         class="button is-info is-outlined">
                                         <span class="icon is-small">
                                             <i class="mdi mdi-check"></i>
@@ -68,7 +68,7 @@
 
                         <div class="list-item-controls">
                             <div class="buttons is-right">
-                                <a href="{{ route('r-contrato-tablero', $ciudad) }}" class="button is-info is-outlined">
+                                <a href="{{ route('r-tablero-contrato', $ciudad) }}" class="button is-info is-outlined">
                                     <span class="icon is-small">
                                         <i class="mdi mdi-check"></i>
                                     </span>

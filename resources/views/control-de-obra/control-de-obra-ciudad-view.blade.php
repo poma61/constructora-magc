@@ -6,7 +6,8 @@
     <div class="card mt-5">
 
         <div class="card-content">
-            <h1 class="as-main-title has-background-info is-size-5 has-text-centered has-text-white animate__animated animate__zoomInDown">
+            <h1
+                class="as-main-title has-background-success is-size-5 has-text-centered has-text-white animate__animated animate__zoomInDown">
                 Control de obras
             </h1>
 
@@ -27,7 +28,7 @@
                                 </figure>
                                 <p> {{ $row->city_name }}</p>
 
-                                <a href="#"
+                                <a href="{{ route('r-tablero-control-de-obra', $row->city_name) }}"
                                     class="button is-info is-rounded">
                                     <span class="icon is-small">
                                         <i class="mdi mdi-check"></i>
@@ -39,7 +40,7 @@
                     @endforeach
                 @else
                     {{-- si no tiene el rol administrador, mostramos la ciudad que le fue asignado --}}
-                     <div class="box m-2" style="width:350px;height:200px">
+                    <div class="box m-2" style="width:350px;height:200px">
                         <div class="is-flex is-justify-content-center is-align-items-center is-flex-direction-column">
                             <figure class="image is-96x96">
                                 @php
@@ -51,7 +52,7 @@
                                     src="{{ asset('src/images/bandera-' . $parse_name_city . '.jpg') }}">
                             </figure>
                             <p>{{ $ciudad }}</p>
-                            <a href="#" class="button is-warning is-rounded">
+                            <a href="{{ route('r-tablero-control-de-obra', $ciudad) }}" class="button is-info is-rounded">
                                 <span class="icon is-small">
                                     <i class="mdi mdi-check"></i>
                                 </span>

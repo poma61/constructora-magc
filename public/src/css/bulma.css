@@ -643,7 +643,6 @@ a.box:active {
     padding-top: calc(0.5em - 1px);
     white-space: nowrap;
     outline: 0;
-    transition: 0.5s;
 }
 .button strong,
 .hero.is-black a:not(.button):not(.dropdown-item):not(.tag):not(.pagination-link.is-current),
@@ -1394,7 +1393,7 @@ fieldset[disabled] .button.is-primary.is-outlined {
 .button.is-link:hover,
 .file.is-link.is-hovered .file-cta,
 .file.is-link:hover .file-cta {
-    background-color: #3e56c4;
+    background-color: #5371f3;
     border-color: transparent;
     color: #fff;
 }
@@ -1618,12 +1617,7 @@ fieldset[disabled] .button.is-info.is-outlined {
     color: #fff;
 }
 
-/* agregado */
-.button.is-success.is-active{
-    background-color: #049e59;
-    border-color: white;
-    color: #fff;
-}
+
 
 .button.is-success[disabled],
 fieldset[disabled] .button.is-success {

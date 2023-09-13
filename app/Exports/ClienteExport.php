@@ -19,8 +19,8 @@ use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
 class ClienteExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents, WithCustomStartCell
 {
-    protected $data;
-    protected $column_names = [];
+
+
     protected $cliente;
     protected $request;
     public function __construct($request)
@@ -47,8 +47,7 @@ class ClienteExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
             // Obtener el primer modelo en la colección
             $first_data = $this->cliente->first();
             // Obtener los nombres de las columnas de la tabla
-            $column_names = array_keys($first_data->toArray());
-            return $column_names;
+           return  array_keys($first_data->toArray());
         }
         return [];
     }
@@ -166,7 +165,7 @@ class ClienteExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
                         'color' => ['rgb' => "FF8800"],
                     ],
                     'font' => [
-                        'color' => ['rgb' => 'FFFFFF'],                     
+                        'color' => ['rgb' => 'FFFFFF'],
                     ],
                 ],);
 

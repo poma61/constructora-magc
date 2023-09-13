@@ -17,7 +17,7 @@ use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
 class ContratoExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents, WithCustomStartCell
 {
-    protected $data;
+
     protected $contrato;
     protected $request;
     public function __construct($request)
@@ -43,8 +43,7 @@ class ContratoExport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
             // Obtener el primer modelo en la colección
             $first_data = $this->contrato->first();
             // Obtener los nombres de las columnas de la tabla
-            $column_names = array_keys($first_data->toArray());
-            return $column_names;
+            return  array_keys($first_data->toArray());
         }
         return [];
     }
@@ -156,13 +155,13 @@ class ContratoExport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
                         'color' => ['rgb' => "2D58FF"],
                     ],
                     'font' => [
-                        'color' => ['rgb' => 'FFFFFF'],              
+                        'color' => ['rgb' => 'FFFFFF'],
                     ],
                 ],);
 
                 // Definir los colores para las filas intercaladas
-                $color_even = '5F80FF'; 
-                $color_odd = 'A1B5FF';  
+                $color_even = '5F80FF';
+                $color_odd = 'A1B5FF';
 
                 // Obtener el número total de filas de datos
                 $total_rows = $this->contrato->count();

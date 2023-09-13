@@ -148,7 +148,7 @@ export default defineComponent({
             colors: colores,
             labels: [estados[0], estados[1], estados[2]],
             responsive: [{
-                breakpoint: 650,// se vuleve responsive cuando el window width sea 600
+                breakpoint: 650,// se vuelve responsive cuando el window width sea 650
                 options: {
                     chart: {
                         width: 400
@@ -202,14 +202,13 @@ export default defineComponent({
         const series_pie = [];
         const series_bar = [];
         const city = null;
-        const group = null;
+
         return {
             chart_options_bar,
             chart_options_pie,
             series_bar,
             series_pie,
             city,
-            group,
             estados,
             year,
             month
@@ -239,13 +238,12 @@ export default defineComponent({
             const contratista = new Contratista(this.city);
             const response = await contratista.graphicEstado(this.year, this.month);
             const estado_totales = {};
-            response.records.forEach(item => {
-                estado_totales[item.estado] = item.total;
-            });
-
-            const records = this.estados.map(item => estado_totales[item] || 0);
 
             if (response.status) {
+                response.records.forEach(item => {
+                    estado_totales[item.estado] = item.total;
+                });
+                const records = this.estados.map(item => estado_totales[item] || 0);
                 this.series_bar = [{
                     data: records
                 }];

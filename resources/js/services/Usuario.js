@@ -19,7 +19,12 @@ class Usuario {
                 'Accept': 'application/json'
             }
         }
-        this.city = city;
+        this.city = "";
+
+        if (city != undefined) {
+            this.city = city;
+        }
+
 
     }
 
@@ -74,7 +79,7 @@ class Usuario {
     }//update
 
     async destroy() {
-        
+
         try {
             const resolve = await axios.post(app.BASE_URL + '/microservice/user/destroy', {
                 id: this.getFill().id

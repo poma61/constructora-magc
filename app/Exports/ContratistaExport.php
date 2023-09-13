@@ -17,7 +17,7 @@ use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
 class ContratistaExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents, WithCustomStartCell
 {
-    protected $data;
+
     protected $contratista;
     protected $request;
     public function __construct($request)
@@ -43,8 +43,7 @@ class ContratistaExport implements FromCollection, WithHeadings, ShouldAutoSize,
             // Obtener el primer modelo en la colección
             $first_data = $this->contratista->first();
             // Obtener los nombres de las columnas de la tabla
-            $column_names = array_keys($first_data->toArray());
-            return $column_names;
+            return  array_keys($first_data->toArray());
         }
         return [];
     }

@@ -43,7 +43,7 @@
             </div>
             <div class="buttons m-1">
                 <v-btn @click="save()" color="cyan-darken-1" class="as-hover__box-shadow m-1 outlined">
-                    <v-icon icon="mdi-note-plus-outline"></v-icon>&nbsp;Registrar pago
+                    <span class="mdi mdi-note-plus-outline is-size-5"></span>&nbsp;Registrar pago
                 </v-btn>
             </div>
         </div>
@@ -78,9 +78,9 @@
         <div class="card">
             <div class="card-content">
                 <div class="is-flex is-justify-content-center is-align-items-center is-flex-direction-column">
-                    <v-icon icon="mdi-file-question" size="90"
-                        class="has-text-danger animate__animated animate__wobble"></v-icon>
-                    <p class="is-size-4 has-text-centered">
+                    <span 
+                        class="mdi mdi-file-question as-icon-7 has-text-danger animate__animated animate__wobble"></span>
+                    <p class="is-size-5 has-text-centered">
                         ¿Esta seguro(a) de eliminar el registro seleccionado?
                     </p>
                 </div>
@@ -89,12 +89,12 @@
             <div class="is-flex  is-justify-content-center  is-align-items-center p-2" style="width: 100%;">
                 <div class="m-1">
                     <v-btn color="cyan-darken-1" @click="confirmDeleteData()" class="m-1 as-hover__box-shadow" rounded="xl">
-                        <v-icon icon="mdi-content-save-all"></v-icon>&nbsp;Aceptar
+                        <span class="mdi mdi-content-save-all is-size-5"></span>&nbsp;Aceptar
                     </v-btn>
                 </div>
                 <div class="m-1">
                     <v-btn color="red" @click="closeDialogDelete()" class="m-1 as-hover__box-shadow" rounded="xl">
-                        <v-icon icon="mdi-cancel"></v-icon>&nbsp;Cancelar
+                        <span class="mdi mdi-cancel is-size-5"></span>&nbsp;Cancelar
                     </v-btn>
                 </div>
             </div>
@@ -103,9 +103,9 @@
     </v-dialog>
 
     <v-snackbar v-model="snackbar_message_response.active" :timeout="2000" :color="snackbar_message_response.color"
-        location="top right" rounded="pill">
+        location="top right" rounded="pill" min-height="70px">
         <div class="is-flex is-justify-content-center is-align-items-center">
-            <v-icon :icon="snackbar_message_response.icon" size="40" />
+            <span :class="snackbar_message_response.icon"  ></span>
             <p class="is-size-6">{{ snackbar_message_response.text }}</p>
         </div>
     </v-snackbar>
@@ -186,10 +186,10 @@ const editForm = (item) => {
 const viewSnackbar = (type, message) => {
     if (type == 'success') {
         snackbar_message_response.value.color = 'cyan-darken-1';
-        snackbar_message_response.value.icon = 'mdi-database-check-outline';
+        snackbar_message_response.value.icon = 'mdi mdi-database-check-outline is-size-1';
     } else {
         snackbar_message_response.value.color = 'red';
-        snackbar_message_response.value.icon = 'mdi-alert-box-outline';
+        snackbar_message_response.value.icon = 'mdi mdi-alert-box-outline is-size-1';
     }
     snackbar_message_response.value.active = true;
     snackbar_message_response.value.text = message;

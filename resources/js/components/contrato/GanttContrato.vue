@@ -104,6 +104,29 @@
     </div>
 
     <div class="box p-0">
+        <x-gantt :data="data_list" style="height: 600px;" locale="es">
+            <x-gantt-column label="Detalles" :width="160">
+                <template v-slot="{ row }">
+
+                    <div class="is-flex is-justify-content-space-between">
+                        <div style="min-width: 150px" class="mr-2">{{ row.name }}</div>
+                        <div style="min-width: 150px" class="mr-2">Fecha firma: {{ date_format.formatDate(row.startDate) }}</div>
+                    </div>
+                </template>
+
+            </x-gantt-column>
+
+            <XGanttSlider prop="startDate">
+                <template v-slot:content="{ row, $index }">
+                    <div class="gantt-task" :style="{ 'background-color': colores[$index % colores.length] }">
+                        {{ row.name }}
+                    </div>
+                </template>
+            </XGanttSlider>
+        </x-gantt>
+    </div>
+
+    <div class="box p-0">
         <div ref="chartContainer"></div>
     </div>
 </template>
@@ -111,10 +134,10 @@
 <script setup>
 import ApexCharts from "apexcharts";
 import esLocale from 'apexcharts/dist/locales/es.json'; // Importa el módulo de idioma "es" aquí
-import moment from 'moment';
 import toastr from "toastr";
 import Contrato from '@/services/Contrato';
 import { onMounted, ref } from "vue";
+import DateFormat from '@/util/DateFormat';
 
 //datas
 toastr.options = {
@@ -124,36 +147,35 @@ toastr.options = {
     timeOut: 3000,
     hideDuration: 100,
 };
-const anio_actual = new Date();
-const year = ref(anio_actual.getFullYear());
+const year = ref(new Date().getFullYear());
 const month = ref("todos");
-const colores = ref(['#F14668', '#485FC7', '#4994D2', '#FFE08A', '#85D7B2', '#7A7A7A']);
+const colores = ref(['#F14668', '#485FC7', '#4994D2', '#D99F00', '#85D7B2', '#7A7A7A']);
 const city = ref("");
 const chart = ref(null);
-const group = ref("");
+const date_format = ref(new DateFormat());
 const indice_aleatorio = ref(-1);
 const series = ref([
     {
         data: []
     }
 ]);
+const data_list = ref([]);
 const chartContainer = ref(null);
 const chart_options = {
     chart: {
-        height: 500,
+        height: 600,
         type: 'rangeBar',
         defaultLocale: 'es',
         locales: [esLocale],
     },
     fill: {
         type: 'solid',
-        opacity: 0.6
+        opacity: 1
     },
     plotOptions: {
         bar: {
             horizontal: true,
-            barHeight: '50%',
-             distributed: true,
+            distributed: true,
             dataLabels: {
                 hideOverflowingLabels: true
             }
@@ -163,10 +185,7 @@ const chart_options = {
         enabled: true,
         formatter: function (val, opts) {
             var label = opts.w.globals.labels[opts.dataPointIndex]
-            var a = moment(val[0])
-            var b = moment(val[1])
-            var diff = b.diff(a, 'days')
-            return label + ': ' + diff + (diff > 1 ? ' days' : ' day')
+            return label;
         },
         style: {
             colors: ['#f3f4f5', '#fff']
@@ -176,7 +195,7 @@ const chart_options = {
         type: 'datetime'
     },
     yaxis: {
-        show: false
+        show: true
     },
     grid: {
         row: {
@@ -194,7 +213,7 @@ const addDate = (fecha_actual) => {
     const nueva_fecha = new Date(fecha_actual);
     // sumamos un dia a la nueva fecha quese creo a partir de la fecha actual
     //esto nos ayuda a mostrar la vista el el diagrama de gantt
-    nueva_fecha.setDate(nueva_fecha.getDate() + 1);
+    nueva_fecha.setDate(nueva_fecha.getDate() + 6);
     return nueva_fecha.toISOString().split('T')[0];
 }
 
@@ -207,17 +226,26 @@ const selectMont = (mes) => {
 const refreshDataGantt = () => {
     //borramos todos los datos de series y volvemos cargar
     series.value[0].data = [];
+    data_list.value=[];
     initDataGantt();
 };
 
 const initDataGantt = async () => {
-    const contrato = new Contrato(city.value, group.value);
+    let id = 0;
+    const contrato = new Contrato(city.value);
     const response = await contrato.ganttContract(year.value, month.value);
     if (response.status) {
         response.records.forEach(item => {
             indice_aleatorio.value = Math.floor(Math.random() * colores.value.length);
+            id++;
+            data_list.value.push({
+                index: id,
+                name: `${item.nombres} ${item.apellido_paterno}  ${item.apellido_materno} - Contrato ${item.n_contrato}`,
+                startDate: new Date(`${item.fecha_firma_contrato}T00:00:00`),
+                endDate: new Date(addDate(item.fecha_firma_contrato) + 'T00:00:00'),
+            });
             series.value[0].data.push({
-                x: `${item.nombres} ${item.apellido_paterno} ${item.apellido_materno} - Contrato: ${item.n_contrato}`,
+                x: `${id}-${item.nombres} ${item.apellido_paterno} ${item.apellido_materno} - Contrato ${item.n_contrato}`,
                 y: [
                     new Date(item.fecha_firma_contrato).getTime(),
                     new Date(addDate(item.fecha_firma_contrato)).getTime()
@@ -258,5 +286,24 @@ onMounted(() => {
 });
 
 </script>
+
+
+<style >
+.gantt-task {
+  display: flex;
+  justify-content: center;
+  height: 15px;
+  border-radius: 3px;
+  color: #fff;
+}
+
+
+.xg-gantt-header-cell,
+.xg-table-header-cell {
+  background-color: #9575CD !important;
+  text-align: center !important;
+  color: #fff !important;
+}
+</style>
 
 
