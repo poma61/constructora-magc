@@ -8,7 +8,11 @@ use App\Models\Contrato;
 use App\Models\Obra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Throwable;
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ObraExport;
 
 class ObraController extends Controller
 {
@@ -260,6 +264,174 @@ class ObraController extends Controller
             ], 500);
         }
     }
+    public function generateExcel(Request $request)
+    {
+        try {
+            // Descargar el archivo Excel directamente usando Excel::download
+            //enviarlo como respuesta de tipo blob
+            return Excel::download(new ObraExport($request), 'archivo.xlsx', \Maatwebsite\Excel\Excel::XLSX, [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => 'attachment; filename=archivo.xlsx'
+            ]);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function graphicEstado(Request $request)
+    {
+        try {
+
+            $meses = [
+                'enero' => '01',
+                'febrero' => '02',
+                'marzo' => '03',
+                'abril' => '04',
+                'mayo' => '05',
+                'junio' => '06',
+                'julio' => '07',
+                'agosto' => '08',
+                'septiembre' => '09',
+                'octubre' => '10',
+                'noviembre' => '11',
+                'diciembre' => '12',
+            ];
+
+            if ($request->input('month') == 'todos') {
+                $obra = Obra::join('contratos', 'contratos.id', '=', 'obras.id_contrato')
+                    ->join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
+                    ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
+                    ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
+                    ->select('obras.estado', DB::raw('COUNT(obras.estado) as total'))
+                    ->where('clientes.status', true)
+                    ->where('contratos.status', true)
+                    ->where('obras.status', true)
+                    ->where('ciudades.city_name',  $request->input('ciudad'))
+                    ->whereYear('obras.fecha_inicio', $request->input('year'))
+                    ->groupBy('obras.estado')
+                    ->get();
+            } else {
+                $obra = Obra::join('contratos', 'contratos.id', '=', 'obras.id_contrato')
+                    ->join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
+                    ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
+                    ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
+                    ->select('obras.estado', DB::raw('COUNT(obras.estado) as total'))
+                    ->where('clientes.status', true)
+                    ->where('contratos.status', true)
+                    ->where('obras.status', true)
+                    ->where('ciudades.city_name',  $request->input('ciudad'))
+                    ->whereYear('obras.fecha_inicio', $request->input('year'))
+                    ->whereMonth('obras.fecha_inicio', $meses[$request->input('month')])
+                    ->groupBy('obras.estado')
+                    ->get();
+            }
 
 
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OK',
+                'records' => $obra,
+            ], 200);
+        } catch (Throwable $th) {
+
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'records' => [],
+            ], 500);
+        }
+    }
+
+
+    public function  calendarFechaInicio(Request $request)
+    {
+        try {
+            $obra = Obra::join('contratos', 'contratos.id', '=', 'obras.id_contrato')
+                ->join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
+                ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
+                ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
+                ->select('clientes.nombres', 'clientes.apellido_paterno', 'clientes.apellido_materno', 'obras.fecha_inicio', 'contratos.n_contrato')
+                ->where('clientes.status', true)
+                ->where('contratos.status', true)
+                ->where('obras.status', true)
+                ->where('ciudades.city_name',  $request->input('ciudad'))
+                ->get();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OK',
+                'records' => $obra,
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'records' => [],
+            ], 500);
+        }
+    }
+
+
+    public function ganttFechaAll(Request $request)
+    {
+        try {
+            $meses = [
+                'enero' => '01',
+                'febrero' => '02',
+                'marzo' => '03',
+                'abril' => '04',
+                'mayo' => '05',
+                'junio' => '06',
+                'julio' => '07',
+                'agosto' => '08',
+                'septiembre' => '09',
+                'octubre' => '10',
+                'noviembre' => '11',
+                'diciembre' => '12',
+            ];
+
+            if ($request->input('month') == 'todos') {
+                $obra = Obra::join('contratos', 'contratos.id', '=', 'obras.id_contrato')
+                    ->join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
+                    ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
+                    ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
+                    ->select('clientes.nombres', 'clientes.apellido_paterno', 'clientes.apellido_materno', 'obras.fecha_inicio', 'obras.fecha_finalizacion', 'contratos.n_contrato')
+                    ->where('clientes.status', true)
+                    ->where('contratos.status', true)
+                    ->where('obras.status', true)
+                    ->where('ciudades.city_name',  $request->input('ciudad'))
+                    ->whereYear('obras.fecha_inicio', $request->input('year'))
+                    ->get();
+            } else {
+                $obra = Obra::join('contratos', 'contratos.id', '=', 'obras.id_contrato')
+                    ->join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
+                    ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
+                    ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
+                    ->select('clientes.nombres', 'clientes.apellido_paterno', 'clientes.apellido_materno', 'obras.fecha_inicio', 'obras.fecha_finalizacion', 'contratos.n_contrato')
+                    ->where('clientes.status', true)
+                    ->where('contratos.status', true)
+                    ->where('obras.status', true)
+                    ->where('ciudades.city_name',  $request->input('ciudad'))
+                    ->whereYear('obras.fecha_inicio', $request->input('year'))
+                    ->whereMonth('obras.fecha_inicio', $meses[$request->input('month')])
+                    ->get();
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OK',
+                'records' => $obra,
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'records' => [],
+            ], 500);
+        }
+    }
 }//class

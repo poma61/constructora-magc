@@ -1,4 +1,5 @@
-<!-- no esta hecho nada -->
+
+
 <template>
     <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
         <ul>
@@ -15,8 +16,8 @@
 
     <div class="buttons">
         <div class="control has-icons-left">
-            <div class="select is-info">
-                <select v-model="year" @click="graphicInitDataBarPieMaterial()">
+            <div class="select is-success">
+                <select v-model="year" @click="graphicBarPieEstado()">
                     <option value="2015">2015</option>
                     <option value="2016">2016</option>
                     <option value="2017">2017</option>
@@ -45,83 +46,84 @@
     </div>
 
     <div class="buttons">
-        <button @click="selectMont('todos')" :class="['button is-info', { 'is-light': month === 'todos' }]">
+        <button @click="selectMont('todos')" :class="['button is-success', { 'is-light': month === 'todos' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Todos
         </button>
 
-        <button @click="selectMont('enero')" :class="['button is-info', { 'is-light': month === 'enero' }]">
+        <button @click="selectMont('enero')" :class="['button is-success', { 'is-light': month === 'enero' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Enero
         </button>
 
-        <button @click="selectMont('febrero')" :class="['button is-info', { 'is-light': month === 'febrero' }]">
+        <button @click="selectMont('febrero')" :class="['button is-success', { 'is-light': month === 'febrero' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Febrero
         </button>
 
-        <button @click="selectMont('marzo')" :class="['button is-info', { 'is-light': month === 'marzo' }]">
+        <button @click="selectMont('marzo')" :class="['button is-success', { 'is-light': month === 'marzo' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Marzo
         </button>
 
-        <button @click="selectMont('abril')" :class="['button is-info', { 'is-light': month === 'abril' }]">
+        <button @click="selectMont('abril')" :class="['button is-success', { 'is-light': month === 'abril' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Abril
         </button>
 
-        <button @click="selectMont('mayo')" :class="['button is-info', { 'is-light': month === 'mayo' }]">
+        <button @click="selectMont('mayo')" :class="['button is-success', { 'is-light': month === 'mayo' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Mayo
         </button>
 
-        <button @click="selectMont('junio')" :class="['button is-info', { 'is-light': month === 'junio' }]">
+        <button @click="selectMont('junio')" :class="['button is-success', { 'is-light': month === 'junio' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Junio
         </button>
 
-        <button @click="selectMont('julio')" :class="['button is-info', { 'is-light': month === 'julio' }]">
+        <button @click="selectMont('julio')" :class="['button is-success', { 'is-light': month === 'julio' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Julio
         </button>
 
 
-        <button @click="selectMont('agosto')" :class="['button is-info', { 'is-light': month === 'agosto' }]">
+        <button @click="selectMont('agosto')" :class="['button is-success', { 'is-light': month === 'agosto' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Agosto
         </button>
 
 
-        <button @click="selectMont('septiembre')" :class="['button is-info', { 'is-light': month === 'septiembre' }]">
+        <button @click="selectMont('septiembre')" :class="['button is-success', { 'is-light': month === 'septiembre' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Septiembre
         </button>
 
 
-        <button @click="selectMont('octubre')" :class="['button is-info', { 'is-light': month === 'octubre' }]">
+        <button @click="selectMont('octubre')" :class="['button is-success', { 'is-light': month === 'octubre' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Octubre
         </button>
 
 
-        <button @click="selectMont('noviembre')" :class="['button is-info', { 'is-light': month === 'noviembre' }]">
+        <button @click="selectMont('noviembre')" :class="['button is-success', { 'is-light': month === 'noviembre' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Noviembre
         </button>
 
 
-        <button @click="selectMont('diciembre')" :class="['button is-info', { 'is-light': month === 'diciembre' }]">
+        <button @click="selectMont('diciembre')" :class="['button is-success', { 'is-light': month === 'diciembre' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Diciembre
         </button>
 
     </div>
     <div class="box p-0">
-        <div ref="barContainer"></div>
-
+        <apexchart type="bar" :height="500" :options="chart_options_bar" :series="series_bar"></apexchart>
     </div>
 
     <div class="box my-2 p-0 is-flex is-justify-content-center">
-        <div ref="pieContainer"></div>
+        <apexchart type="pie" :width="600" :options="chart_options_pie" :series="series_pie"></apexchart>
     </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
-
+import VueApexCharts from "vue3-apexcharts";
 import esLocale from 'apexcharts/dist/locales/es.json'; // Importa el módulo de idioma "es" aquí
-import Inventario from '@/services/Inventario';
+import Obra from '@/services/Obra';
 import toastr from 'toastr';
-import ApexCharts from "apexcharts";
 
 export default defineComponent({
+    components: {
+        apexchart: VueApexCharts,
+    },
     data() {
         // Configurar opciones globales para Toastr (opcional)
         toastr.options = {
@@ -131,17 +133,23 @@ export default defineComponent({
             timeOut: 3000,
             hideDuration: 100,
         };
-        const anio_actual = new Date();
-        const year = anio_actual.getFullYear();
+        const year = new Date().getFullYear();
         const month = "todos";
+        const colores = ['#48C78E', '#F14668', '#3E8ED0'];
+        const estados = [
+            'En ejecucion',//0
+            'Paralizado',//1
+            'Finalizado',//2
+        ];
         const chart_options_pie = {
             chart: {
-                width: 600,
+                width: 380,
                 type: 'pie',
             },
-            labels: [],
+            colors: colores,
+            labels: [estados[0], estados[1], estados[2]],
             responsive: [{
-                breakpoint: 800,// se vuelve responsive cuando el window width sea 600
+                breakpoint: 650,// se vuelve responsive cuando el window width sea 650
                 options: {
                     chart: {
                         width: 400
@@ -156,10 +164,15 @@ export default defineComponent({
         const chart_options_bar = {
             chart: {
                 type: 'bar',
-                height: 600,
+                events: {
+                    click: function (chart, w, e) {
+                        console.log(chart, w, e)
+                    }
+                },
                 defaultLocale: 'es',
                 locales: [esLocale],
             },
+            colors: colores,
             plotOptions: {
                 bar: {
                     columnWidth: '45%',
@@ -172,23 +185,34 @@ export default defineComponent({
             legend: {
                 show: true
             },
-            xaxis: {},
+            xaxis: {
+                categories: [
+                    [estados[0]],
+                    [estados[1]],
+                    [estados[2]],
+                ],
+                labels: {
+                    style: {
+                        fontSize: '12px'
+                    }
+                }
+            },
+
         };
-        const chart_pie = null;
-        const chart_bar = null;
+
         const series_pie = [];
         const series_bar = [];
         const city = null;
+
         return {
             chart_options_bar,
             chart_options_pie,
-            chart_bar,
-            chart_pie,
             series_bar,
             series_pie,
             city,
+            estados,
             year,
-            month,
+            month
         };
     },//data
 
@@ -208,55 +232,25 @@ export default defineComponent({
 
         selectMont(mes) {
             this.month = mes;
-            this.graphicInitDataBarPieMaterial();
+            this.graphicBarPieEstado();
         },
 
-        renderGrapich() {
-            this.chart_bar = new ApexCharts(this.$refs.barContainer, {
-                ...this.chart_options_bar,
-                series: this.series_bar
-            });
-            this.chart_bar.render();
-
-            this.chart_pie = new ApexCharts(this.$refs.pieContainer, {
-                ...this.chart_options_pie,
-                series: this.series_pie
-            });
-            this.chart_pie.render();
-        },
-        async graphicInitDataBarPieMaterial() {
-            const inventario = new Inventario(this.city);
-            const response = await inventario.graphicMaterial(this.year, this.month);
+        async graphicBarPieEstado() {
+            const obra = new Obra(this.city);
+            const response = await obra.graphicEstado(this.year, this.month);
+            const estado_totales = {};
 
             if (response.status) {
-                const nombre_material = response.records.map(item => item.material);
-                this.chart_options_pie.labels = nombre_material;
-                const categories = [];
-                for (let i = 0; i < nombre_material.length; i++) {
-                    categories.push([nombre_material[i]]);
-                }
-                this.chart_options_bar.xaxis = {
-                    categories: categories,
-                    labels: {
-                        style: {
-                            fontSize: '12px'
-                        }
-                    }
-                };
-
-                const records = response.records.map(item =>Number(item.cantidad_total));
+                response.records.forEach(item => {
+                    estado_totales[item.estado] = item.total;
+                });
+                const records = this.estados.map(item => estado_totales[item] || 0);
                 this.series_bar = [{
                     data: records
                 }];
+
                 this.series_pie = records;
-
-                this.chart_bar.updateOptions(this.chart_options_bar);
-                this.chart_bar.updateSeries(this.series_bar);
-
-                this.chart_pie.updateOptions(this.chart_options_pie);
-                this.chart_pie.updateSeries(this.series_pie);
-
-                this.viewToast('success', response.message);
+                this.viewToast('success', response.message)
             } else {
                 this.viewToast('error', response.message)
             }
@@ -266,8 +260,7 @@ export default defineComponent({
     },//methods
     mounted() {
         this.urlParams();
-        this.renderGrapich();
-        this.graphicInitDataBarPieMaterial(this.year, this.month);
+        this.graphicBarPieEstado(this.year, this.month);
     }
 
 });

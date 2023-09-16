@@ -5,8 +5,8 @@
     <div class="card mt-5">
         <div class="card-content">
             <h1
-                class="as-main-title has-background-success is-size-5 has-text-centered has-text-white animate__animated animate__bounceInDown">
-                Control de obras | Calendario
+                class="as-main-title has-background-info is-size-5 has-text-centered has-text-white animate__animated animate__bounceInDown">
+                Finanzas de construccion | Contratista | Gantt
             </h1>
             <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
                 <ul>
@@ -15,12 +15,12 @@
                             <span class="icon is-small">
                                 <i class="mdi mdi-city" aria-hidden="true"></i>
                             </span>
-                            <span>{{ $ciudad}}</span>
+                            <span>{{ strtoupper($ciudad) }}</span>
                         </div>
                     </li>
                 </ul>
             </nav>
-            @include('components/control-de-obra/control-de-obra-options')
+            @include('components/finanzas-de-construccion/contratista-options')
 
             <div id="app"></div>
         </div>
@@ -29,5 +29,5 @@
 
 
 @section('template_js')
-    @vite('resources/js/obraCalendar.js')
+    @vite('resources/js/contratistaGantt.js')
 @endsection

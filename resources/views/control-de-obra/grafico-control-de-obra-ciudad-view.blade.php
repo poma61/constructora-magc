@@ -29,5 +29,5 @@
 
 
 @section('template_js')
-    {{-- @vite('resources/js/obraChart.js') --}}
+    @vite('resources/js/obraChart.js')
 @endsection

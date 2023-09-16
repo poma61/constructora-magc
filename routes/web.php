@@ -7,6 +7,7 @@ use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ContratoController;
+use App\Http\Controllers\DisenioController;
 use App\Http\Controllers\ObraController;
 use App\Http\Controllers\FinanzasDeConstruccionController;
 use App\Http\Controllers\InventarioController;
@@ -107,9 +108,9 @@ Route::group(['middleware' => ['auth', 'check.city.access']], function () {
     Route::post('/microservice/control-de-obra/ciudad/generate-excel', [ObraController::class, 'generateExcel']);
 
     // //grafico,calendario,gantt 
-    Route::post('/microservice/control-de-obra/ciudad/graphic-material', [ObraController::class, 'graphicMaterial']);
-    Route::post('/microservice/control-de-obra/ciudad/calendar-fecha-ingreso', [ObraController::class, 'calendarFechaIngreso']);
-    Route::post('/microservice/control-de-obra/ciudad/gantt-fecha-ingreso', [ObraController::class, 'ganttFechaIngreso']);
+    Route::post('/microservice/control-de-obra/ciudad/graphic-estado', [ObraController::class, 'graphicEstado']);
+    Route::post('/microservice/control-de-obra/ciudad/calendar-fecha-inicio', [ObraController::class, 'calendarFechaInicio']);
+    Route::post('/microservice/control-de-obra/ciudad/gantt-fecha-all', [ObraController::class, 'ganttFechaAll']);
 });
 
 
@@ -164,3 +165,16 @@ Route::group(['middleware' => ['auth', 'check.city.access']], function () {
     Route::post('/microservice/inventario/ciudad/calendar-fecha-ingreso', [InventarioController::class, 'calendarFechaIngreso']);
     Route::post('/microservice/inventario/ciudad/gantt-fecha-ingreso', [InventarioController::class, 'ganttFechaIngreso']);
 });
+
+
+
+//disenio
+Route::group(['middleware' => ['auth']], function () {
+    //vistas
+    Route::get('/disenio/tablero/', [DisenioController::class, 'viewTablero'])->name('r-tablero-disenio');
+    Route::get('/disenio/grafico/', [DisenioController::class, 'viewGrafico'])->name('r-grafico-disenio');
+    Route::get('/disenio/calendario', [DisenioController::class, 'viewCalendario'])->name('r-calendario-disenio');
+});
+
+
+//CCD

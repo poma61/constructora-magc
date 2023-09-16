@@ -113,8 +113,9 @@
         <template v-slot="{ row }">
 
           <div class="is-flex is-justify-content-space-between">
-            <div style="min-width: 100px" class="mr-2">{{ row.name }}</div>
-            <div style="min-width: 100px" class="mr-2">{{ date_format.formatDate(row.startDate) }}</div>
+            <div style="min-width: 100px" class="mr-2">
+              {{ row.name }},  {{ date_format.formatDate(row.startDate) }}-{{ date_format.formatDate(row.endDate) }}
+            </div>
           </div>
         </template>
 
@@ -140,7 +141,7 @@
 import ApexCharts from "apexcharts";
 import esLocale from 'apexcharts/dist/locales/es.json'; // Importa el módulo de idioma "es" aquí
 import toastr from "toastr";
-import Inventario from '@/services/Inventario';
+import Obra from '@/services/Obra';
 import { onMounted, ref } from "vue";
 import DateFormat from '@/util/DateFormat';
 
@@ -180,7 +181,6 @@ const chart_options = {
   plotOptions: {
     bar: {
       horizontal: true,
-      barHeight: '50%',
       distributed: true,
       dataLabels: {
         hideOverflowingLabels: true
@@ -218,13 +218,7 @@ const urlParams = () => {
   const parse_url = new URL(window.location.href);
   city.value = parse_url.pathname.split('/').pop();
 }
-const addDate = (fecha_actual) => {
-  const nueva_fecha = new Date(fecha_actual + 'T00:00:00');
-  // sumamos un dia a la nueva fecha quese creo a partir de la fecha actual
-  //esto nos ayuda a mostrar la vista el el diagrama de gantt
-  nueva_fecha.setDate(nueva_fecha.getDate() + 5);
-  return nueva_fecha.toISOString().split('T')[0];
-}
+
 
 const selectMont = (mes) => {
   month.value = mes;
@@ -241,26 +235,24 @@ const refreshDataGantt = () => {
 
 const initDataGantt = async () => {
   let id = 0;
-  const inventario = new Inventario(city.value);
-  const response = await inventario.ganttFechaIngreso(year.value, month.value);
+  const obra = new Obra(city.value);
+  const response = await obra.ganttFechaAll(year.value, month.value);
   if (response.status) {
-
     response.records.forEach(item => {
       indice_aleatorio.value = Math.floor(Math.random() * colores.value.length);
       id++;
-
       data_list.value.push({
         index: id,
-        name: item.material,
-        startDate: new Date(`${item.fecha_ingreso}T00:00:00`),
-        endDate: new Date(addDate(item.fecha_ingreso) + 'T00:00:00'),
+        name: `${item.nombres} ${item.apellido_paterno} ${item.apellido_materno} - Contrato:${item.n_contrato}`,
+        startDate: new Date(`${item.fecha_inicio}T00:00:00`),
+        endDate: new Date(item.fecha_finalizacion + 'T00:00:00'),
       });
 
       series.value[0].data.push({
-        x: `${id}-${item.material}`,
+        x: `${id}-${item.nombres} ${item.apellido_paterno} ${item.apellido_materno} - Contrato:${item.n_contrato}`,
         y: [
-          new Date(item.fecha_ingreso).getTime(),
-          new Date(addDate(item.fecha_ingreso)).getTime()//aumentamos 5 dia para mostrar en la vista gantt
+          new Date(item.fecha_inicio).getTime(),
+          new Date(item.fecha_finalizacion).getTime()//aumentamos 5 dia para mostrar en la vista gantt
         ],
         fillColor: colores.value[indice_aleatorio.value]
       });
@@ -311,7 +303,7 @@ onMounted(() => {
 
 .xg-gantt-header-cell,
 .xg-table-header-cell {
-  background-color: #C96B00 !important;
+  background-color: #006fc9 !important;
   text-align: center !important;
   color: #fff !important;
 }

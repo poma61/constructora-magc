@@ -144,7 +144,7 @@
                 </li>
 
                 <li>
-                    <a href="#" class="unfold-toggle no-arrow">
+                    <a href="{{ route('r-tablero-disenio') }}" class="unfold-toggle no-arrow">
                         <span class="as-icon mdi mdi-dishwasher is-size-4"></span>
                         <span>Diseño</span>
                     </a>

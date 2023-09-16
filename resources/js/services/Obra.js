@@ -141,7 +141,7 @@ class Obra {
 
     async graphicEstado(filter_year, filter_month) {
         try {
-            const resolve = await axios.post(app.BASE_URL + '/microservice/control-de-obra/ciudad/graphic-material', {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/control-de-obra/ciudad/graphic-estado', {
                 ciudad: this.getCity(),
                 year: filter_year,
                 month: filter_month,
@@ -155,7 +155,7 @@ class Obra {
 
     async calendarFechaInicio() {
         try {
-            const resolve = await axios.post(app.BASE_URL + '/microservice/control-de-obra/ciudad/calendar-fecha-ingreso', {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/control-de-obra/ciudad/calendar-fecha-inicio', {
                 ciudad: this.getCity(),
             }, this.config);
             return resolve.data;
@@ -166,9 +166,9 @@ class Obra {
     }
 
 
-    async ganttFechaInicio(filter_year, filter_month) {
+    async ganttFechaAll(filter_year, filter_month) {
         try {
-            const resolve = await axios.post(app.BASE_URL + '/microservice/control-de-obra/ciudad/gantt-fecha-ingreso', {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/control-de-obra/ciudad/gantt-fecha-all', {
                 ciudad: this.getCity(),
                 year: filter_year,
                 month: filter_month,

@@ -9,9 +9,6 @@ use App\Models\Contrato;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
-
-
-
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ContratistaExport;
 use App\Http\Requests\HistorialPagoContratistaRequest;

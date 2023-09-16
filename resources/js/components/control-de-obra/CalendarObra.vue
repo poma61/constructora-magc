@@ -7,7 +7,7 @@
                     <span class="icon is-small">
                         <span class="mdi mdi-calendar-clock"></span>
                     </span>
-                    <span>Fechas de ingreso</span>
+                    <span>Fechas de inicio</span>
                 </div>
             </li>
         </ul>
@@ -20,7 +20,7 @@
 <script>
 import { defineComponent } from 'vue';
 import VueCal from 'vue-cal'
-import Inventario from '@/services/Inventario';
+import Obra from '@/services/Obra';
 import toastr from 'toastr';
 
 export default defineComponent({
@@ -72,9 +72,9 @@ export default defineComponent({
             }
         },
 
-        async initCalendarFechaIngreso() {
-            const inventario = new Inventario(this.city);
-            const response = await inventario.calendarFechaIngreso();
+        async initCalendarFechaInicio() {
+            const obra = new Obra(this.city);
+            const response = await obra.calendarFechaInicio();
 
             if (response.status) {
                 response.records.forEach(item => {
@@ -82,9 +82,9 @@ export default defineComponent({
                     this.indice_aleatorio = Math.floor(Math.random() * this.class_colors.length);
 
                     this.data_events.push({
-                        start: `${item.fecha_ingreso}`,
-                        end: `${item.fecha_ingreso}`,
-                        title: `${item.material}`,
+                        start: `${item.fecha_inicio}`,
+                        end: `${item.fecha_inicio}`,
+                        title: `${item.nombres} ${item.apellido_paterno} ${item.apellido_materno}`,
                         content: `N° de contrato: ${item.n_contrato}`,
                         class: `${this.class_colors[this.indice_aleatorio]} has-text-white my-1`
                     });
@@ -101,7 +101,7 @@ export default defineComponent({
 
     mounted() {
         this.urlParams();
-        this.initCalendarFechaIngreso();
+        this.initCalendarFechaInicio();
     }
 
 });
@@ -111,12 +111,12 @@ export default defineComponent({
 /* Green-theme. */
 .vuecal__menu,
 .vuecal__cell-events-count {
-    background-color: #c96b00 !important;
+    background-color: #006fc9 !important;
     color: #fff;
 }
 
 .vuecal__title-bar {
-    background-color: #ffdcb4 !important;
+    background-color: #81b3dd !important;
 }
 
 /* Dot indicator 'mes'*/
@@ -129,7 +129,7 @@ export default defineComponent({
 
 
 /* ocultamos la hora del menu 'day'=>'dia' */
-.vuecal__event-time{
+.vuecal__event-time {
     display: none !important;
 }
 </style>
