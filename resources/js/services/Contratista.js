@@ -101,7 +101,7 @@ class Contratista {
     async destroy() {
         try {
             const resolve = await axios.post(app.BASE_URL + '/microservice/finanzas-de-construccion/ciudad/contratista/tablero-destroy', {
-                id: this.getFill('contrato').id,
+                id: this.getFill().id,
                 ciudad: this.city,
             }, this.config);
 

@@ -4,6 +4,10 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Response;
+use Illuminate\Contracts\Validation\Validator;
+
 class DisenioRequest extends FormRequest
 {
     /**
@@ -11,7 +15,7 @@ class DisenioRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +26,28 @@ class DisenioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "id_cliente" => 'required',
+            "requerimiento" => 'required',
+            "fecha" => 'required|date',
+            "arquitecto" => 'required',
         ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'id_cliente.required' => 'El campo nombre cliente es requerido.',
+        ];
+    }
+
+
+    protected function failedValidation(Validator $validator): HttpResponseException
+    {
+        $response = [
+            'status' => false,
+            'message' => 'Verificar los campos!',
+            'message_errors' => $validator->errors(),
+        ];
+        throw  new HttpResponseException(response()->json($response, Response::HTTP_UNPROCESSABLE_ENTITY));
     }
 }

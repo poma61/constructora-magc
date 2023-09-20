@@ -8,7 +8,7 @@
         </div>
 
 
-        <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
             <ul>
                 <li>
                     <div class="has-text-info">
@@ -145,8 +145,8 @@
                 </template>
 
                 <template v-slot:item.add_pagos="{ item }">
-                    <v-btn @click="historialPagos(item.raw)" color="yellow-darken-3" icon="mdi-cash-100"
-                        class="m-1 as-hover__box-shadow" />
+                    <v-btn @click="historialPagos(item.raw)" color="orange-darken-1" icon="mdi-cash-100"
+                        class="m-1 as-hover__box-shadow" variant="outlined"/>
                 </template>
 
 
@@ -194,7 +194,7 @@
     </v-dialog>
 
     <v-snackbar v-model="snackbar_message_response.active" :timeout="2000" :color="snackbar_message_response.color"
-        location="top right" rounded="pill" min-height="70px">
+        location="bottom right" rounded="pill" min-height="70px">
         <div class="is-flex is-justify-content-center is-align-items-center">
             <span :class="snackbar_message_response.icon"></span>
             <p class="is-size-6">{{ snackbar_message_response.text }}</p>
@@ -205,7 +205,7 @@
         :dialog_form_prop="dialog_form" @refreshRowDataByFormEmit="refreshRowDataByForm" />
 
     <HistorialPagoBoardContratista v-if="component_historial_pago" :city_prop="city"
-        :item_contratista_prop="item_contratista" />
+        :item_contratista_prop="item_contratista"  @viewDataTableEmit="viewDataTable"/>
 </template>
 
 <script setup>

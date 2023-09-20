@@ -1,6 +1,6 @@
 <template>
     <div class="m-1" style="width: 100%;">
-        <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
             <ul>
                 <li>
                     <div class="has-text-info">
@@ -42,8 +42,15 @@
 
             </div>
             <div class="buttons m-1">
+                <v-btn @click="viewDataTableChild()" color="cyan-darken-1" class="as-hover__box-shadow m-1 outlined">
+                    <span class="mdi mdi-table-of-contents is-size-5"></span>&nbsp;Ver tablero principal
+                </v-btn>
+                <v-btn @click="initData()" color="cyan-darken-1" class="as-hover__box-shadow m-1 outlined">
+                    <span class="mdi mdi-refresh is-size-5" :loading="loading_refresh_data_table"></span>&nbsp;Actualizar
+                </v-btn>
+
                 <v-btn @click="save()" color="cyan-darken-1" class="as-hover__box-shadow m-1 outlined">
-                    <span class="mdi mdi-note-plus-outline is-size-5"></span>&nbsp;Registrar pago
+                    <span class="mdi mdi-content-save-all is-size-5"></span>&nbsp;Guardar pago
                 </v-btn>
             </div>
         </div>
@@ -56,17 +63,19 @@
                 :fixed-header="true" :height="400" :sort-by="[{ key: 'id', order: 'desc' }]">
 
                 <template v-slot:item.fecha_pago="{ item }">
-                    <span class="tag is-rounded has-background-grey-light as-font-9 m-1">
+                    <span class="tag is-rounded has-background-info as-font-9 m-1">
                         {{ date_format.formatDate(item.columns.fecha_pago) }}
                     </span>
                 </template>
 
 
                 <template v-slot:item.actions="{ item }">
-                    <v-btn @click="editForm(item.raw)" color="cyan-darken-1" icon="mdi-pencil"
-                        class="m-1 as-hover__box-shadow" />
-                    <v-btn @click="openDeleteData(item.raw)" color="red" icon="mdi-delete"
-                        class="m-1 as-hover__box-shadow" />
+                    <div style="width: 150px;">
+                        <v-btn @click="editForm(item.raw)" color="cyan-darken-1" icon="mdi-pencil"
+                            class="m-1 as-hover__box-shadow" />
+                        <v-btn @click="openDeleteData(item.raw)" color="red" icon="mdi-delete"
+                            class="m-1 as-hover__box-shadow" />
+                    </div>
                 </template>
 
             </v-data-table>
@@ -78,8 +87,7 @@
         <div class="card">
             <div class="card-content">
                 <div class="is-flex is-justify-content-center is-align-items-center is-flex-direction-column">
-                    <span 
-                        class="mdi mdi-file-question as-icon-7 has-text-danger animate__animated animate__wobble"></span>
+                    <span class="mdi mdi-file-question as-icon-7 has-text-danger animate__animated animate__wobble"></span>
                     <p class="is-size-5 has-text-centered">
                         ¿Esta seguro(a) de eliminar el registro seleccionado?
                     </p>
@@ -103,9 +111,9 @@
     </v-dialog>
 
     <v-snackbar v-model="snackbar_message_response.active" :timeout="2000" :color="snackbar_message_response.color"
-        location="top right" rounded="pill" min-height="70px">
+        location="bottom right" rounded="pill" min-height="70px">
         <div class="is-flex is-justify-content-center is-align-items-center">
-            <span :class="snackbar_message_response.icon"  ></span>
+            <span :class="snackbar_message_response.icon"></span>
             <p class="is-size-6">{{ snackbar_message_response.text }}</p>
         </div>
     </v-snackbar>
@@ -120,11 +128,14 @@ import HistorialPagoContratista from '@/services/HistorialPagoContratista';
 import DateFormat from '@/util/DateFormat';
 //props
 const props = defineProps(['city_prop', 'item_contratista_prop']);
+const emit = defineEmits(['viewDataTableEmit']);
+
 
 //data
 const data = ref([]);
 const buscar_data_table = ref("");
 const loading_data_table = ref(null);
+const loading_refresh_data_table = ref(null);
 const date_format = ref(new DateFormat());
 const dialog_delete = ref(false);
 const indice_data = ref(-1);
@@ -239,10 +250,13 @@ const newForm = () => {
 
 const initData = () => {
     loading_data_table.value = "cyan-darken-1";
+    loading_refresh_data_table.value = "white"
     setTimeout(async () => {
         const historial_pago_contratista = new HistorialPagoContratista(props.city_prop);
         const response = await historial_pago_contratista.index(props.item_contratista_prop.id);
         loading_data_table.value = null;
+        loading_refresh_data_table.value = null;
+
         if (response.status) {
             data.value = response.records;
             viewSnackbar('success', response.message);
@@ -251,6 +265,11 @@ const initData = () => {
         }
 
     }, 800);
+}
+
+const viewDataTableChild = () => {
+    emit('viewDataTableEmit');
+
 }
 
 onMounted(() => {

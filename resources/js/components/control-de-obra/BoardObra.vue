@@ -6,7 +6,7 @@
         </v-btn>
     </div>
 
-    <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
         <ul>
             <li>
                 <div class="has-text-info">
@@ -198,7 +198,7 @@
     </v-dialog>
 
     <v-snackbar v-model="snackbar_message_response.active" :timeout="2000" :color="snackbar_message_response.color"
-        location="top right" rounded="pill" min-height="70px">
+        location="bottom right" rounded="pill" min-height="70px">
         <div class="is-flex is-justify-content-center is-align-items-center">
             <span :class="snackbar_message_response.icon"></span>
             <p class="is-size-6">{{ snackbar_message_response.text }}</p>

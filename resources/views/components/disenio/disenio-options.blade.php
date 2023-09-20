@@ -1,20 +1,38 @@
- <div class="buttons">
-     <a href="{{ route('r-tablero-disenio') }}"
-         class="button is-primary is-rounded my-1 @if (Route::currentRouteName() == 'r-tablero-disenio') is-outlined @endif">
-         <span class="mdi mdi-table-of-contents is-size-4"></span>&nbsp;Tablero
-     </a>
+<div class="tabs is-boxed">
+    <ul>
+        <li class="@if (Route::currentRouteName() == 'r-tablero-disenio') is-active @endif">
+            <a href="{{ route('r-tablero-disenio') }}">
+                <span class="icon">
+                    <i class="mdi mdi-table-of-contents is-size-4" aria-hidden="true"></i>
+                </span>
+                <span>Tablero</span>
+            </a>
+        </li>
 
-     <a href="{{ route('r-grafico-disenio') }}"
-         class="button is-primary is-rounded my-1 @if (Route::currentRouteName() == 'r-grafico-disenio') is-outlined @endif">
-         <span class="mdi mdi-chart-bar is-size-4"></span>&nbsp;Grafico
-     </a>
+        <li class="@if (Route::currentRouteName() == 'r-grafico-disenio') is-active @endif">
+            <a href="{{ route('r-grafico-disenio') }}">
+                <span class="icon">
+                    <i class="mdi mdi-chart-bar is-size-4" aria-hidden="true"></i>
+                </span>
+                <span>Grafico</span>
+
+            </a>
+        </li class="@if (Route::currentRouteName() == 'r-calendario-disenio')
+is-active
+@endif">
+
+        <li class="@if (Route::currentRouteName() == 'r-calendario-disenio') is-active @endif">
+            <a href="{{ route('r-calendario-disenio') }}">
+                <span class="icon">
+                    <i class="mdi mdi-calendar-clock is-size-4" aria-hidden="true"></i>
+                </span>
+                <span>Calendario</span>
+
+            </a>
+        </li>
 
 
-     <a href="{{ route('r-calendario-disenio') }}"
-         class="button is-primary is-rounded my-1 @if (Route::currentRouteName() == 'r-calendario-disenio') is-outlined @endif">
-         <span class="mdi mdi-calendar-clock is-size-4"></span>&nbsp;Calendario
-     </a>
+    </ul>
+</div>
 
- </div>
-
-{{-- request()->route()->getName()  => es lo mismo que Route::currentRouteName()--}}
+{{-- request()->route()->getName()  => es lo mismo que Route::currentRouteName() --}}

@@ -336,7 +336,7 @@ function showForm(personal, data_table_row_index) {
                         title: "¡OK!",
                         text: response.message,
                         timer: 3000,
-                        position: 'top-end',
+                        position: 'bottom-end',
                         popup: 'has-background-info has-text-white'
                     };
                     SweetAlert.successToast(properties2);

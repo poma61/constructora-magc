@@ -47,7 +47,7 @@
     @saveParent="save()" :message_errors_field_parent="message_errors_field" />
 
   <v-snackbar v-model="snackbar_message_response.value" :timeout="2000" :color="snackbar_message_response.color"
-    location="top right">
+    location="bottom right">
     <div class="is-flex is-justify-content-center is-align-items-center">
       <v-icon :icon="snackbar_message_response.icon" size="50"></v-icon>
       <p class="is-size-6">{{ snackbar_message_response.text }}
@@ -55,7 +55,7 @@
     </div>
   </v-snackbar>
 
-  <v-dialog v-model="dialog_delete" max-width="500px" persistent transition="dialog-top-transition">
+  <v-dialog v-model="dialog_delete" max-width="500px" persistent transition="dialog-bottom-transition">
     <div class="card">
 
       <div class="card-content">

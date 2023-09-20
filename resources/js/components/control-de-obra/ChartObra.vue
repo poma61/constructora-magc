@@ -1,7 +1,7 @@
 
 
 <template>
-    <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
         <ul>
             <li>
                 <div class="has-text-info">
@@ -129,7 +129,7 @@ export default defineComponent({
         toastr.options = {
             closeButton: true,
             progressBar: true,
-            positionClass: 'toast-top-right',
+            positionClass: 'toast-bottom-right',
             timeOut: 3000,
             hideDuration: 100,
         };

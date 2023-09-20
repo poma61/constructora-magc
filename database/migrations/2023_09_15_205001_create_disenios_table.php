@@ -17,10 +17,6 @@ return new class extends Migration
             $table->longText('requerimiento');
             $table->date('fecha');
             $table->string('arquitecto');
-            $table->string('planos',100);
-            $table->string('elevaciones',100);
-            $table->string('instalaciones',100);
-            $table->string('3D',100);
             $table->boolean('status');
             $table->timestamps();
 

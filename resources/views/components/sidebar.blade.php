@@ -118,23 +118,10 @@
                 <li>
                     <a href="#" class="unfold-toggle no-arrow">
                         <i class="as-icon mdi mdi-file-table-box-outline is-size-4"></i>
-                        <span>CCD Economicas</span>
+                        <span>CCD</span>
                     </a>
                 </li>
 
-                <li>
-                    <a href="#" class="unfold-toggle no-arrow">
-                        <i class="as-icon mdi mdi-file-table-box-outline is-size-4"></i>
-                        <span>CCD Estandar</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#" class="unfold-toggle no-arrow">
-                        <i class="as-icon mdi mdi-file-table-box-outline is-size-4"></i>
-                        <span>CCD Lujos</span>
-                    </a>
-                </li>
                 <li>
                     <div class="unfold-divider"></div>
                 </li>

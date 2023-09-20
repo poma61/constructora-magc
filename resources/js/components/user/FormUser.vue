@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="props.dialog_form_parent" max-width="500px" persistent transition="dialog-top-transition">
+    <v-dialog v-model="props.dialog_form_parent" max-width="500px" persistent transition="dialog-bottom-transition">
         <div class="card">
             <header class="card-header has-background-link">
                 <p class="card-header-title has-text-white">

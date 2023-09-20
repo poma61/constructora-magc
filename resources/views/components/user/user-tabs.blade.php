@@ -1,4 +1,4 @@
-  <div class="tabs is-toggle is-medium">
+  <div class="tabs is-toggle">
       <ul>
           <li class="{{ $city == 'Santa-Cruz' ? 'is-active' : null }}">
               <a href="{{ route('r-user-view', 'Santa-Cruz') }}">

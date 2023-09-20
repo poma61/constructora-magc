@@ -10,7 +10,7 @@
 
             @include('components/contrato/contrato-options')
 
-            <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+            <nav class="breadcrumb" aria-label="breadcrumbs">
                 <ul>
                     <li>
                         <div class="has-text-info">

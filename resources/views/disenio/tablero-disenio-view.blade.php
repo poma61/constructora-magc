@@ -18,5 +18,5 @@
 
 
 @section('template_js')
-    {{-- @vite('resources/js/contratistaBoard.js') --}}
+    @vite('resources/js/disenioBoard.js')
 @endsection

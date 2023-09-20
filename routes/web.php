@@ -151,7 +151,6 @@ Route::group(['middleware' => ['auth', 'check.city.access']], function () {
     Route::get('/inventario/grafico/{ciudad}', [InventarioController::class, 'viewGrafico'])->name('r-grafico-inventario');
     Route::get('/inventario/calendario/{ciudad}', [InventarioController::class, 'viewCalendario'])->name('r-calendario-inventario');
     Route::get('/inventario/gantt/{ciudad}', [InventarioController::class, 'viewGantt'])->name('r-gantt-inventario');
-
     //tablero
     Route::post('/microservice/inventario/ciudad/tablero-index', [InventarioController::class, 'tableroIndex']);
     Route::post('/microservice/inventario/ciudad/tablero-create', [InventarioController::class, 'rowTableroCreate']);
@@ -159,7 +158,6 @@ Route::group(['middleware' => ['auth', 'check.city.access']], function () {
     Route::post('/microservice/inventario/ciudad/tablero-destroy', [InventarioController::class, 'rowTableroDestroy']);
     Route::post('/microservice/inventario/ciudad/buscar-contrato-by-contratista', [InventarioController::class, 'buscarContratoByContratista']);
     Route::post('/microservice/inventario/ciudad/generate-excel', [InventarioController::class, 'generateExcel']);
-
     // //grafico,calendario,gantt 
     Route::post('/microservice/inventario/ciudad/graphic-material', [InventarioController::class, 'graphicMaterial']);
     Route::post('/microservice/inventario/ciudad/calendar-fecha-ingreso', [InventarioController::class, 'calendarFechaIngreso']);
@@ -174,7 +172,30 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/disenio/tablero/', [DisenioController::class, 'viewTablero'])->name('r-tablero-disenio');
     Route::get('/disenio/grafico/', [DisenioController::class, 'viewGrafico'])->name('r-grafico-disenio');
     Route::get('/disenio/calendario', [DisenioController::class, 'viewCalendario'])->name('r-calendario-disenio');
+    //tablero
+    Route::post('/microservice/disenio/tablero-index', [DisenioController::class, 'tableroIndexDisenio']);
+    Route::post('/microservice/disenio/tablero-create', [DisenioController::class, 'rowTableroCreateDisenio']);
+    Route::put('/microservice/disenio/tablero-update', [DisenioController::class, 'rowTableroUpdateDisenio']);
+    Route::post('/microservice/disenio/tablero-destroy', [DisenioController::class, 'rowTableroDestroyDisenio']);
+    Route::post('/microservice/disenio/buscar-cliente', [DisenioController::class, 'buscarCliente']);
+    Route::post('/microservice/disenio/generate-excel', [DisenioController::class, 'generateExcelDisenio']);
+    //tablero,proceso
+    Route::post('/microservice/disenio/proceso/index-proceso', [DisenioController::class, 'indexProceso']);
+    Route::post('/microservice/disenio/proceso/is-refresh-proceso', [DisenioController::class, 'isRefreshProceso']);
+    //tablero,pestado
+    Route::post('/microservice/disenio/estado/index-estado', [DisenioController::class, 'indexEstado']);
+    Route::post('/microservice/disenio/estado/is-refresh-estado', [DisenioController::class, 'isRefreshEstado']);
+    Route::post('/microservice/disenio/estado/generate-num-codigo-estado', [DisenioController::class, 'generateNumCodigoEstado']);
+    //tablero,revision
+    Route::post('/microservice/disenio/revision/tablero-index', [DisenioController::class, 'tableroIndexRevisionDisenio']);
+    Route::post('/microservice/disenio/revision/tablero-create', [DisenioController::class, 'rowTableroCreateRevisionDisenio']);
+    Route::put('/microservice/disenio/revision/tablero-update', [DisenioController::class, 'rowTableroUpdateRevisionDisenio']);
+    Route::post('/microservice/disenio/revision/tablero-destroy', [DisenioController::class, 'rowTableroDestroyRevisionDisenio']);
+    //tablero,modificacion
+    Route::post('/microservice/disenio/modificacion/tablero-index', [DisenioController::class, 'tableroIndexModificacionDisenio']);
+    Route::post('/microservice/disenio/modificacion/tablero-create', [DisenioController::class, 'rowTableroCreateModificacionDisenio']);
+    Route::put('/microservice/disenio/modificacion/tablero-update', [DisenioController::class, 'rowTableroUpdateModificacionDisenio']);
+    Route::post('/microservice/disenio/modificacion/tablero-destroy', [DisenioController::class, 'rowTableroDestroyModificacionDisenio']);
 });
-
 
 //CCD

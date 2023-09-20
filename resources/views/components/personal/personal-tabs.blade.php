@@ -1,4 +1,4 @@
-  <div class="tabs is-centered is-boxed is-medium">
+  <div class="tabs is-centered is-boxed">
       <ul>
           <li class="{{ $city == 'Santa-Cruz' ? 'is-active' : null }}">
               <a href="{{ route('r-personal-index-view', 'Santa-Cruz') }}">

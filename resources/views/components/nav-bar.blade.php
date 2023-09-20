@@ -1,19 +1,23 @@
 <div class="header">
     <div class="header-left">
         <div class="menu-icon mdi mdi-menu"></div>
-
     </div>
 
     <div class="header-right">
 
         <div class="dropdown is-right">
             <div class="dropdown-trigger">
+
                 <button class="button is-transparent is-medium has-text-white" aria-haspopup="true"
                     aria-controls="dropdown-menu2">
                     <span class="icon">
-                        <span class="mdi mdi-bell"></span>
+                        <div class="icon-badge-container">
+                            <span class="mdi mdi-bell"></span>
+                            <div class="icon-badge has-background-danger">188</div>
+                        </div>
                     </span>
                 </button>
+
             </div>
             <div class="dropdown-menu animate__animated animate__bounceIn" id="dropdown-menu2" role="menu">
                 <div class="dropdown-content">
@@ -51,29 +55,21 @@
                     aria-controls="dropdown-menu3">
 
                     <span class="icon">
-                      <span class="mdi mdi-cog"></span>
+                        <span class="mdi mdi-cog"></span>
                     </span>
                 </button>
             </div>
             <div class="dropdown-menu animate__animated animate__bounceIn" id="dropdown-menu3" role="menu">
                 <div class="dropdown-content">
                     <a href="#" class="dropdown-item">
-                        <span class="icon has-text-weight-bold  has-text-info">
-                          <span class="mdi mdi-account-box"></span>
+                        <span class="icon has-text-weight-bold  has-text-success">
+                            <span class="mdi mdi-account-box"></span>
                         </span>
                         Perfil
                     </a>
-
-                    <a href="#" class="dropdown-item">
-                        <span class="icon has-text-success">
-                           <span class="mdi mdi-cog"></span>
-                        </span>
-
-                        Configuraciones
-                    </a>
                     <a class="dropdown-item" id="salir">
                         <span class="icon has-text-info">
-                           <span class="mdi mdi-lock"></span>
+                            <span class="mdi mdi-lock"></span>
                         </span>
                         Salir
                     </a>

@@ -1,5 +1,5 @@
 
-  <div class="tabs is-centered  is-medium">
+  <div class="tabs is-centered">
       <ul>
           @if ($grupo == 'todos')
               @for ($i = 1; $i <= 10; $i++)
@@ -7,7 +7,7 @@
                       <a href="{{ route('r-tablero-cliente-grupo-view', [$city, str_pad($i, 2, '0', STR_PAD_LEFT)]) }}">
                           <span>Grupo</span>
                           <span class="icon is-normal">
-                              <i class="{{ 'mdi mdi-numeric-' . $i . '-box-outline' }}" aria-hidden="true"></i>
+                              <i class="is-size-5 {{ 'mdi mdi-numeric-' . $i . '-box-outline' }}" aria-hidden="true"></i>
                           </span>
                       </a>
                   </li>
@@ -18,7 +18,7 @@
                       <span>Grupo</span>
                       <span class="icon is-normal">
                       {{-- ltrim => para quitar los ceros por delante de un numero  --}}
-                          <i class="{{ 'mdi mdi-numeric-' .ltrim($grupo,'0'). '-box-outline' }}" aria-hidden="true"></i>
+                          <i class="is-size-5 {{ 'mdi mdi-numeric-' .ltrim($grupo,'0'). '-box-outline' }}" aria-hidden="true"></i>
                       </span>
 
                   </a>

@@ -12,14 +12,18 @@ export default defineConfig({
                 'resources/js/clienteGantt.js',
                 
                 'resources/js/contratistaBoard.js',
-                'resources/js/contratistasCalendar.js',
+                'resources/js/contratistaCalendar.js',
                 'resources/js/contratistaChart.js',
-                'resources/js/contratistasGantt.js',
+                'resources/js/contratistaGantt.js',
 
                 'resources/js/contratoBoard.js',
                 'resources/js/contratoCalendar.js',
                 'resources/js/contratoGantt.js',
     
+                'resources/js/disenioBoard.js',
+                'resources/js/disenioCalendar.js',
+                'resources/js/disenioChart.js',
+
                 'resources/js/inventarioBoard.js',
                 'resources/js/inventarioCalendar.js',
                 'resources/js/inventarioChart.js',

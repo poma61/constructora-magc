@@ -25,7 +25,7 @@
 
                     <div class="is-flex is-flex-wrap-wrap" style="width: 100%;">
                         <v-text-field label="Buscar N° de contrato" prepend-inner-icon="mdi-magnify" color="cyan-darken-1"
-                            :loading="loading_search_cliente" @keyup.enter="searchContrato()" style="width: 300px;"
+                            :loading="loading_search_contrato" @keyup.enter="searchContrato()" style="width: 300px;"
                             placeholder="Introduzca el n° de contrato" class="m-1" clearable v-model="search_n_contrato" />
 
                         <div class="m-2">
@@ -85,7 +85,7 @@
     </v-dialog>
 
     <v-snackbar v-model="snackbar_message_response.active" :timeout="2000" :color="snackbar_message_response.color"
-        location="top right" rounded="pill" min-height="70px">
+        location="bottom right" rounded="pill" min-height="70px">
         <div class="is-flex is-justify-content-center is-align-items-center">
             <span :class="snackbar_message_response.icon"></span>
             <p class="is-size-6">{{ snackbar_message_response.text }}</p>
@@ -148,7 +148,7 @@ const resetTo = () => {
 }
 
 //datas
-const loading_search_cliente = ref(null);
+const loading_search_contrato = ref(null);
 const message_errors_field = ref({});
 const search_n_contrato = ref("");
 const snackbar_message_response = ref({ active: false, icon: "", color: "", text: "", });
@@ -166,11 +166,11 @@ const getViewMessageErrorsField = computed(() => {
 
 
 const searchContrato = () => {
-    loading_search_cliente.value = 'cyan-darken-1';
+    loading_search_contrato.value = 'cyan-darken-1';
     setTimeout(async () => {
         const contratista = new Contratista(props.city_prop);
         const response = await contratista.buscarContrato(search_n_contrato.value);
-        loading_search_cliente.value = null;
+        loading_search_contrato.value = null;
         if (response.status) {
             props.item_contratista_prop.id_contrato = response.record.id;
             props.item_contratista_prop.n_contrato = response.record.n_contrato;

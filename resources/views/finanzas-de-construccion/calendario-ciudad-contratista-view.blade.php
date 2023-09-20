@@ -8,7 +8,7 @@
                 class="as-main-title has-background-info is-size-5 has-text-centered has-text-white animate__animated animate__bounceInDown">
                 Finanzas de construccion | Contratista | Calendario
             </h1>
-            <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+            <nav class="breadcrumb" aria-label="breadcrumbs">
                 <ul>
                     <li>
                         <div class="has-text-info">

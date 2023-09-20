@@ -15,8 +15,8 @@ return new class extends Migration
         //de la  base de datos, entonces ya no se puede eliminar el registro... si modificar pero NO eliminar
         Schema::create('estados', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha_aprobacion');
-            $table->date('fecha_entrega');
+            $table->date('fecha_aprobacion')->nullable();
+            $table->date('fecha_entrega')->nullable();
             $table->string('codigo');
             $table->unsignedBigInteger('id_disenio');
             $table->timestamps();
