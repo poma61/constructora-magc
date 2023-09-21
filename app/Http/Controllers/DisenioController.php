@@ -16,18 +16,28 @@ use App\Models\EstadoDisenio;
 use App\Models\ModificacionDisenio;
 use App\Models\ProcesoDisenio;
 use App\Models\RevisionDisenio;
+use Illuminate\Support\Facades\DB;
 
-use function Laravel\Prompts\select;
 
 class DisenioController extends Controller
 {
-
-
+    //vistas
     public function viewTablero()
     {
         return view('disenio/tablero-disenio-view');
     }
 
+    public function viewGrafico()
+    {
+        return view('disenio/grafico-disenio-view');
+    }
+
+    public function viewCalendario()
+    {
+        return view('disenio/calendario-disenio-view');
+    }
+
+    //tablero diseño
     public function tableroIndexDisenio(Request $request)
     {
         try {
@@ -187,6 +197,8 @@ class DisenioController extends Controller
         }
     }
 
+
+    //procesos
     public function indexProceso(Request $request)
     {
         try {
@@ -235,6 +247,57 @@ class DisenioController extends Controller
     }
 
 
+    public function graphicProceso(Request $request)
+    {
+        try {
+            $meses = [
+                'enero' => '01',
+                'febrero' => '02',
+                'marzo' => '03',
+                'abril' => '04',
+                'mayo' => '05',
+                'junio' => '06',
+                'julio' => '07',
+                'agosto' => '08',
+                'septiembre' => '09',
+                'octubre' => '10',
+                'noviembre' => '11',
+                'diciembre' => '12',
+            ];
+
+            if ($request->input('month') == 'todos') {
+                $proceso_disenio = ProcesoDisenio::join('disenios', 'disenios.id', '=', 'procesos.id_disenio')
+                    ->select("procesos.{$request->input('field')}", DB::raw("COUNT(procesos.{$request->input('field')}) as total"))
+                    ->where('disenios.status', true)
+                    ->whereYear('disenios.fecha', $request->input('year'))
+                    ->groupBy("procesos.{$request->input('field')}")
+                    ->get();
+            } else {
+                $proceso_disenio = ProcesoDisenio::join('disenios', 'disenios.id', '=', 'procesos.id_disenio')
+                    ->select("procesos.{$request->input('field')}", DB::raw("COUNT(procesos.{$request->input('field')}) as total"))
+                    ->where('disenios.status', true)
+                    ->whereYear('disenios.fecha', $request->input('year'))
+                    ->whereMonth('disenios.fecha', $meses[$request->input('month')])
+                    ->groupBy("procesos.{$request->input('field')}")
+                    ->get();
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OK',
+                'records' => $proceso_disenio,
+            ], 200);
+        } catch (Throwable $th) {
+
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'records' => [],
+            ], 500);
+        }
+    }
+
+    //estados
     public function indexEstado(Request $request)
     {
         try {
@@ -291,6 +354,8 @@ class DisenioController extends Controller
             ], 500);
         }
     }
+
+
     public function generateNumCodigoEstado(Request $request)
     {
         try {
@@ -331,6 +396,35 @@ class DisenioController extends Controller
                 'status' => false,
                 'message' => $th->getMessage(),
                 'record' => null,
+            ], 500);
+        }
+    }
+
+    public function  calendarFechaAllEstado(Request $request)
+    {
+        try {
+            $revision_disenio = EstadoDisenio::join('disenios', 'disenios.id', '=', 'estados.id_disenio')
+                ->join('clientes', 'clientes.id', '=', 'disenios.id_cliente')
+                ->select(
+                    'clientes.nombres',
+                    'clientes.apellido_paterno',
+                    'clientes.apellido_materno',
+                    "estados.{$request->input('field')}",
+                )
+                ->where('clientes.status', true)
+                ->where('disenios.status', true)
+                ->get();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OK',
+                'records' => $revision_disenio,
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'records' => [],
             ], 500);
         }
     }
@@ -423,6 +517,37 @@ class DisenioController extends Controller
         }
     }
 
+
+    public function  calendarFechaAllRevision(Request $request)
+    {
+        try {
+            $revision_disenio = RevisionDisenio::join('disenios', 'disenios.id', '=', 'revisiones.id_disenio')
+                ->join('clientes', 'clientes.id', '=', 'disenios.id_cliente')
+                ->select(
+                    'clientes.nombres',
+                    'clientes.apellido_paterno',
+                    'clientes.apellido_materno',
+                    "revisiones.{$request->input('field')}",
+                )
+                ->where('clientes.status', true)
+                ->where('disenios.status', true)
+                ->where('revisiones.status', true)
+                ->get();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OK',
+                'records' => $revision_disenio,
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'records' => [],
+            ], 500);
+        }
+    }
+
     //Modificacion
     public function tableroIndexModificacionDisenio(Request $request)
     {
@@ -505,6 +630,36 @@ class DisenioController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function  calendarFechaModificacion(Request $request)
+    {
+        try {
+            $revision_disenio = ModificacionDisenio::join('disenios', 'disenios.id', '=', 'modificaciones.id_disenio')
+                ->join('clientes', 'clientes.id', '=', 'disenios.id_cliente')
+                ->select(
+                    'clientes.nombres',
+                    'clientes.apellido_paterno',
+                    'clientes.apellido_materno',
+                    "modificaciones.fecha",
+                )
+                ->where('clientes.status', true)
+                ->where('disenios.status', true)
+                ->where('modificaciones.status', true)
+                ->get();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OK',
+                'records' => $revision_disenio,
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'records' => [],
             ], 500);
         }
     }

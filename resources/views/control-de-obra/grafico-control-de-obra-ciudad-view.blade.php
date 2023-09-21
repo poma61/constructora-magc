@@ -1,5 +1,5 @@
 @extends('layouts/app')
-@section('title', 'MAGC | Finanzas de construccion')
+@section('title', 'MAGC | Control de obras')
 
 @section('template_content')
     <div class="card mt-5">

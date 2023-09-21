@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Contratista;
+use App\Models\Disenio;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -18,17 +18,17 @@ use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 class DisenioExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents, WithCustomStartCell
 {
 
-    protected $contratista;
+    protected $disenio;
     protected $request;
     public function __construct($request)
     {
         $this->request = $request;
-        $this->contratista = $this->getContratista();
+        $this->disenio = $this->getDisenio();
     }
 
     public function collection()
     {
-        return  collect($this->contratista);
+        return  collect($this->disenio);
     }
 
     public function startCell(): string
@@ -39,16 +39,16 @@ class DisenioExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
     public function headings(): array
     {
         // Verificar si hay datos en la colección
-        if ($this->contratista->isNotEmpty()) {
+        if ($this->disenio->isNotEmpty()) {
             // Obtener el primer modelo en la colección
-            $first_data = $this->contratista->first();
+            $first_data = $this->disenio->first();
             // Obtener los nombres de las columnas de la tabla
             return  array_keys($first_data->toArray());
         }
         return [];
     }
 
-    public function getContratista()
+    public function getDisenio()
     {
         $meses = [
             'enero' => '01',
@@ -66,59 +66,37 @@ class DisenioExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
         ];
 
         if ($this->request->input('month') == 'todos') {
-            $contratista = Contratista::join('contratos', 'contratos.id', '=', 'contratistas.id_contrato')
-                ->join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
-                ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
-                ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
+            $disenio = Disenio::join('clientes', 'clientes.id', '=', 'disenios.id_cliente')
                 ->select(
-                    'ciudades.city_name as Nombre ciudad',
-                    'grupos.grup_number as Grupo',
                     'clientes.nombres as Cliente, nombres',
                     'clientes.apellido_paterno as Cliente, apellido paterno',
                     'clientes.apellido_materno as Cliente, apellido materno',
-                    'contratos.n_contrato as N° de contrato',
-                    'contratistas.nombres as Contratista, nombres',
-                    'contratistas.apellido_paterno as Contratista, apellido paterno',
-                    'contratistas.apellido_materno as Contratista, apellido materno',
-                    'contratistas.estado as Estado',
-                    DB::raw('DATE_FORMAT(contratistas.fecha_inicio, "%d-%m-%Y") as "Fecha inicio"'),
-                    'contratistas.descripcion as Descripcion',
+                    'disenios.requerimiento as Requerimiento',
+                    DB::raw('DATE_FORMAT(disenios.fecha, "%d-%m-%Y") as "Fecha"'),
+                    'disenios.arquitecto as Arquitecto',
                 )
                 ->where('clientes.status', true)
-                ->where('contratos.status', true)
-                ->where('contratistas.status', true)
-                ->where('ciudades.city_name',  $this->request->input('ciudad'))
-                ->whereYear('contratistas.fecha_inicio', $this->request->input('year'))
+                ->where('disenios.status', true)
+                ->whereYear('disenios.fecha', $this->request->input('year'))
                 ->get();
         } else {
-            $contratista = Contratista::join('contratos', 'contratos.id', '=', 'contratistas.id_contrato')
-                ->join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
-                ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
-                ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
+            $disenio = Disenio::join('clientes', 'clientes.id', '=', 'disenios.id_cliente')
                 ->select(
-                    'ciudades.city_name as Nombre ciudad',
-                    'grupos.grup_number as Grupo',
                     'clientes.nombres as Cliente, nombres',
                     'clientes.apellido_paterno as Cliente, apellido paterno',
                     'clientes.apellido_materno as Cliente, apellido materno',
-                    'contratos.n_contrato as N° de contrato',
-                    'contratistas.nombres as Contratista, nombres',
-                    'contratistas.apellido_paterno as Contratista, apellido paterno',
-                    'contratistas.apellido_materno as Contratista, apellido materno',
-                    'contratistas.estado as Estado',
-                    DB::raw('DATE_FORMAT(contratistas.fecha_inicio, "%d-%m-%Y") as "Fecha inicio"'),
-                    'contratistas.descripcion as Descripcion',
+                    'disenios.requerimiento as Requerimiento',
+                    DB::raw('DATE_FORMAT(disenios.fecha, "%d-%m-%Y") as "Fecha"'),
+                    'disenios.arquitecto as Arquitecto',
                 )
                 ->where('clientes.status', true)
-                ->where('contratos.status', true)
-                ->where('contratistas.status', true)
-                ->where('ciudades.city_name',  $this->request->input('ciudad'))
-                ->whereYear('contratistas.fecha_inicio', $this->request->input('year'))
-                ->whereMonth('contratistas.fecha_inicio', $meses[$this->request->input('month')])
+                ->where('disenios.status', true)
+                ->whereYear('disenios.fecha', $this->request->input('year'))
+                ->whereMonth('disenios.fecha', $meses[$this->request->input('month')])
                 ->get();
         }
 
-        return $contratista;
+        return $disenio;
     }
 
     public function registerEvents(): array
@@ -126,7 +104,7 @@ class DisenioExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 // Agregar un título en la primera fila antes de los datos
-                $event->sheet->setCellValue('A1', "Reporte de contratistas");
+                $event->sheet->setCellValue('A1', "Reporte de diseños");
                 $event->sheet->setCellValue('B1', "Año= {$this->request->input('year')}");
                 $event->sheet->setCellValue('C1', "Mes= {$this->request->input('month')}");
                 // Estilo para el título
@@ -138,7 +116,7 @@ class DisenioExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
                 ]);
 
                 // Aplicar el estilo de bordes a todas las celdas (incluido el encabezado)
-                $all_cells_range = 'A2:' . Coordinate::stringFromColumnIndex(count($this->headings())) . $this->contratista->count() + 2;
+                $all_cells_range = 'A2:' . Coordinate::stringFromColumnIndex(count($this->headings())) . $this->disenio->count() + 2;
                 $event->sheet->getStyle($all_cells_range)->applyFromArray([
                     'borders' => [
                         'allBorders' => [
@@ -156,7 +134,7 @@ class DisenioExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
                 $event->sheet->getStyle($header_range)->applyFromArray([
                     'fill' => [
                         'fillType' => Fill::FILL_SOLID,
-                        'color' => ['rgb' => "8C00FF"],
+                        'color' => ['rgb' => "006F8E"],
                     ],
                     'font' => [
                         'color' => ['rgb' => 'FFFFFF'],
@@ -164,11 +142,11 @@ class DisenioExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
                 ],);
 
                 // Definir los colores para las filas intercaladas
-                $color_even = 'B565F7';
-                $color_odd = 'D5ABF7';
+                $color_even = '49D8FF';
+                $color_odd = 'A6E0F0';
 
                 // Obtener el número total de filas de datos
-                $total_rows = $this->contratista->count();
+                $total_rows = $this->disenio->count();
 
                 for ($row_index = 3; $row_index <= $total_rows + 2; $row_index++) {
                     // Definir el color en función de si el índice de fila es par o impar

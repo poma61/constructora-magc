@@ -5,22 +5,47 @@
             <li>
                 <div class="has-text-info">
                     <span class="icon is-small">
-                        <span class="mdi mdi-calendar-clock"></span>
+                        <span class="mdi mdi-text-box-check-outline"></span>
                     </span>
-                    <span>Fechas de inicio</span>
+                    <span>REVISION</span>
                 </div>
             </li>
         </ul>
     </nav>
 
+    <div class="tabs is-toggle">
+        <ul>
+
+            <li :class="{ 'is-active': field == 'fecha_rev_plano' }">
+                <a @click="selectField('fecha_rev_plano')">
+                    <span class="icon is-small">
+                        <i class="mdi mdi-calendar-check-outline is-size-5"></i>
+                    </span>
+                    <span>Fechas, planos</span>
+                </a>
+            </li>
+
+            <li :class="{ 'is-active': field == 'fecha_rev_3D' }">
+                <a @click="selectField('fecha_rev_3D')">
+                    <span class="icon is-small">
+                        <i class="mdi mdi-calendar-check-outline is-size-5"></i>
+                    </span>
+                    <span>Fechas, 3D</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
     <vue-cal style="min-height: 80vh" active-view="year" locale="es" :events="data_events" events-on-month-view="short"
         :disable-views="['years', 'week', 'day']" events-count-on-year-view show-time-in-cells />
+        
 </template>
 
 <script>
 import { defineComponent } from 'vue';
 import VueCal from 'vue-cal'
-import Contratista from '@/services/Contratista';
+import RevisionDisenio from '@/services/RevisionDisenio';
 import toastr from 'toastr';
 
 export default defineComponent({
@@ -29,8 +54,6 @@ export default defineComponent({
     },
     data() {
         const data_events = [];
-        const city = "";
-        const group = "";
         const class_colors = [
             'has-background-danger',
             'has-background-warning-dark',
@@ -41,21 +64,16 @@ export default defineComponent({
             'has-background-grey',
         ];
         const indice_aleatorio = -1;
+        const field = "fecha_rev_plano";
         return {
             data_events,
-            city,
-            group,
             indice_aleatorio,
             class_colors,
+            field,
         }
     },
 
     methods: {
-        urlParams() {
-            const parse_url = new URL(window.location.href);
-            this.city = parse_url.pathname.split('/').pop();
-        },
-
         viewToast(type, message) {
             // Configurar opciones globales para Toastr (opcional)
             toastr.options = {
@@ -72,18 +90,18 @@ export default defineComponent({
             }
         },
 
-        async initCalendarFechaInicio() {
-            const contratista = new Contratista(this.city);
-            const response = await contratista.calendarFechaInicio();
+        async initCalendarFechaAll() {
 
+            const revision = new RevisionDisenio();
+            const response = await revision.calendarFechaAllShe(this.field);
             if (response.status) {
                 response.records.forEach(item => {
                     //indice aleatorio, segun el tamaño del array de clases de colores
                     this.indice_aleatorio = Math.floor(Math.random() * this.class_colors.length);
 
                     this.data_events.push({
-                        start: `${item.fecha_inicio}`,
-                        end: `${item.fecha_inicio}`,
+                        start: `${item[this.field]}`,
+                        end: `${item[this.field]}`,
                         title: `${item.nombres} ${item.apellido_paterno} ${item.apellido_materno}`,
                         class: `${this.class_colors[this.indice_aleatorio]} has-text-white my-1`
                     });
@@ -96,11 +114,16 @@ export default defineComponent({
 
         },
 
+        selectField(is_field) {
+            this.field = is_field;
+            this.data_events=[];//reiniciamos la variable
+            this.initCalendarFechaAll();
+        }
+
     },//methods
 
     mounted() {
-        this.urlParams();
-        this.initCalendarFechaInicio();
+        this.initCalendarFechaAll();
     }
 
 });
@@ -126,8 +149,4 @@ export default defineComponent({
     padding: 2px !important;
 }
 
-/* ocultamos la hora final (end) */
-.vuecal__event-time span {
-    display: none !important;
-}
 </style>

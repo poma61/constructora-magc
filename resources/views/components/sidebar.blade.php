@@ -2,10 +2,11 @@
     $routes_cliente = ['r-cliente-index-view', 'r-tablero-cliente-grupo-view', 'r-grafico-cliente-grupo-view', 'r-calendario-cliente-grupo-view', 'r-gantt-cliente-grupo-view'];
     $routes_contrato = ['r-ciudad-contrato', 'r-tablero-contrato', 'r-calendario-contrato', 'r-gantt-contrato'];
     $routes_finanzas_de_construccion = ['r-ciudad-finanzas-de-construccion', 'r-tablero-finanzas-de-construccion', 'r-grafico-finanzas-de-construccion', 'r-calendario-finanzas-de-construccion', 'r-gantt-finanzas-de-construccion'];
-    $routes_inventario = ['r-ciudad-inventario', 'r-tablero-inventario','r-grafico-inventario','r-calendario-inventario','r-gantt-inventario'];
-    $routes_control_de_obra = ['r-ciudad-control-de-obra','r-tablero-control-de-obra','r-grafico-control-de-obra','r-calendario-control-de-obra','r-gantt-control-de-obra'];
+    $routes_inventario = ['r-ciudad-inventario', 'r-tablero-inventario', 'r-grafico-inventario', 'r-calendario-inventario', 'r-gantt-inventario'];
+    $routes_control_de_obra = ['r-ciudad-control-de-obra', 'r-tablero-control-de-obra', 'r-grafico-control-de-obra', 'r-calendario-control-de-obra', 'r-gantt-control-de-obra'];
+    $routes_disenio = ['r-tablero-disenio', 'r-grafico-disenio', 'r-calendario-disenio'];
     //obtenemos el name de la ruta actual que esta en la url
-    $route_actual=Route::currentRouteName();
+    $route_name_actual = Route::currentRouteName();
 @endphp
 
 <div class="left-side-bar">
@@ -47,8 +48,8 @@
 
                 <li>
                     <a href="{{ route('r-home') }}"
-                        class="unfold-toggle no-arrow @if ( $route_actual == 'r-home') active @endif">
-                        <i class="as-icon mdi mdi-home-circle-outline is-size-4"></i>
+                        class="unfold-toggle no-arrow @if ($route_name_actual == 'r-home') active @endif">
+                        <i class="as-icon mdi mdi-home-circle-outline is-size-5"></i>
                         <span>Inicio</span>
                     </a>
                 </li>
@@ -62,16 +63,16 @@
 
                 <li>
                     <a href="{{ route('r-cliente-index-view') }}"
-                        class="unfold-toggle no-arrow @if (in_array( $route_actual, $routes_cliente)) active @endif">
-                        <i class="as-icon mdi mdi-table-account is-size-4"></i>
+                        class="unfold-toggle no-arrow @if (in_array($route_name_actual, $routes_cliente)) active @endif">
+                        <i class="as-icon mdi mdi-table-account is-size-5"></i>
                         <span>Clientes</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('r-ciudad-contrato') }}"
-                        class="unfold-toggle no-arrow  @if (in_array( $route_actual, $routes_contrato)) active @endif">
-                        <i class="as-icon mdi mdi-file-account-outline is-size-4"></i>
+                        class="unfold-toggle no-arrow  @if (in_array($route_name_actual, $routes_contrato)) active @endif">
+                        <i class="as-icon mdi mdi-file-account-outline is-size-5"></i>
                         <span>Contratos</span>
                     </a>
                 </li>
@@ -85,24 +86,24 @@
 
                 <li>
                     <a href="{{ route('r-ciudad-control-de-obra') }}"
-                        class="unfold-toggle no-arrow @if (in_array( $route_actual, $routes_control_de_obra)) active @endif">
-                        <i class="as-icon mdi mdi-file-tree is-size-4"></i>
+                        class="unfold-toggle no-arrow @if (in_array($route_name_actual, $routes_control_de_obra)) active @endif">
+                        <i class="as-icon mdi mdi-file-tree is-size-5"></i>
                         <span>Control de obras</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('r-ciudad-finanzas-de-construccion') }}"
-                        class="unfold-toggle no-arrow  @if (in_array( $route_actual, $routes_finanzas_de_construccion)) active @endif">
-                        <i class="as-icon mdi mdi-counter is-size-4"></i>
+                        class="unfold-toggle no-arrow  @if (in_array($route_name_actual, $routes_finanzas_de_construccion)) active @endif">
+                        <i class="as-icon mdi mdi-counter is-size-5"></i>
                         <span>Finanzas de construccion</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('r-ciudad-inventario') }}"
-                        class="unfold-toggle no-arrow  @if (in_array( $route_actual, $routes_inventario)) active @endif">
-                        <i class="as-icon mdi mdi-file-table-box-outline is-size-4"></i>
+                        class="unfold-toggle no-arrow  @if (in_array($route_name_actual, $routes_inventario)) active @endif">
+                        <i class="as-icon mdi mdi-file-table-box-outline is-size-5"></i>
                         <span>Inventario</span>
                     </a>
                 </li>
@@ -116,8 +117,9 @@
                 </li>
 
                 <li>
-                    <a href="#" class="unfold-toggle no-arrow">
-                        <i class="as-icon mdi mdi-file-table-box-outline is-size-4"></i>
+                    <a href="{{ route('r-ccd-operation') }}"
+                        class="unfold-toggle no-arrow @if ($route_name_actual == 'r-ccd-operation') active @endif">
+                        <i class="as-icon mdi mdi-file-table-box-outline is-size-5"></i>
                         <span>CCD</span>
                     </a>
                 </li>
@@ -131,8 +133,9 @@
                 </li>
 
                 <li>
-                    <a href="{{ route('r-tablero-disenio') }}" class="unfold-toggle no-arrow">
-                        <span class="as-icon mdi mdi-dishwasher is-size-4"></span>
+                    <a href="{{ route('r-tablero-disenio') }}"
+                        class="unfold-toggle no-arrow @if (in_array($route_name_actual, $routes_disenio)) active @endif">
+                        <span class="as-icon mdi mdi-dishwasher is-size-5"></span>
                         <span>Diseño</span>
                     </a>
                 </li>
@@ -140,7 +143,6 @@
 
                 {{-- opciones del menu solo cuando es rol administrador --}}
                 @if (Auth::user()->role == 'Administrador')
-
                     <li>
                         <div class="unfold-divider"></div>
                     </li>
@@ -151,16 +153,16 @@
 
                     <li>
                         <a href="{{ route('r-personal-index-view', 'Santa-Cruz') }}"
-                            class="unfold-toggle no-arrow @if ( $route_actual == 'r-personal-index-view') active @endif">
-                            <span class="as-icon  mdi mdi-badge-account-outline is-size-4"></span>
+                            class="unfold-toggle no-arrow @if ($route_name_actual == 'r-personal-index-view') active @endif">
+                            <span class="as-icon  mdi mdi-badge-account-outline is-size-5"></span>
                             <span>Personal</span>
                         </a>
                     </li>
 
                     <li>
                         <a href="{{ route('r-user-view', 'Santa-Cruz') }}"
-                            class="unfold-toggle no-arrow @if ( $route_actual == 'r-user-view') active @endif">
-                            <span class="as-icon mdi mdi-home-account is-size-4"></span>
+                            class="unfold-toggle no-arrow @if ($route_name_actual == 'r-user-view') active @endif">
+                            <span class="as-icon mdi mdi-home-account is-size-5"></span>
                             <span>Usuarios</span>
                         </a>
                     </li>

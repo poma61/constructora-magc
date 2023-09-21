@@ -159,7 +159,7 @@ const items_per_page_options = ref([
 const columns = ref([
     { title: 'Fecha', key: 'fecha' },
     { title: 'Observacion', key: 'observacion' },
-    { title: 'Acciones', key: 'actions', align: 'center' },
+    { title: 'Acciones', key: 'actions',  align: 'center' },
 ])
 
 //computed

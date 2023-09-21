@@ -6,7 +6,7 @@
         <div class="card-content">
             <h1
                 class="as-main-title as-background-orange  is-size-5 has-text-centered has-text-white animate__animated animate__bounceInDown">
-                Diseño | Tablero
+                Diseño | Grafico
             </h1>
           
             @include('components/disenio/disenio-options')
@@ -18,5 +18,5 @@
 
 
 @section('template_js')
-    @vite('resources/js/disenioBoard.js')
+    @vite('resources/js/disenioChart.js')
 @endsection

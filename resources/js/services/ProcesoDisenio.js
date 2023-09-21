@@ -58,7 +58,18 @@ class ProcesoDisenio extends Disenio {
         }
     }
 
+    async graphicProcesoShe(is_year, is_month, is_field) {
+        try {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/disenio/proceso/graphic-proceso', {
+                year: is_year,
+                month: is_month,
+                field: is_field,
+            }, this.config);
+            return resolve.data;
+        } catch (error) {
+            return error.response.data;
+        }
+    }
 
 }//class
-
 export default ProcesoDisenio;

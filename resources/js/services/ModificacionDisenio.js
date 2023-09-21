@@ -82,6 +82,19 @@ class ModificacionDisenio extends Disenio {
         }
     }
 
+
+    async calendarFechaOneShe() {
+        try {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/disenio/modificacion/calendar-fecha', this.config);
+
+            return resolve.data;
+        } catch (error) {
+            return error.response.data;
+        }
+    }
+
+
+
 }//class
 
 export default ModificacionDisenio;

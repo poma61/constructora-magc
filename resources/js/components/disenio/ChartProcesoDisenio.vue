@@ -4,18 +4,69 @@
             <li>
                 <div class="has-text-info">
                     <span class="icon is-small">
+                        <span class="mdi mdi-chart-line"></span>
+                    </span>
+                    <span>Procesos</span>
+                </div>
+            </li>
+
+            <li>
+                <div class="has-text-info">
+                    <span class="icon is-small">
                         <span class="mdi mdi-calendar-clock"></span>
                     </span>
-                    <span>Fechas de inicio</span>
+                    <span>Fechas de diseño</span>
                 </div>
             </li>
         </ul>
     </nav>
 
+    <div class="tabs is-toggle">
+        <ul>
+
+            <li :class="{ 'is-active': field == 'planos' }">
+                <a @click="selectField('planos')">
+                    <span class="icon is-small">
+                        <i class="mdi mdi-chart-line"></i>
+                    </span>
+                    <span>Planos</span>
+                </a>
+            </li>
+
+            <li :class="{ 'is-active': field == 'elevaciones' }">
+                <a @click="selectField('elevaciones')">
+                    <span class="icon is-small">
+                        <i class="mdi mdi-chart-line"></i>
+                    </span>
+                    <span>Elevaciones</span>
+                </a>
+            </li>
+
+            <li :class="{ 'is-active': field == 'instalaciones' }">
+                <a @click="selectField('instalaciones')">
+                    <span class="icon is-small">
+                        <i class="mdi mdi-chart-line"></i>
+                    </span>
+                    <span>Instalaciones</span>
+                </a>
+            </li>
+
+            <li :class="{ 'is-active': field == 'p3D' }">
+                <a @click="selectField('p3D')">
+                    <span class="icon is-small">
+                        <i class="mdi mdi-chart-line"></i>
+                    </span>
+                    <span>3D</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
     <div class="buttons">
         <div class="control has-icons-left">
             <div class="select is-info">
-                <select v-model="year" @click="graphicBarPieEstado()">
+                <select v-model="year" @click="graphicBarPieProceso()">
                     <option value="2015">2015</option>
                     <option value="2016">2016</option>
                     <option value="2017">2017</option>
@@ -38,70 +89,71 @@
                 </select>
             </div>
             <div class="icon is-small is-left">
-                <span class="mdi mdi-calendar-cursor has-text-info is-size-4"></span>
+                <span class="mdi mdi-calendar-cursor has-text-info is-size-5"></span>
             </div>
         </div>
     </div>
 
     <div class="buttons">
         <button @click="selectMont('todos')" :class="['button is-info', { 'is-light': month === 'todos' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Todos
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Todos
         </button>
 
         <button @click="selectMont('enero')" :class="['button is-info', { 'is-light': month === 'enero' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Enero
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Enero
         </button>
 
         <button @click="selectMont('febrero')" :class="['button is-info', { 'is-light': month === 'febrero' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Febrero
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Febrero
         </button>
 
         <button @click="selectMont('marzo')" :class="['button is-info', { 'is-light': month === 'marzo' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Marzo
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Marzo
         </button>
 
         <button @click="selectMont('abril')" :class="['button is-info', { 'is-light': month === 'abril' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Abril
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Abril
         </button>
 
         <button @click="selectMont('mayo')" :class="['button is-info', { 'is-light': month === 'mayo' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Mayo
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Mayo
         </button>
 
         <button @click="selectMont('junio')" :class="['button is-info', { 'is-light': month === 'junio' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Junio
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Junio
         </button>
 
         <button @click="selectMont('julio')" :class="['button is-info', { 'is-light': month === 'julio' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Julio
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Julio
         </button>
 
 
         <button @click="selectMont('agosto')" :class="['button is-info', { 'is-light': month === 'agosto' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Agosto
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Agosto
         </button>
 
 
         <button @click="selectMont('septiembre')" :class="['button is-info', { 'is-light': month === 'septiembre' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Septiembre
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Septiembre
         </button>
 
 
         <button @click="selectMont('octubre')" :class="['button is-info', { 'is-light': month === 'octubre' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Octubre
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Octubre
         </button>
 
 
         <button @click="selectMont('noviembre')" :class="['button is-info', { 'is-light': month === 'noviembre' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Noviembre
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Noviembre
         </button>
 
 
         <button @click="selectMont('diciembre')" :class="['button is-info', { 'is-light': month === 'diciembre' }]">
-            <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Diciembre
+            <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Diciembre
         </button>
 
     </div>
+    
     <div class="box p-0">
         <apexchart type="bar" :height="500" :options="chart_options_bar" :series="series_bar"></apexchart>
     </div>
@@ -115,7 +167,7 @@
 import { defineComponent } from 'vue';
 import VueApexCharts from "vue3-apexcharts";
 import esLocale from 'apexcharts/dist/locales/es.json'; // Importa el módulo de idioma "es" aquí
-import Contratista from '@/services/Contratista';
+import ProcesoDisenio from '@/services/ProcesoDisenio';
 import toastr from 'toastr';
 
 export default defineComponent({
@@ -134,7 +186,8 @@ export default defineComponent({
         const anio_actual = new Date();
         const year = anio_actual.getFullYear();
         const month = "todos";
-        const colores = ['#48C78E', '#F14668', '#3E8ED0'];
+        const colores = ['#51A351', '#F14668', '#3E8ED0'];
+        const field = "planos";
         const estados = [
             'En ejecucion',//0
             'Paralizado',//1
@@ -201,25 +254,20 @@ export default defineComponent({
 
         const series_pie = [];
         const series_bar = [];
-        const city = null;
 
         return {
             chart_options_bar,
             chart_options_pie,
             series_bar,
             series_pie,
-            city,
             estados,
             year,
-            month
+            month,
+            field
         };
     },//data
 
     methods: {
-        urlParams() {
-            const parse_url = new URL(window.location.href);
-            this.city = parse_url.pathname.split('/').pop();
-        },
 
         viewToast(type, message) {
             if (type == 'success') {
@@ -231,17 +279,23 @@ export default defineComponent({
 
         selectMont(mes) {
             this.month = mes;
-            this.graphicBarPieEstado();
+            this.graphicBarPieProceso();
         },
 
-        async graphicBarPieEstado() {
-            const contratista = new Contratista(this.city);
-            const response = await contratista.graphicEstado(this.year, this.month);
+        selectField(is_field) {
+            this.field = is_field;
+            this.graphicBarPieProceso();
+        },
+
+
+        async graphicBarPieProceso() {
+            const proceso_disenio = new ProcesoDisenio();
+            const response = await proceso_disenio.graphicProcesoShe(this.year, this.month, this.field);
             const estado_totales = {};
 
             if (response.status) {
                 response.records.forEach(item => {
-                    estado_totales[item.estado] = item.total;
+                    estado_totales[item[this.field]] = item.total;
                 });
                 const records = this.estados.map(item => estado_totales[item] || 0);
                 this.series_bar = [{
@@ -258,8 +312,7 @@ export default defineComponent({
 
     },//methods
     mounted() {
-        this.urlParams();
-        this.graphicBarPieEstado(this.year, this.month);
+        this.graphicBarPieProceso();
     }
 
 });

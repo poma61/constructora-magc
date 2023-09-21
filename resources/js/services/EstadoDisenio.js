@@ -71,6 +71,18 @@ class EstadoDisenio extends Disenio {
     }
 
 
+    async calendarFechaAllShe(is_field) {
+        try {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/disenio/estado/calendar-fecha-all', {
+                field: is_field,
+            }, this.config);
+
+            return resolve.data;
+        } catch (error) {
+            return error.response.data;
+        }
+    }
+
 }//class
 
 export default EstadoDisenio;

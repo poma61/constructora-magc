@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import MainApplication from '@/components/disenio/CalendarDisenio.vue'
+import MainApplication from '@/components/disenio/CalendarAllByDisenio.vue'
 import 'vue-cal/dist/vuecal.css';
 import 'toastr/build/toastr.min.css';
 

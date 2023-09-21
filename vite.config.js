@@ -34,6 +34,8 @@ export default defineConfig({
                 'resources/js/obraChart.js',
                 'resources/js/obraGantt.js',
 
+                'resources/js/operationCCD.js',
+
                 'resources/js/userBoard.js',
             ],
             refresh: true,

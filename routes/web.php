@@ -11,6 +11,7 @@ use App\Http\Controllers\DisenioController;
 use App\Http\Controllers\ObraController;
 use App\Http\Controllers\FinanzasDeConstruccionController;
 use App\Http\Controllers\InventarioController;
+use App\Http\Controllers\CCDController;
 
 
 //middleware('guest') si el usuario esta autenticado no permite que el usuario acceda a la vista login
@@ -196,6 +197,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/microservice/disenio/modificacion/tablero-create', [DisenioController::class, 'rowTableroCreateModificacionDisenio']);
     Route::put('/microservice/disenio/modificacion/tablero-update', [DisenioController::class, 'rowTableroUpdateModificacionDisenio']);
     Route::post('/microservice/disenio/modificacion/tablero-destroy', [DisenioController::class, 'rowTableroDestroyModificacionDisenio']);
+
+    //grafico, proceso
+    Route::post('/microservice/disenio/proceso/graphic-proceso', [DisenioController::class, 'graphicProceso']);
+    //calendario, revision
+    Route::post('/microservice/disenio/revision/calendar-fecha-all', [DisenioController::class, 'calendarFechaAllRevision']);
+    //calendario,estado
+    Route::post('/microservice/disenio/estado/calendar-fecha-all', [DisenioController::class, 'calendarFechaAllEstado']);
+    //calendario, modificacion
+    Route::post('/microservice/disenio/modificacion/calendar-fecha', [DisenioController::class, 'calendarFechaModificacion']);
 });
 
 //CCD
+Route::get('/operacion/ccd', [CCDController::class, 'index'])->middleware('auth')->name('r-ccd-operation');

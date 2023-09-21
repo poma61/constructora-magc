@@ -1,0 +1,118 @@
+
+<template>
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li>
+                <div class="has-text-link">
+                    <span class="icon is-small">
+                        <span class="mdi mdi-file-sign"></span>
+                    </span>
+                    <span>MODIFICACION</span>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <vue-cal style="min-height: 80vh" active-view="year" locale="es" :events="data_events" events-on-month-view="short"
+        :disable-views="['years', 'week', 'day']" events-count-on-year-view show-time-in-cells />
+</template>
+
+<script>
+import { defineComponent } from 'vue';
+import VueCal from 'vue-cal'
+import ModificacionDisenio from '@/services/ModificacionDisenio';
+import toastr from 'toastr';
+
+export default defineComponent({
+    components: {
+        VueCal,
+    },
+    data() {
+        const data_events = [];
+        const class_colors = [
+            'has-background-danger',
+            'has-background-warning-dark',
+            'has-background-success',
+            'has-background-info',
+            'has-background-link',
+            'has-background-primary',
+            'has-background-grey',
+        ];
+        const indice_aleatorio = -1;
+        return {
+            data_events,
+            indice_aleatorio,
+            class_colors,
+        }
+    },
+
+    methods: {
+        viewToast(type, message) {
+            // Configurar opciones globales para Toastr (opcional)
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                positionClass: 'toast-bottom-right',
+                timeOut: 3000,
+                hideDuration: 100,
+            };
+            if (type == 'success') {
+                toastr.success(message)
+            } else {
+                toastr.error(message, 'Error')
+            }
+        },
+
+        async initCalendarFechaOne() {
+            const revision = new ModificacionDisenio();
+            const response = await revision.calendarFechaOneShe();
+            if (response.status) {
+                response.records.forEach(item => {
+                    //indice aleatorio, segun el tamaño del array de clases de colores
+                    this.indice_aleatorio = Math.floor(Math.random() * this.class_colors.length);
+
+                    this.data_events.push({
+                        start: `${item.fecha}`,
+                        end: `${item.fecha}`,
+                        title: `${item.nombres} ${item.apellido_paterno} ${item.apellido_materno}`,
+                        class: `${this.class_colors[this.indice_aleatorio]} has-text-white my-1`
+                    });
+
+                });
+                this.viewToast('success', response.message);
+            } else {
+                this.viewToast('error', response.message);
+            }
+
+        },
+
+
+    },//methods
+
+    mounted() {
+        this.initCalendarFechaOne();
+    }
+
+});
+</script>
+
+<style>
+/* Green-theme. */
+.vuecal__menu,
+.vuecal__cell-events-count {
+    background-color: #00bcc9 !important;
+    color: #fff;
+}
+
+.vuecal__title-bar {
+    background-color: #c3fbff !important;
+}
+
+/* Dot indicator */
+.vuecal__cell-events-count {
+    min-width: 20px !important;
+    min-height: 20px !important;
+    font-size: 20px !important;
+    padding: 2px !important;
+}
+</style>

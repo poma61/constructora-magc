@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'MAGC | Administracion')
+@section('title', 'MAGC | No Autorizado')
 
 @section('template_css')
 
