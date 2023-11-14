@@ -1,6 +1,5 @@
 @extends('layouts.master-login')
 
-
 @section('title', 'Constructora MAGC')
 @section('template_css')
     <link rel="stylesheet" type="text/css" href="{{ asset('src/css/bulma.css') }}" />
@@ -33,6 +32,7 @@
             </button>
         </div>
         <br>
+                 
         @error('failed-user')
             <div class="notification is-warning">
                 <button class="delete"></button>

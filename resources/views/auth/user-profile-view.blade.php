@@ -1,16 +1,15 @@
 @extends('layouts/app')
-@section('title', 'MAGC | Usuarios')
+@section('title', 'MAGC | Perfil')
 
 
 @section('template_content')
 
-    <div class="card mt-5">
+    <div class="card mt-5" style="min-height:85vh">
 
         <div class="card-content">
           <h1 class="as-main-title has-background-primary is-size-5 has-text-centered has-text-white has-text-white animate__animated animate__bounce">
-                Administracion de usuarios del sistema
+                Datos del usuario del sistema
             </h1>
-            @include('components/user/user-tabs')
 
             <div id="app">
             </div>
@@ -22,5 +21,5 @@
 
 @section('template_js')
 
- @vite('resources/js/userBoard.js')
+ @vite('resources/js/authUserProfile.js')
 @endsection

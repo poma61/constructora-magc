@@ -14,13 +14,38 @@ use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\CCDController;
 
 
+Route::get('/storage-link', function () {
+    if (file_exists(public_path('storage'))) {
+        return 'The "public/storage" directory already exists.';
+    }
+
+    app('files')->link(
+        storage_path('app/public'),
+        public_path('storage')
+    );
+
+    return 'The [public/storage] directory has bee linked.';
+});
+
+
+
 //middleware('guest') si el usuario esta autenticado no permite que el usuario acceda a la vista login
 //entonces esto redirige a la vista principal donde se configura en la siguiente ruta del archivo php
 //app/Providers/RouteServiceProvider.php
 Route::get('/', [LoginController::class, 'index'])->name('r-view-login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login'])->name("r-login");
+
+//auth
+Route::group(['middleware' => ['auth']], function () {
+    Route::get("/salir", [LoginController::class, 'logout'])->name("r-salir");
+    Route::get("/me", [LoginController::class, 'viewMe'])->name("r-me");
+    Route::post("/microservice/index-me", [LoginController::class, 'me']);
+    Route::put("/microservice/update-credentials-me", [LoginController::class, 'updateCredentials']);
+});
+
+
+//home
 Route::get("/home", [HomeController::class, 'index'])->name("r-home")->middleware("auth");
-Route::get("/salir", [LoginController::class, 'logout'])->name("r-salir")->middleware("auth");
 
 
 //personal
@@ -43,7 +68,6 @@ Route::group(['middleware' => ['auth', 'check.role.access']], function () {
     Route::post('/microservice/user/destroy', [UserController::class, 'destroy']);
     Route::post('/microservice/user/buscar-personal-registrado', [UserController::class, 'buscarPersonal']);
 });
-
 
 
 //clientes
@@ -99,7 +123,6 @@ Route::group(['middleware' => ['auth', 'check.city.access']], function () {
     Route::get('/control-de-obra/grafico/{ciudad}', [ObraController::class, 'viewGrafico'])->name('r-grafico-control-de-obra');
     Route::get('/control-de-obra/calendario/{ciudad}', [ObraController::class, 'viewCalendario'])->name('r-calendario-control-de-obra');
     Route::get('/control-de-obra/gantt/{ciudad}', [ObraController::class, 'viewGantt'])->name('r-gantt-control-de-obra');
-
     //tablero
     Route::post('/microservice/control-de-obra/ciudad/tablero-index', [ObraController::class, 'tableroIndex']);
     Route::post('/microservice/control-de-obra/ciudad/tablero-create', [ObraController::class, 'rowTableroCreate']);
@@ -107,7 +130,6 @@ Route::group(['middleware' => ['auth', 'check.city.access']], function () {
     Route::post('/microservice/control-de-obra/ciudad/tablero-destroy', [ObraController::class, 'rowTableroDestroy']);
     Route::post('/microservice/control-de-obra/ciudad/buscar-contrato', [ObraController::class, 'buscarContrato']);
     Route::post('/microservice/control-de-obra/ciudad/generate-excel', [ObraController::class, 'generateExcel']);
-
     // //grafico,calendario,gantt 
     Route::post('/microservice/control-de-obra/ciudad/graphic-estado', [ObraController::class, 'graphicEstado']);
     Route::post('/microservice/control-de-obra/ciudad/calendar-fecha-inicio', [ObraController::class, 'calendarFechaInicio']);
@@ -197,7 +219,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/microservice/disenio/modificacion/tablero-create', [DisenioController::class, 'rowTableroCreateModificacionDisenio']);
     Route::put('/microservice/disenio/modificacion/tablero-update', [DisenioController::class, 'rowTableroUpdateModificacionDisenio']);
     Route::post('/microservice/disenio/modificacion/tablero-destroy', [DisenioController::class, 'rowTableroDestroyModificacionDisenio']);
-
     //grafico, proceso
     Route::post('/microservice/disenio/proceso/graphic-proceso', [DisenioController::class, 'graphicProceso']);
     //calendario, revision
@@ -207,6 +228,7 @@ Route::group(['middleware' => ['auth']], function () {
     //calendario, modificacion
     Route::post('/microservice/disenio/modificacion/calendar-fecha', [DisenioController::class, 'calendarFechaModificacion']);
 });
+
 
 //CCD
 Route::get('/operacion/ccd', [CCDController::class, 'index'])->middleware('auth')->name('r-ccd-operation');

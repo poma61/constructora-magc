@@ -28,8 +28,8 @@
 
 <body>
 
-    @include('components.nav-bar')
-    @include('components.sidebar')
+    @include('components/nav-bar')
+    @include('components/sidebar')
 
     <div class="as-container-page">
         @yield('template_content')

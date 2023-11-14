@@ -13,9 +13,7 @@ use Throwable;
 
 class PersonalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+ 
     public function indexView(string $nombre_ciudad)
     {
         try {
@@ -85,9 +83,7 @@ class PersonalController extends Controller
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create(PersonalRequest $request)
     {
         try {
@@ -146,9 +142,7 @@ class PersonalController extends Controller
     }
 
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+  
     public function edit(Request $request)
     {
         try {
@@ -172,9 +166,7 @@ class PersonalController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(PersonalRequest $request)
     {
         try {
@@ -221,9 +213,7 @@ class PersonalController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+  
     public function destroy(Request $request)
     {
         try {

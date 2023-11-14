@@ -13,7 +13,7 @@
                 color="indigo-lighten-1" suffix="$us/m²" clearable style="width: 250px;"
                 @input="fieldAsseptNumber($event, 'precio_construccion')" @click:clear="onClear('precio_construccion')" />
 
-            <v-text-field v-model="is_ccd_fill.superficie" label="Supericie construccion" class="m-1"
+            <v-text-field v-model="is_ccd_fill.superficie" label="Superficie construccion" class="m-1"
                 color="indigo-lighten-1" clearable suffix="m²" style="width: 250px;"
                 @input="fieldAsseptNumber($event, 'superficie')" @click:clear="onClear('superficie')" />
 
@@ -22,7 +22,7 @@
                 @click:clear="onClear('precio_terreno')" />
 
             <v-text-field v-model="is_ccd_fill.plazo_anios" label="Plazo (años)" class="m-1" color="indigo-lighten-1"
-                clearable style="width: 250px;" @input="fieldAsseptNumber($event, 'plazo_anios')"
+                clearable style="width: 250px;" @input="plazoAniosAsseptNumberInteger($event, 'plazo_anios')"
                 @click:clear="onClear('plazo_anios')" />
 
             <v-text-field v-model="is_ccd_fill.interes_anual" label="Interes anual (%)" class="m-1" color="indigo-lighten-1"
@@ -38,16 +38,16 @@
                 Calcular
             </v-btn>
         </div>
-
+       
     </div>
 
     <div class="box">
         <div class="table-container">
-            <table class="table table is-striped table is-hoverable is-narrow table is-fullwidth">
+            <table class="table  is-striped  is-narrow  is-fullwidth">
                 <thead>
                     <tr>
                         <th class="has-text-info">Precio construccion ($us) </th>
-                        <th class="has-text-info">Supericie construccion (m<sup>2</sup>) </th>
+                        <th class="has-text-info">Superficie construccion (m<sup>2</sup>) </th>
                         <th class="has-text-info">Precio terreno ($us) </th>
                         <th class="has-text-info">Construccion ($us) </th>
                     </tr>
@@ -83,7 +83,7 @@
         </div>
 
         <div class="table-container">
-            <table class="table table is-striped table is-hoverable is-narrow">
+            <table class="table is-striped is-narrow is-fullwidth">
                 <thead>
                     <tr>
                         <th class="has-text-success">Precio credito directo ($us) </th>
@@ -124,7 +124,7 @@
 
 
         <div class="table-container">
-            <table class="table table is-striped table is-hoverable is-narrow">
+            <table class="table is-striped is-narrow is-fullwidth">
                 <thead>
                     <tr>
                         <th class="has-text-link">Plazo (años)</th>
@@ -249,6 +249,16 @@ const calculateCCD = () => {
         viewToast('error', error);
     }
 
+}
+
+const plazoAniosAsseptNumberInteger = (event, campo) => {
+    let valor_campo = event.target.value;
+
+    // Eliminar los caracteres no válidos, excepto números
+    valor_campo = valor_campo.replace(/\D/g, '');
+
+    // Actualizar el valor en el campo de entrada
+    is_ccd_fill.value[campo] = valor_campo;
 }
 
 const fieldAsseptNumber = (event, campo) => {

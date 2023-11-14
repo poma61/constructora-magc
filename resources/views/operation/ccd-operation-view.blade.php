@@ -10,6 +10,7 @@
             </h1>
 
             <div id="app"></div>
+
         </div>
     </div>
 @endsection

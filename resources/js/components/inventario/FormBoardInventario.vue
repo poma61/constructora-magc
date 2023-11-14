@@ -80,7 +80,7 @@
     </v-dialog>
 
     <v-snackbar v-model="snackbar_message_response.active" :timeout="2000" :color="snackbar_message_response.color"
-        location="top right" rounded="pill" min-height="70px">
+        location="bottom right" rounded="pill" min-height="70px">
         <div class="is-flex is-justify-content-center is-align-items-center">
             <span :class="snackbar_message_response.icon"></span>
             <p class="is-size-6">{{ snackbar_message_response.text }}</p>
@@ -120,7 +120,9 @@ const save = async () => {
             //pasaremos la respuesta del servidor por buenas practicas y evitar confusiones
             //debemos pasar el n_contrato_contratista porque en la respuesta del servidor no hay ese dato porque el n_contrato_contratista
             //esta en otra tabla, y la tabla inventario solo tenemos el id_contratista
-            emit('refreshRowDataByFormEmit', 'edit', Object.assign({ n_contrato_contratista: props.item_inventario_prop.n_contrato_contratista }, response.record));
+            emit('refreshRowDataByFormEmit', 'edit', Object.assign({
+                n_contrato_contratista: props.item_inventario_prop.n_contrato_contratista
+            }, response.record));
             closeChild();
             viewSnackbar('success', response.message);
         } else {
@@ -138,7 +140,9 @@ const save = async () => {
             //como es un registro nuevo el  id=0 actualmente en props.item_inventario_prop,
             //debemos pasar el n_contrato_contratista porque en la respuesta del servidor no hay ese dato porque el n_contrato
             //esta en otra tabla, y la tabla inventario solo tenemos el id_contratista
-            emit('refreshRowDataByFormEmit', 'add', Object.assign({ n_contrato_contratista: props.item_inventario_prop.n_contrato_contratista }, response.record));
+            emit('refreshRowDataByFormEmit', 'add', Object.assign({
+                n_contrato_contratista: props.item_inventario_prop.n_contrato_contratista
+            }, response.record));
             closeChild();
             viewSnackbar('success', response.message);
         } else {

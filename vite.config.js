@@ -37,6 +37,7 @@ export default defineConfig({
                 'resources/js/operationCCD.js',
 
                 'resources/js/userBoard.js',
+                'resources/js/authUserProfile.js',
             ],
             refresh: true,
         }),
