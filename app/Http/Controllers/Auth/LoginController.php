@@ -23,7 +23,6 @@ class LoginController extends Controller
     {
 
         $user = User::where("usuario", $request->input('usuario'))->where("status", true)->first();
-        $remember = $request->filled("remember");
 
         if ($user != null) {
             if (Hash::check($request->input("password"), $user->password)) {
@@ -57,6 +56,7 @@ class LoginController extends Controller
                 ->select('users.id as id_usuario', 'users.role', 'users.usuario', 'personals.*')
                 ->where('personals.status', true)
                 ->where('users.status', true)
+                ->where('users.id', Auth::user()->id)
                 ->first();
 
             return response()->json([
@@ -81,16 +81,22 @@ class LoginController extends Controller
                 ->where('status', true)
                 ->first();
 
-            $user->usuario = $request->input('usuario');
-            $user->password = Hash::make($request->input('password'));
-
-            $user->update();
-
-            return response()->json([
-                'record' => $user,
-                'message' => 'Credenciales actualizados!',
-                'status' => true,
-            ], 200);
+            if ($user != null) {
+                $user->usuario = $request->input('usuario');
+                $user->password = Hash::make($request->input('new_password'));
+                $user->update();
+                return response()->json([
+                    'record' => $user,
+                    'message' => 'Credenciales actualizados!',
+                    'status' => true,
+                ], 200);
+            } else {
+                return response()->json([
+                    'record' => $user,
+                    'message' => '',
+                    'status' => false,
+                ], 200);
+            }
         } catch (Throwable $th) {
             return response()->json([
                 'record' => [],

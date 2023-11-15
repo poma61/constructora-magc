@@ -5,9 +5,10 @@ class AuthProfile {
 
     constructor(auth_user) {
         this.auth_user = {
-            id_usuario:"",
+            id_usuario: 0,
             usuario: "",
-            password: "",
+            old_password: "",
+            new_password: "",
         }
 
         this.config = {

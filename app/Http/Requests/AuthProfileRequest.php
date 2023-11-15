@@ -7,6 +7,10 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+
 
 class AuthProfileRequest extends FormRequest
 {
@@ -28,7 +32,16 @@ class AuthProfileRequest extends FormRequest
         $rules = [
             // si estamos haciendo un update debe permitir el ingreso del mismo usuario en caso de que no se modifique
             'usuario' => 'required|unique:users,usuario,' . $this->input('id_usuario'),
-            'password' => 'required|min:8',
+            'new_password' => 'required|min:8',
+            'old_password' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    // Verificar si la contraseña antigua es correcta
+                    if (!Hash::check($value, Auth::user()->password)) {
+                        $fail('La contraseña antigua no es válida.');
+                    }
+                },
+            ],
         ];
 
         return $rules;
@@ -42,8 +55,9 @@ class AuthProfileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'password.required' => 'El campo contraseña es requerido.',
-            'password.min' => 'El campo contraseña debe tener al menos 8 caracteres.',
+            'new_password.required' => 'El campo contraseña nueva es requerido.',
+            'new_password.min' => 'El campo contraseña nueva debe tener al menos 8 caracteres.',
+            'old_password.required' => 'El campo contraseña anterior es requerido.',
         ];
     }
 

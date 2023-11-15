@@ -61,15 +61,27 @@
             </div>
 
             <div class="field m-1" style="width: 100%; ">
-                <label class="label has-text-info">Contraseña</label>
+                <label class="label has-text-info">Contraseña anterior</label>
                 <p class="control has-icons-left">
-                    <input class="input" type="password" placeholder="Escriba aquí..." v-model="is_user.password"
+                    <input class="input" type="password" placeholder="Escriba aquí..." v-model="is_user.old_password"
                         autocomplete="none">
                     <span class="icon is-small is-left has-text-info">
                         <span class="mdi mdi-lock-outline"></span>
                     </span>
                 </p>
-                <p class="has-text-danger as-font-9">{{ getValidateErrors('password') }}</p>
+                <p class="has-text-danger as-font-9">{{ getValidateErrors('old_password') }}</p>
+            </div>
+
+            <div class="field m-1" style="width: 100%; ">
+                <label class="label has-text-info">Contraseña nueva</label>
+                <p class="control has-icons-left">
+                    <input class="input" type="password" placeholder="Escriba aquí..." v-model="is_user.new_password"
+                        autocomplete="none">
+                    <span class="icon is-small is-left has-text-info">
+                        <span class="mdi mdi-lock-outline"></span>
+                    </span>
+                </p>
+                <p class="has-text-danger as-font-9">{{ getValidateErrors('new_password') }}</p>
             </div>
 
         </form>
@@ -84,7 +96,7 @@
             </button>
         </div>
     </div>
-    
+
     <div v-if="!loading_data_profile">
         <p class="has-text-danger as-font-9">NOTA: Solo se puede actualizar las credenciales de inicio de sesion, para
             actualizar
@@ -113,9 +125,10 @@ const loading_data_profile = ref(false);
 const loading_save_credentials = ref(false);
 const message_errors_field = ref({});
 const is_user = ref({
-    id_usuario: "",
+    id_usuario: 0,
     usuario: "",
-    password: "",
+    old_password: "",
+    new_password: "",
 });
 
 const user_autenticate = ref({
@@ -158,7 +171,7 @@ const me = async () => {
         const response = await user.me();
         loading_data_profile.value = false;
         if (response.status) {
-            user_autenticate.value = response.record;
+            user_autenticate.value = Object.assign({}, response.record);
             viewToast('success', response.message);
             is_user.value.usuario = user_autenticate.value.usuario;
             is_user.value.id_usuario = user_autenticate.value.id_usuario;
@@ -177,7 +190,7 @@ const saveCredentials = () => {
         loading_save_credentials.value = false;
 
         if (response.status) {
-            message_errors_field.value = {};
+            clear()
             viewToast('success', response.message);
         } else {
             if (response.message_errors != undefined) {
@@ -187,8 +200,14 @@ const saveCredentials = () => {
         }
 
     }, 800);
-
 }
+
+const clear = () => {
+    message_errors_field.value = {};
+    is_user.value.old_password = "";
+    is_user.value.new_password = "";
+};
+
 
 onMounted(() => {
     me();
