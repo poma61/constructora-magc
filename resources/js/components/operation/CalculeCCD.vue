@@ -1,4 +1,6 @@
 <template>
+
+    <!-- Inpust  editables -->
     <div class="box">
         <div class="is-flex is-align-items-center my-3 py-3" style="border-bottom: 1px solid #cfcfcf;">
             <span class="icon mx-3 has-text-info">
@@ -7,39 +9,66 @@
             <h1 class="has-text-info">CASA CREDITO DIRECTO</h1>
         </div>
 
+        <div clas="is-flex is-flex-wrap-wrap">
+            <div class="is-flex is-flex-wrap-wrap">
+                <v-text-field v-model="is_ccd_edit.precio_construccion" label="Precio construccion" class="m-1"
+                    color="indigo-lighten-1" suffix="$us/m²" clearable style="width: 250px;"
+                    @input="fieldAsseptNumber($event, 'precio_construccion')"
+                    @click:clear="onClearFieldEdit('precio_construccion')" />
 
-        <div class="is-flex is-flex-wrap-wrap">
-            <v-text-field v-model="is_ccd_fill.precio_construccion" label="Precio construccion" class="m-1"
-                color="indigo-lighten-1" suffix="$us/m²" clearable style="width: 250px;"
-                @input="fieldAsseptNumber($event, 'precio_construccion')" @click:clear="onClear('precio_construccion')" />
+                <v-text-field v-model="is_ccd_edit.superficie" label="Superficie construccion" class="m-1"
+                    color="indigo-lighten-1" clearable suffix="m²" style="width: 250px;"
+                    @input="fieldAsseptNumber($event, 'superficie')" @click:clear="onClearFieldEdit('superficie')" />
 
-            <v-text-field v-model="is_ccd_fill.superficie" label="Superficie construccion" class="m-1"
-                color="indigo-lighten-1" clearable suffix="m²" style="width: 250px;"
-                @input="fieldAsseptNumber($event, 'superficie')" @click:clear="onClear('superficie')" />
+                <v-text-field v-model="is_ccd_edit.precio_terreno" label="Precio Terreno" class="m-1"
+                    color="indigo-lighten-1" clearable style="width: 250px;" suffix="$us"
+                    @input="fieldAsseptNumber($event, 'precio_terreno')"
+                    @click:clear="onClearFieldEdit('precio_terreno')" />
+            </div>
 
-            <v-text-field v-model="is_ccd_fill.precio_terreno" label="Precio Terreno" class="m-1" color="indigo-lighten-1"
-                clearable style="width: 250px;" suffix="$us" @input="fieldAsseptNumber($event, 'precio_terreno')"
-                @click:clear="onClear('precio_terreno')" />
+            <div class="is-flex is-flex-wrap-wrap">
 
-            <v-text-field v-model="is_ccd_fill.plazo_anios" label="Plazo (años)" class="m-1" color="indigo-lighten-1"
-                clearable style="width: 250px;" @input="plazoAniosAsseptNumberInteger($event, 'plazo_anios')"
-                @click:clear="onClear('plazo_anios')" />
+                <v-text-field v-model="is_ccd_edit.plazo_anios" label="Plazo (años)" class="m-1"
+                    color="indigo-lighten-1" clearable style="width: 250px;"
+                    @input="plazoAniosAsseptNumberInteger($event, 'plazo_anios')"
+                    @click:clear="onClearFieldEdit('plazo_anios')" />
 
-            <v-text-field v-model="is_ccd_fill.interes_anual" label="Interes anual (%)" class="m-1" color="indigo-lighten-1"
-                clearable style="width: 250px;" suffix="%" @input="fieldAsseptNumber($event, 'interes_anual')"
-                @click:clear="onClear('interes_anual')" />
+                <v-text-field v-model="is_ccd_edit.interes_anual" label="Interes anual  (%)" class="m-1"
+                    color="indigo-lighten-1" clearable style="width: 250px;" suffix="%"
+                    @input="fieldAsseptNumber($event, 'interes_anual')"
+                    @click:clear="onClearFieldEdit('interes_anual')" />
+
+                <v-text-field v-model="is_ccd_edit.couta_inicial_porcentaje" label="Couta inicial (%)" class="m-1"
+                    color="indigo-lighten-1" clearable style="width: 250px;" suffix="%"
+                    @input="fieldAsseptNumber($event, 'couta_inicial_porcentaje')"
+                    @click:clear="onClearFieldEdit('couta_inicial_porcentaje')" />
+
+
+            </div>
+
         </div>
 
 
         <div class="buttons">
-            <v-btn color="indigo-lighten-1" class="as-hover__box-shadow" :loading="loading_calculate"
+
+            <v-btn color="red" class="as-hover__box-shadow" @click="onClearFieldAll">
+                <span class="mdi mdi-trash-can-outline is-size-4"></span>
+                Limpiar campos
+            </v-btn>
+
+            <v-btn color="indigo-lighten-1" class="as-hover__box-shadow ma-1" :loading="loading_calculate"
                 @click="calculateCCD()">
-                <span class="mdi mdi-calculator-variant-outline is-size-4"></span>
+                <span class="mdi mdi-calculator-variant-outline is-size-4 ma-1"></span>
                 Calcular
             </v-btn>
+
+            <p v-if="loading_calculate" class="ma-1"> Calculando...</p>
+
         </div>
-       
+
     </div>
+
+    <!-- Seccion donde se muestran los resultados -->
 
     <div class="box">
         <div class="table-container">
@@ -56,8 +85,8 @@
                     <tr>
                         <td>
                             <!-- Precio construccion  -->
-                            <v-text-field color="indigo-lighten-1" v-model="is_ccd_calculate.precio_construccion" readonly
-                                style="min-width: 190px;" />
+                            <v-text-field color="indigo-lighten-1" v-model="is_ccd_calculate.precio_construccion"
+                                readonly style="min-width: 190px;" />
                         </td>
 
                         <td>
@@ -179,12 +208,13 @@ toastr.options = {
     timeOut: 3000,
     hideDuration: 100,
 };
-const is_ccd_fill = ref({
+const is_ccd_edit = ref({
     precio_construccion: "",
     superficie: "",
     precio_terreno: "",
     plazo_anios: "",
     interes_anual: "",
+    couta_inicial_porcentaje: "",
 });
 
 const is_ccd_calculate = ref({
@@ -193,7 +223,7 @@ const is_ccd_calculate = ref({
     precio_terreno: 0.00,
     construccion: 0.00,
     precio_credito_directo: 0.00,
-    couta_inicial_porcentaje: '35%',
+    couta_inicial_porcentaje: 0.00,
     monto_couta_inicial: 0.00,
     monto_por_pagar: 0.00,
     plazo_anios: 0,
@@ -213,26 +243,26 @@ const calculateCCD = () => {
                 return;
             }
             //calculos tabla 1
-            const construccion = Number(is_ccd_fill.value.superficie) * Number(is_ccd_fill.value.precio_construccion);
-            const precio_al_contado = Math.ceil((Number(construccion) + Number(is_ccd_fill.value.precio_terreno)) / 50) * 50;//multiplo superior a 50
-            is_ccd_calculate.value.precio_construccion = Number(is_ccd_fill.value.precio_construccion).toFixed(2);
-            is_ccd_calculate.value.superficie = Number(is_ccd_fill.value.superficie).toFixed(2);
-            is_ccd_calculate.value.precio_terreno = Number(is_ccd_fill.value.precio_terreno).toFixed(2);
+            const construccion = Number(is_ccd_edit.value.superficie) * Number(is_ccd_edit.value.precio_construccion);
+            const precio_al_contado = Math.ceil((Number(construccion) + Number(is_ccd_edit.value.precio_terreno)) / 50) * 50;//multiplo superior a 50
+            is_ccd_calculate.value.precio_construccion = Number(is_ccd_edit.value.precio_construccion).toFixed(2);
+            is_ccd_calculate.value.superficie = Number(is_ccd_edit.value.superficie).toFixed(2);
+            is_ccd_calculate.value.precio_terreno = Number(is_ccd_edit.value.precio_terreno).toFixed(2);
             is_ccd_calculate.value.construccion = construccion.toFixed(2);
 
             //calculos tabla 2
             is_ccd_calculate.value.precio_credito_directo = precio_al_contado.toFixed(2);
-            const couta_inicial_porcentaje = 0.35;
-            is_ccd_calculate.value.couta_inicial_porcentaje = (Number(couta_inicial_porcentaje) * 100) + "%";// asignamos 35%
-            const monto_couta_inicial = Number(couta_inicial_porcentaje) * Number(is_ccd_calculate.value.precio_credito_directo);
+            is_ccd_calculate.value.couta_inicial_porcentaje = is_ccd_edit.value.couta_inicial_porcentaje + "%"; // asignamos el porcentaje sin parsear al formado 0.00, visualizar en formato porcentaje  %
+            const parse_couta_inicial_porcentaje = Number(is_ccd_edit.value.couta_inicial_porcentaje) / 100; //obtenemos el porcentaje en formato => 0.00
+            const monto_couta_inicial = Number(parse_couta_inicial_porcentaje) * Number(is_ccd_calculate.value.precio_credito_directo);
             is_ccd_calculate.value.monto_couta_inicial = monto_couta_inicial.toFixed(2);
             const monto_por_pagar = Number(is_ccd_calculate.value.precio_credito_directo) - Number(is_ccd_calculate.value.monto_couta_inicial);
             is_ccd_calculate.value.monto_por_pagar = monto_por_pagar.toFixed(2);
 
             //calculos tabla 3
-            is_ccd_calculate.value.plazo_anios = is_ccd_fill.value.plazo_anios;
-            is_ccd_calculate.value.interes_anual = is_ccd_fill.value.interes_anual + "%";
-            const parse_interes_anual = Number(is_ccd_fill.value.interes_anual) / 100;//obtenemos el porcentaje en formato => 0.00
+            is_ccd_calculate.value.plazo_anios = is_ccd_edit.value.plazo_anios;
+            is_ccd_calculate.value.interes_anual = is_ccd_edit.value.interes_anual + "%";
+            const parse_interes_anual = Number(is_ccd_edit.value.interes_anual) / 100;//obtenemos el porcentaje en formato => 0.00
             const couta_mensual_part = (Number(is_ccd_calculate.value.monto_por_pagar) * Number(is_ccd_calculate.value.plazo_anios) * Number(parse_interes_anual)) + Number(is_ccd_calculate.value.monto_por_pagar);
             //verificar si plazo_anios es "0",porque no podemos hacer la division si plazo anios es "0" no existe division entre cero es una indeterminada
             const plazo_anios = (is_ccd_calculate.value.plazo_anios == 0) ? 1 : is_ccd_calculate.value.plazo_anios;
@@ -258,7 +288,7 @@ const plazoAniosAsseptNumberInteger = (event, campo) => {
     valor_campo = valor_campo.replace(/\D/g, '');
 
     // Actualizar el valor en el campo de entrada
-    is_ccd_fill.value[campo] = valor_campo;
+    is_ccd_edit.value[campo] = valor_campo;
 }
 
 const fieldAsseptNumber = (event, campo) => {
@@ -276,16 +306,16 @@ const fieldAsseptNumber = (event, campo) => {
         valor_campo = partes.join('.');
     }
     // Actualizar el valor en el campo de entrada
-    is_ccd_fill.value[campo] = valor_campo;
+    is_ccd_edit.value[campo] = valor_campo;
 }
 
 const validarCampos = () => {
-    const is_campos = Object.values(is_ccd_fill.value);
+    const is_campos = Object.values(is_ccd_edit.value);
 
-    if (is_campos.every((campo) => campo !== "")) {
+    if (is_campos.every((campo) => campo != "")) {
         return true;
     } else {
-        viewToast('error', "Debe llenar todos los campos");
+        viewToast('warning', "Debe llenar todos los campos");
         return false;
     }
 }
@@ -294,11 +324,28 @@ const viewToast = (type, message) => {
     if (type == 'success') {
         toastr.success(message, 'OK');
     } else {
-        toastr.error(message, 'Error');
+        toastr.warning(message, 'Algo salio mal');
     }
 }
 
-const onClear = (campo) => {
-    is_ccd_fill.value[campo] = "";
+// Hacemos eliminacion de  esta forma porque debemos asiggnar un "" vacio en cada textField editable
+// si no utilizamos esta funcion y hacemos click en la X de eliminacion de textfield, si se elimina de forma predeterminada 
+// la funcion calculateCCD se ejecuta aunque el campo este vacio  al utulizar la eliminacion predeterminada de vuetify,
+// por eso debemos personalizar de esta forma
+const onClearFieldEdit = (campo) => {
+    is_ccd_edit.value[campo] = "";
+}
+
+const onClearFieldAll = () => {
+    // resetar todos los valores de is_ccd_edit
+    Object.keys(is_ccd_edit.value).forEach(key => {
+        is_ccd_edit.value[key] = "";
+    });
+    // resetar todos los valores de is_ccd_calculate
+    Object.keys(is_ccd_calculate.value).forEach(key => {
+        is_ccd_calculate.value[key] = 0.00
+    });
+
+    viewToast('success', "Campos optimizados");
 }
 </script>

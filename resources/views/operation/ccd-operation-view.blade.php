@@ -18,4 +18,4 @@
 
 @section('template_js')
     @vite('resources/js/operationCCD.js')
-@endsection
+@endsection 
