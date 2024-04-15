@@ -29,7 +29,13 @@ class ClienteRequest extends FormRequest
             'nombres' => 'required',
             'apellido_paterno' => 'required',
             'apellido_materno' => 'required',
-            'n_de_contacto' => 'required|numeric',
+            'n_de_contacto' => [
+                'required',
+                'numeric',
+                Rule::unique('clientes')->where(function ($query){
+                    $query->where('status',true);
+                })->ignore($this->input('id')),
+            ],
             'ci' => [
                 'required',
                 //aplicar la validacion unique cuando el campo status este en true siginifica que el registto no esta eliminado
