@@ -1,5 +1,5 @@
 <template>
-  <div class="columns is-desktop">
+  <div class="columns">
     <div class="column">
       <button class="button is-info icon-text" @click="newForm()">
         <span class="icon">
@@ -7,7 +7,6 @@
         </span>
         <span>Nuevo</span></button>
     </div>
-
   </div>
   <div class="card">
     <v-text-field v-model="buscar_registros" append-inner-icon="mdi-file-search-outline" clearable
@@ -16,7 +15,7 @@
 
     <v-data-table :hover="true" :headers="headers" :items="registros" :loading="change"
       :items-per-page-options="items_per_page_options" :show-current-page="true" :fixed-header="true"
-      :search="buscar_registros" :height="500" :sort-by="[{ key: 'id', order: 'desc' }]">
+      :search="buscar_registros" :height="600" :sort-by="[{ key: 'id', order: 'desc' }]">
 
       <template v-slot:item="{ item }">
         <tr>
@@ -24,7 +23,7 @@
           <td>{{ item.columns.apellido_paterno }}</td>
           <td>{{ item.columns.apellido_materno }}</td>
           <td>{{ item.columns.ciudad }}</td>
-          <td>{{ item.columns.role }}</td>
+          <td>{{ item.columns.role }}</td> 
           <td>
             <span class="tag is-primary as-font-9 m-1"> {{ date_format.formatDateHour(item.columns.created_at) }}</span>
           </td>
@@ -41,7 +40,6 @@
 
     </v-data-table>
   </div>
-
 
   <FormUser :dialog_form_parent="dialog_form" @closeDialogFormParent="closeDialogForm()" :item_user_parent="item_user"
     @saveParent="save()" :message_errors_field_parent="message_errors_field" />

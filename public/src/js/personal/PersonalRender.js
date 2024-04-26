@@ -1,3 +1,4 @@
+
 function html(datos) {
     return `
     <form id="custom-form" nctype="multipart/form-data" class="as-form">
@@ -72,8 +73,8 @@ function html(datos) {
                 </div>
             </div>
         </div>
-
     </div>
+
     <div class="field">
         <label class="label has-text-info">Telefono</label>
         <p class="control has-icons-left">
@@ -99,28 +100,7 @@ function html(datos) {
                <span class="mdi mdi-text-box-check"></span>
             </span>
         </p>
-
     </div>
-
-    <div class="field">
-        <label class="label has-text-info">Administra grupo</label>
-        <div class="select is-multiple" style="width:100%">
-            <select multiple size="5" style="width:100%" name="grup_number">
-            <option value="01"  ${datos.grup_number == '01' ? 'selected' : ''} >01</option>
-            <option value="02"  ${datos.grup_number == '02' ? 'selected' : ''} >02</option>
-            <option value="03"  ${datos.grup_number == '03' ? 'selected' : ''} >03</option>
-            <option value="04"  ${datos.grup_number == '04' ? 'selected' : ''} >04</option>
-            <option value="05"  ${datos.grup_number == '05' ? 'selected' : ''} >05</option>
-            <option value="06"  ${datos.grup_number == '06' ? 'selected' : ''} >06</option>
-            <option value="07"  ${datos.grup_number == '07' ? 'selected' : ''} >07</option>
-            <option value="08"  ${datos.grup_number == '08' ? 'selected' : ''} >08</option>
-            <option value="09"  ${datos.grup_number == '09' ? 'selected' : ''} >09</option>
-            <option value="10"  ${datos.grup_number == '10' ? 'selected' : ''} >10</option>
-            <option value="todos"  ${datos.grup_number == 'todos' ? 'selected' : ''} >todos</option>
-            </select>
-        </div>
-    </div>
-
 
     <div class="field mt-3">
         <div class="file is-primary">
@@ -139,16 +119,15 @@ function html(datos) {
         <div class="is-flex is-justify-content-center  mt-2">
             <figure class="image is-180x180">
                 <img id="img-view"
-                    src="${(datos.foto == null) ? BASE_URL + '/src/images/image-preview.png' : BASE_URL + '/' + datos.foto}">
+                    src="${(datos.foto == null) ? config.BASE_URL + '/src/images/image-preview.png' : config.BASE_URL + '/' + datos.foto}">
             </figure>
 
         </div>
     </div>
-
-
 </form>
    `;
 }
+import config from '/src/js/config.js';
 import Personal from '/src/js/personal/Personal.js';
 import ValidateError from '/src/js/util/ValidateError.js';
 import SweetAlert from '/src/js/util/SweetAlert.js';
@@ -161,7 +140,7 @@ const url_web = "/microservice/personal";
 const parsed_url = new URL(window.location.href);
 
 // Obtener el valor  de la url get=> por donde se pasa el nombre de la ciudad
-const city = parsed_url.pathname.split('/').pop();;
+const city = parsed_url.pathname.split('/').pop();
 
 async function initDataTable() {
     const personal = new Personal(city, url_web);
@@ -189,25 +168,18 @@ async function initDataTable() {
                 title: 'CI',
                 render: function (data, type, row, meta) {
                     // Concatenar el valor de 'ci' con 'ci_espedido'
-                    return data.ci + ' ' + data.ci_expedido;
+                    return `${data.ci} ${data.ci_expedido}`;
                 }
             },
             { data: 'telefono', title: 'Telefono' },
             { data: 'direccion', title: 'Direccion' },
             {
                 data: null,
-                title: 'Administra grupo',
-                render: function (data, type, row, meta) {
-                    return `<span class="tag is-primary as-font-9">${data.grup_number}</span>`
-                }
-            },
-            {
-                data: null,
                 title: 'Foto',
                 render: function (data, type, row, meta) {
                     return `
                     <figure class="image is-64x64">
-                        <img class="is-rounded" src="${BASE_URL}/${data.foto}">
+                        <img class="is-rounded" src="${config.BASE_URL}/${data.foto}">
                     </figure>
                   `
                 }
@@ -229,7 +201,7 @@ async function initDataTable() {
                     return `
                     <div class="columns">
                          <div class="column is-2 ">
-                             <button class="button is-rounded is-primary edit-record" data-id="${data}"   data-rowindex="${meta.row}">
+                             <button class="button is-rounded is-primary edit-record" data-id="${data}" data-rowindex="${meta.row}">
                              <span class="mdi mdi-pencil"></span>
                              </button>
                          </div>
@@ -256,10 +228,8 @@ async function initDataTable() {
 
 function save(type, data_table_row_index, obj_datos) {
     const table = $("#table-records").DataTable();
-
     switch (type) {
         case 'create':
-
             table.row.add(obj_datos).draw();
             break;
         case 'update':
@@ -332,14 +302,8 @@ function showForm(personal, data_table_row_index) {
                 }
 
                 if (response.status) {
-                    const properties2 = {
-                        title: "¡OK!",
-                        text: response.message,
-                        timer: 3000,
-                        position: 'bottom-end',
-                        popup: 'has-background-info has-text-white'
-                    };
-                    SweetAlert.successToast(properties2);
+                    toastr.success(response.message, 'OK');
+
                     if (response.type == 'create') {
                         save('create', data_table_row_index, personal.getFill());
                     } else {
@@ -350,10 +314,10 @@ function showForm(personal, data_table_row_index) {
 
                 } else {
                     if (response.message_errors == undefined) {
-                        toastr.error("Error interno!", 'Error');
+                        toastr.error(response.message, 'Error interno!');
                     } else {
                         ValidateError.validator(response.message_errors, '.field');
-                        toastr.error('Debe llenar todos los datos.', response.message);
+                        toastr.error(response.message, 'Error de validacio!');
                     }
 
                 }
@@ -367,28 +331,34 @@ function showForm(personal, data_table_row_index) {
     ImageVisualize.imgView('#file-foto', '#img-view');
 }
 
+/*
+Este codigo ya es obsoleto a partir de jquery 3
+$( document ).ready(function() {
+    // Handler for .ready() called.
+  });
+en vez de eso utilizar
+$(function() {
+  // Handler for .ready() called.
+});
+*/
 
-
-$(document).ready(function () {
-
+$(function () {
     initDataTable();
-    $('#new-form').click(function () {
-        const personal_obj = new Personal(city, url_web);
-        showForm(personal_obj, null);
+    $('#new-form').on('click', function () {
+        const personal = new Personal(city, url_web);
+        showForm(personal, null);
     });
-
     // Delegar el evento de clic al contenedor de la tabla y seleccionar los botones internos
     $('#table-container').on("click", '.edit-record', async function () {
-        const personal_obj = new Personal(city, url_web);
+        const personal = new Personal(city, url_web);
         const data_id = $(this).data('id')
         const data_table_row_index = $(this).data('rowindex')
-        await personal_obj.edit(data_id);
+        await personal.edit(data_id);
 
-        showForm(personal_obj, data_table_row_index);
+        showForm(personal, data_table_row_index);
     });
 
     $('#table-container').on('click', '.delete-record', function () {
-
         const id = $(this).data('id');
         const data_table_row_index = $(this).data('rowindex')
         const properties2 = {
@@ -413,11 +383,8 @@ $(document).ready(function () {
                     toastr.error(response.message, 'Error');
                 }
             }
-
         });
-
     });
-
 });
 
 

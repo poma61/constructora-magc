@@ -79,6 +79,8 @@ class ObraExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEv
                     'contratos.n_contrato as N° de contrato',
                     'obras.estado as Estado',
                     'obras.monto_pago_contratista as Monto pago contratista',
+                    // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                    // si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
                     DB::raw('DATE_FORMAT(obras.fecha_inicio, "%d-%m-%Y") as "Fecha inicio"'),
                     DB::raw('DATE_FORMAT(obras.fecha_finalizacion, "%d-%m-%Y") as "Fecha finalizacion"'),
                     'obras.descripcion as Descripcion',
@@ -103,6 +105,8 @@ class ObraExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEv
                     'contratos.n_contrato as N° de contrato',
                     'obras.estado as Estado',
                     'obras.monto_pago_contratista as Monto pago contratista',
+                    // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                    // si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
                     DB::raw('DATE_FORMAT(obras.fecha_inicio, "%d-%m-%Y") as "Fecha inicio"'),
                     DB::raw('DATE_FORMAT(obras.fecha_finalizacion, "%d-%m-%Y") as "Fecha finalizacion"'),
                     'obras.descripcion as Descripcion',

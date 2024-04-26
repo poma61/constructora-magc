@@ -44,60 +44,60 @@
     </div>
 
     <div class="buttons">
-        <button @click="selectMont('todos')" :class="['button is-info', { 'is-light': month === 'todos' }]">
+        <button @click="selectMont('todos')" :class="['button is-info', { 'is-light': month == 'todos' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Todos
         </button>
 
-        <button @click="selectMont('enero')" :class="['button is-info', { 'is-light': month === 'enero' }]">
+        <button @click="selectMont('enero')" :class="['button is-info', { 'is-light': month == 'enero' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Enero
         </button>
 
-        <button @click="selectMont('febrero')" :class="['button is-info', { 'is-light': month === 'febrero' }]">
+        <button @click="selectMont('febrero')" :class="['button is-info', { 'is-light': month == 'febrero' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Febrero
         </button>
 
-        <button @click="selectMont('marzo')" :class="['button is-info', { 'is-light': month === 'marzo' }]">
+        <button @click="selectMont('marzo')" :class="['button is-info', { 'is-light': month == 'marzo' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Marzo
         </button>
 
-        <button @click="selectMont('abril')" :class="['button is-info', { 'is-light': month === 'abril' }]">
+        <button @click="selectMont('abril')" :class="['button is-info', { 'is-light': month == 'abril' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Abril
         </button>
 
-        <button @click="selectMont('mayo')" :class="['button is-info', { 'is-light': month === 'mayo' }]">
+        <button @click="selectMont('mayo')" :class="['button is-info', { 'is-light': month == 'mayo' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Mayo
         </button>
 
-        <button @click="selectMont('junio')" :class="['button is-info', { 'is-light': month === 'junio' }]">
+        <button @click="selectMont('junio')" :class="['button is-info', { 'is-light': month == 'junio' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Junio
         </button>
 
-        <button @click="selectMont('julio')" :class="['button is-info', { 'is-light': month === 'julio' }]">
+        <button @click="selectMont('julio')" :class="['button is-info', { 'is-light': month == 'julio' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Julio
         </button>
 
 
-        <button @click="selectMont('agosto')" :class="['button is-info', { 'is-light': month === 'agosto' }]">
+        <button @click="selectMont('agosto')" :class="['button is-info', { 'is-light': month == 'agosto' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Agosto
         </button>
 
 
-        <button @click="selectMont('septiembre')" :class="['button is-info', { 'is-light': month === 'septiembre' }]">
+        <button @click="selectMont('septiembre')" :class="['button is-info', { 'is-light': month == 'septiembre' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Septiembre
         </button>
 
 
-        <button @click="selectMont('octubre')" :class="['button is-info', { 'is-light': month === 'octubre' }]">
+        <button @click="selectMont('octubre')" :class="['button is-info', { 'is-light': month == 'octubre' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Octubre
         </button>
 
 
-        <button @click="selectMont('noviembre')" :class="['button is-info', { 'is-light': month === 'noviembre' }]">
+        <button @click="selectMont('noviembre')" :class="['button is-info', { 'is-light': month == 'noviembre' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Noviembre
         </button>
 
 
-        <button @click="selectMont('diciembre')" :class="['button is-info', { 'is-light': month === 'diciembre' }]">
+        <button @click="selectMont('diciembre')" :class="['button is-info', { 'is-light': month == 'diciembre' }]">
             <span class="mdi mdi-calendar-check-outline is-size-4"></span>&nbsp;Diciembre
         </button>
 

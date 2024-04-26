@@ -81,6 +81,8 @@ class ContratistaExport implements FromCollection, WithHeadings, ShouldAutoSize,
                     'contratistas.apellido_paterno as Contratista, apellido paterno',
                     'contratistas.apellido_materno as Contratista, apellido materno',
                     'contratistas.estado as Estado',
+                     // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                     //si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
                     DB::raw('DATE_FORMAT(contratistas.fecha_inicio, "%d-%m-%Y") as "Fecha inicio"'),
                     'contratistas.descripcion as Descripcion',
                 )
@@ -106,6 +108,8 @@ class ContratistaExport implements FromCollection, WithHeadings, ShouldAutoSize,
                     'contratistas.apellido_paterno as Contratista, apellido paterno',
                     'contratistas.apellido_materno as Contratista, apellido materno',
                     'contratistas.estado as Estado',
+                     // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                     //si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
                     DB::raw('DATE_FORMAT(contratistas.fecha_inicio, "%d-%m-%Y") as "Fecha inicio"'),
                     'contratistas.descripcion as Descripcion',
                 )

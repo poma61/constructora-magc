@@ -14,6 +14,8 @@ use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\CCDController;
 
 
+// en un hosting muchas veces no se puede ejecutar php artisan
+// para generar storage link en un hosting se puede hacer desde una peticion get
 Route::get('/storage-link', function () {
     if (file_exists(public_path('storage'))) {
         return 'The "public/storage" directory already exists.';

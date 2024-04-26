@@ -127,7 +127,7 @@
             color="cyan-darken-1" />
         <v-data-table :hover="true" :items="data" :headers="columns" :search="buscar_data_table"
             :loading="loading_data_table" :items-per-page-options="items_per_page_options" :show-current-page="true"
-            :fixed-header="true" :height="500" :sort-by="[{ key: 'id', order: 'desc' }]">
+            :fixed-header="true" :height="600" :sort-by="[{ key: 'id', order: 'desc' }]">
 
             <template v-slot:item.estado="{ item }">
                 <span class="tag is-success as-font-9 m-1" v-if="item.columns.estado == 'En ejecucion'">

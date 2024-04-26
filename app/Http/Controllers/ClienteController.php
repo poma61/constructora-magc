@@ -10,6 +10,7 @@ use App\Models\Cliente;
 use App\Models\ClienteResponsable;
 use App\Models\Grupo;
 use App\Models\Responsable;
+use App\Models\UserHasPermiso;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,16 +24,40 @@ class ClienteController extends Controller
     public function indexView()
     {
         try {
-            $user = Auth::user()->onPersonal()->first();
-            $ciudad = Ciudad::where('id', $user->id_ciudad)->first();
-            $grupo = Grupo::where('id', $user->id_grupo)->first();
-            $list_ciudades = Ciudad::all();
+            $user = Auth::user();
+            $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
+                ->select("permisos.*")
+                ->where("users_has_permisos.id_user", $user->id)
+                ->where("users_has_permisos.status", true)
+                ->get();
 
-            if ($ciudad == null) {
-                return view('error-page-view');
+            foreach ($user_has_permiso as $row) {
+                if ($row->content_type == 'ciudades') {
+                    $ciudades[] = $row->code_content;
+                }
             }
 
-            return view('cliente/ciudad-view', ['city' => $ciudad->city_name, 'grupo' => $grupo->grup_number, 'list_ciudades' => $list_ciudades]);
+            foreach ($user_has_permiso as $row) {
+                if ($row->content_type == 'grupos') {
+                    // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
+                    // Entonces debemos separar la ciudad y su correspondiente grupo
+                    $parts = explode('_', $row->code_content);
+
+                    $city_groups[] = [
+                        "ciudad" => $parts[0],
+                        "grupo" =>  $parts[1],
+                    ];
+                }
+            }
+
+
+            return view(
+                'cliente/ciudad-view',
+                [
+                    'ciudades' => $ciudades,
+                    'city_groups' => $city_groups,
+                ]
+            );
         } catch (Throwable $th) {
             return view('error-page-view');
         }
@@ -41,24 +66,43 @@ class ClienteController extends Controller
     public function tableroView(string $city, string $grupo_num)
     {
         try {
+            //verificamos si los parametros de la Url son validos
+            //solo es para verificar los parametros de la url para estabilidad del sistema
             $verified_ciudad = Ciudad::where('city_name', $city)->first();
             $verified_grupo = Grupo::where('grup_number', $grupo_num)->first();
-            //verificamos si los parametros de la Url son validos
-            //la opcion 'todos' es valida porque existe en la base de datos
-            //pero cuando no existe el grupo 'todos' , si nos hace referencia 
-            // que tiene acceso a los grupos del 1 al 10, entonces desde ese punto 
-            //no dejamos entrar a la vista si el parametro de la url es todos 
-            if ($verified_ciudad == null || $verified_grupo == null || $grupo_num == 'todos') {
+
+
+            if ($verified_ciudad == null || $verified_grupo == null) {
                 return view('error-page-view');
             }
 
-            $user = Auth::user()->onPersonal()->first();
-            $grupo = Grupo::where('id', $user->id_grupo)->first();
+            //obtenemos todos los grupos que tiene acceso el usuario
+            $user = Auth::user();
+            $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
+                ->select("permisos.*")
+                ->where("users_has_permisos.id_user", $user->id)
+                ->where("users_has_permisos.status", true)
+                ->get();
+
+            foreach ($user_has_permiso as $row) {
+                if ($row->content_type == 'grupos') {
+                    // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
+                    // Entonces debemos separar la ciudad y su correspondiente grupo
+                    $parts = explode('_', $row->code_content);
+                    if ($parts[0] == $city) {
+                        $manage_groups[] = $parts[1];
+                    }
+                }
+            }
+
+            // Ordenamos los grupos de forma ascendente
+            // porque podria haber la posibilidad de que esten desordenados [10, 02, 03, 01, 04]
+            sort($manage_groups);
 
             return view('cliente/tablero-grupo-cliente-view', [
-                'grupo' => $grupo->grup_number,
-                'city' => $verified_ciudad->city_name,
-                'grupo_active' => $verified_grupo->grup_number
+                "manage_groups" => $manage_groups,
+                'city' => $city,
+                'grupo_active' => $grupo_num
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -70,22 +114,34 @@ class ClienteController extends Controller
         try {
             $verified_ciudad = Ciudad::where('city_name', $city)->first();
             $verified_grupo = Grupo::where('grup_number', $grupo_num)->first();
-            //verificamos si los parametros de la Url son validos
-            //la opcion 'todos' es valida porque existe en la base de datos
-            //pero cuando no existe el grupo 'todos' , si nos hace referencia 
-            // que tiene acceso a los grupos del 1 al 10, entonces desde ese punto 
-            //no dejamos entrar a la vista si el parametro de la url es todos 
-            if ($verified_ciudad == null || $verified_grupo == null || $grupo_num == 'todos') {
+
+            if ($verified_ciudad == null || $verified_grupo == null) {
                 return view('error-page-view');
             }
 
-            $user = Auth::user()->onPersonal()->first();
-            $grupo = Grupo::where('id', $user->id_grupo)->first();
+            //obtenemos todos los grupos que tiene acceso el usuario
+            $user = Auth::user();
+            $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
+                ->select("permisos.*")
+                ->where("users_has_permisos.id_user", $user->id)
+                ->where("users_has_permisos.status", true)
+                ->get();
+
+            foreach ($user_has_permiso as $row) {
+                if ($row->content_type == 'grupos') {
+                    // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
+                    // Entonces debemos separar la ciudad y su correspondiente grupo
+                    $parts = explode('_', $row->code_content);
+                    if ($parts[0] == $city) {
+                        $manage_groups[] = $parts[1];
+                    }
+                }
+            }
 
             return view('cliente/grafico-grupo-cliente-view', [
-                'grupo' => $grupo->grup_number,
-                'city' => $verified_ciudad->city_name,
-                'grupo_active' => $verified_grupo->grup_number
+                "manage_groups" => $manage_groups,
+                'city' => $city,
+                'grupo_active' => $grupo_num
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -98,21 +154,34 @@ class ClienteController extends Controller
             $verified_ciudad = Ciudad::where('city_name', $city)->first();
             $verified_grupo = Grupo::where('grup_number', $grupo_num)->first();
             //verificamos si los parametros de la Url son validos
-            //la opcion 'todos' es valida porque existe en la base de datos
-            //pero cuando no existe el grupo 'todos' , si nos hace referencia 
-            // que tiene acceso a los grupos del 1 al 10, entonces desde ese punto 
-            //no dejamos entrar a la vista si el parametro de la url es todos 
-            if ($verified_ciudad == null || $verified_grupo == null || $grupo_num == 'todos') {
+
+            if ($verified_ciudad == null || $verified_grupo == null) {
                 return view('error-page-view');
             }
 
-            $user = Auth::user()->onPersonal()->first();
-            $grupo = Grupo::where('id', $user->id_grupo)->first();
+            //obtenemos todos los grupos que tiene acceso el usuario
+            $user = Auth::user();
+            $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
+                ->select("permisos.*")
+                ->where("users_has_permisos.id_user", $user->id)
+                ->where("users_has_permisos.status", true)
+                ->get();
+
+            foreach ($user_has_permiso as $row) {
+                if ($row->content_type == 'grupos') {
+                    // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
+                    // Entonces debemos separar la ciudad y su correspondiente grupo
+                    $parts = explode('_', $row->code_content);
+                    if ($parts[0] == $city) {
+                        $manage_groups[] = $parts[1];
+                    }
+                }
+            }
 
             return view('cliente/calendar-grupo-cliente-view', [
-                'grupo' => $grupo->grup_number,
-                'city' => $verified_ciudad->city_name,
-                'grupo_active' => $verified_grupo->grup_number
+                "manage_groups" => $manage_groups,
+                'city' => $city,
+                'grupo_active' => $grupo_num
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -126,21 +195,35 @@ class ClienteController extends Controller
             $verified_ciudad = Ciudad::where('city_name', $city)->first();
             $verified_grupo = Grupo::where('grup_number', $grupo_num)->first();
             //verificamos si los parametros de la Url son validos
-            //la opcion 'todos' es valida porque existe en la base de datos
-            //pero cuando no existe el grupo 'todos' , si nos hace referencia 
-            // que tiene acceso a los grupos del 1 al 10, entonces desde ese punto 
-            //no dejamos entrar a la vista si el parametro de la url es todos 
-            if ($verified_ciudad == null || $verified_grupo == null || $grupo_num == 'todos') {
+
+            if ($verified_ciudad == null || $verified_grupo == null) {
                 return view('error-page-view');
             }
 
-            $user = Auth::user()->onPersonal()->first();
-            $grupo = Grupo::where('id', $user->id_grupo)->first();
+            //obtenemos todos los grupos que tiene acceso el usuario
+            $user = Auth::user();
+            $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
+                ->select("permisos.*")
+                ->where("users_has_permisos.id_user", $user->id)
+                ->where("users_has_permisos.status", true)
+                ->get();
+
+            foreach ($user_has_permiso as $row) {
+                if ($row->content_type == 'grupos') {
+                    // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
+                    // Entonces debemos separar la ciudad y su correspondiente grupo
+                    // obtenemos un array de esta manera ['Santa-Cruz', '02']
+                    $parts = explode('_', $row->code_content);
+                    if ($parts[0] == $city) {
+                        $manage_groups[] = $parts[1];
+                    }
+                }
+            }
 
             return view('cliente/gantt-grupo-cliente-view', [
-                'grupo' => $grupo->grup_number,
-                'city' => $verified_ciudad->city_name,
-                'grupo_active' => $verified_grupo->grup_number
+                "manage_groups" => $manage_groups,
+                'city' => $city,
+                'grupo_active' => $grupo_num
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');

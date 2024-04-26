@@ -87,6 +87,8 @@ class InventarioExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                     'inventario.cantidad as Cantidad',
                     'inventario.costo_unitario as Costo unitario',
                     'inventario.costo_total as Costo total',
+                    // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                    // si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
                     DB::raw('DATE_FORMAT(inventario.fecha_ingreso, "%d-%m-%Y") as "Fecha ingreso"'),
                 )
                 ->where('clientes.status', true)
@@ -118,7 +120,9 @@ class InventarioExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                     'inventario.cantidad as Cantidad',
                     'inventario.costo_unitario as Costo unitario',
                     'inventario.costo_total as Costo total',
-                    DB::raw('DATE_FORMAT(inventario.fecha_ingreso, "%d-%m-%Y") as "Fecha ingreso"'),    
+                    // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                    // si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
+                    DB::raw('DATE_FORMAT(inventario.fecha_ingreso, "%d-%m-%Y") as "Fecha ingreso"'),
                 )
                 ->where('clientes.status', true)
                 ->where('contratos.status', true)

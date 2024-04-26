@@ -76,10 +76,14 @@ class ContratoExport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
                     'clientes.apellido_paterno as Apellido paterno',
                     'clientes.apellido_materno as Apellido materno',
                     'contratos.n_contrato as N° de contrato',
+                    // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                    // si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
                     DB::raw('DATE_FORMAT(contratos.fecha_firma_contrato,"%d-%m-%Y") as "Fecha de firma de contrato"'),
                     'contratos.monto_total_construccion as Monto total construccion',
                     'contratos.couta_inicial as Couta inicial',
                     'contratos.couta_mensual  as Couta mensual',
+                    // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                    // si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
                     DB::raw('DATE_FORMAT(contratos.fecha_pago_couta_mensual, "%d-%m-%Y") as "Fecha de pago de couta mensual"'),
                     'contratos.descripcion',
                 )
@@ -99,10 +103,14 @@ class ContratoExport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
                     'clientes.apellido_paterno as Apellido paterno',
                     'clientes.apellido_materno as Apellido materno',
                     'contratos.n_contrato as N° de contrato',
+                    // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                    // si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
                     DB::raw('DATE_FORMAT(contratos.fecha_firma_contrato,"%d-%m-%Y") as "Fecha de firma de contrato"'),
                     'contratos.monto_total_construccion as Monto total construccion',
                     'contratos.couta_inicial as Couta inicial',
                     'contratos.couta_mensual  as Couta mensual',
+                    // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                    // si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
                     DB::raw('DATE_FORMAT(contratos.fecha_pago_couta_mensual, "%d-%m-%Y") as "Fecha de pago de couta mensual"'),
                     'contratos.descripcion',
                 )

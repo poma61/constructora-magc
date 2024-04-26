@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('grup_number',10);
             $table->unsignedBigInteger('id_ciudad');
-            $table->timestamps();
 
             $table->foreign('id_ciudad')->references('id')->on('ciudades');
         });

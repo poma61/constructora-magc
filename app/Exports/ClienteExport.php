@@ -19,8 +19,6 @@ use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
 class ClienteExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents, WithCustomStartCell
 {
-
-
     protected $cliente;
     protected $request;
     public function __construct($request)
@@ -94,7 +92,9 @@ class ClienteExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
                     'clientes.estado as Estado',
                     'clientes.descripcion as Descripcion',
                     'clientes.monto_inicial as Monto inicial',
-                    DB::raw('DATE_FORMAT(clientes.fecha_reunion, "%d-%m-%Y") as "Fecha de reunion"'), // Formatear la fecha
+                    // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                    //si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
+                    DB::raw('DATE_FORMAT(clientes.fecha_reunion, "%d-%m-%Y") as "Fecha de reunion"'), 
                     'clientes.hora_reunion as Hora de reunion',
                     'clientes.seguimiento as Seguimiento',
                 )
@@ -116,6 +116,8 @@ class ClienteExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
                     'clientes.estado as Estado',
                     'clientes.descripcion as Descripcion',
                     'clientes.monto_inicial as Monto inicial',
+                     // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                     //si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
                     DB::raw('DATE_FORMAT(clientes.fecha_reunion, "%d-%m-%Y") as "Fecha de reunion"'), // Formatear la fecha
                     'clientes.hora_reunion as Hora de reunion',
                     'clientes.seguimiento as Seguimiento',

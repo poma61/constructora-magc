@@ -72,6 +72,8 @@ class DisenioExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
                     'clientes.apellido_paterno as Cliente, apellido paterno',
                     'clientes.apellido_materno as Cliente, apellido materno',
                     'disenios.requerimiento as Requerimiento',
+                     // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                     //si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
                     DB::raw('DATE_FORMAT(disenios.fecha, "%d-%m-%Y") as "Fecha"'),
                     'disenios.arquitecto as Arquitecto',
                 )
@@ -86,6 +88,8 @@ class DisenioExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
                     'clientes.apellido_paterno as Cliente, apellido paterno',
                     'clientes.apellido_materno as Cliente, apellido materno',
                     'disenios.requerimiento as Requerimiento',
+                     // Formatear la fecha, solo funciona para mysql DATE_FORMAT
+                     //si el sistema tiene otro motor de base de datos puede buscar el equivalente de DATE_FORMAT
                     DB::raw('DATE_FORMAT(disenios.fecha, "%d-%m-%Y") as "Fecha"'),
                     'disenios.arquitecto as Arquitecto',
                 )

@@ -14,35 +14,64 @@
                             readonly />
 
                         <v-text-field color="cyan-darken-2" label="Usuario" v-model="props.item_user_parent.usuario"
-                            :error-messages="getValidateErrors('usuario')"    autocomplete="none"/>
+                            :error-messages="getValidateErrors('usuario')" autocomplete="none" />
 
                         <v-text-field color="cyan-darken-2" label="Contraseña" :type="show ? 'text' : 'password'"
                             :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'" @click:append-inner="show = !show"
-                            v-model="props.item_user_parent.password" :error-messages="getValidateErrors('password')"    autocomplete="none"/>
+                            v-model="props.item_user_parent.password" :error-messages="getValidateErrors('password')"
+                            autocomplete="none" />
 
+                        <div class="d-flex">
+                            <v-text-field density="compact" label="Buscar Personal" prepend-inner-icon="mdi-magnify"
+                                color="cyan-darken-2" v-model="ci" :loading="change_search_personal"
+                                @keyup.enter="searchPersonal()" placeholder="Introduzca el C.I. del personal" />
 
-                        <v-radio-group v-model="props.item_user_parent.role" label="Rol" inline
-                            :error-messages="getValidateErrors('role')">
-                            <v-radio label="Normal" value="Normal" color="cyan-darken-2"></v-radio>
-                            <v-radio label="Administrador" value="Administrador" color="cyan-darken-2"></v-radio>
-
-                        </v-radio-group>
+                            <v-btn style="width: 45px" icon="mdi-magnify" color="orange-darken-3" variant="elevated"
+                                class="ml-2" @click="searchPersonal()"></v-btn>
+                        </div>
 
                         <v-text-field color="cyan-darken-2" label="Personal" readonly
                             v-model="props.item_user_parent.nombre_completo_personal"
                             :error-messages="getValidateErrors('id_personal')" />
-
-                        <div class="columns">
-                            <div class="column is-four-fifths">
-                                <v-text-field density="compact" label="Buscar Personal" prepend-inner-icon="mdi-magnify"
-                                    color="cyan-darken-2" v-model="ci" :loading="change_search_personal"
-                                    @keyup.enter="searchPersonal()" placeholder="Introduzca el CI del personal" />
+                        <div class="mx-2">
+                            <p>Administra grupos</p>
+                            <div class="d-flex is-flex-wrap-wrap">
+                                <v-switch class="mr-5" color="success" label="01" value="01" hide-details></v-switch>
+                                <v-switch class="mr-5" color="success" label="02" value="02" hide-details></v-switch>
+                                <v-switch class="mr-5" color="success" label="03" value="03" hide-details></v-switch>
+                                <v-switch class="mr-5" color="success" label="04" value="04" hide-details></v-switch>
+                                <v-switch class="mr-5" color="success" label="05" value="05" hide-details></v-switch>
+                                <v-switch class="mr-5" color="success" label="06" value="06" hide-details></v-switch>
+                                <v-switch class="mr-5" color="success" label="07" value="07" hide-details></v-switch>
+                                <v-switch class="mr-5" color="success" label="08" value="08" hide-details></v-switch>
+                                <v-switch class="mr-5" color="success" label="09" value="09" hide-details></v-switch>
+                                <v-switch class="mr-5" color="success" label="10" value="10" hide-details></v-switch>
                             </div>
+                        </div>
+                        <div>
+                            <v-radio-group v-model="props.item_user_parent.role" label="Rol" inline
+                                :error-messages="getValidateErrors('role')">
+                                <v-radio label="Normal" value="Normal" color="cyan-darken-2"></v-radio>
+                                <v-radio label="Administrador" value="Administrador" color="cyan-darken-2"></v-radio>
+                            </v-radio-group>
+                            <p class="mx-5" v-if="props.item_user_parent.role == 'Normal'">
+                                <span class="text-success">Normal:</span>
+                            <ol class="ml-5" style="list-style-type:square;">
+                                <li>Acceso a todos los modulos. Excepto a los modulos <b>personal</b> y <b>usuarios</b>
+                                </li>
+                                <li>Acceso solo a la ciudad a la que pertenece el usuario.</li>
+                                <li>Acceso solo a los datos registrados por el mismo usuario del modulo cliente</li>
+                            </ol>
+                            </p>
+                            <p class="mx-5" v-if="props.item_user_parent.role == 'Administrador'">
+                                <span class="text-success">Administrador:</span>
 
-                            <div class="column">
-                                <v-btn icon="mdi-magnify" size="compact" color="orange-darken-3" variant="outlined"
-                                    class="pa-3" @click="searchPersonal()"></v-btn>
-                            </div>
+                            <ol class="ml-5" style="list-style-type:square;">
+                                <li>Acceso a todos los modulos.</li>
+                                <li>Acceso a todas las ciudades.</li>
+                                <li>Acceso a todos los registros del modulo cliente</li>
+                            </ol>
+                            </p>
                         </div>
                     </div>
                 </form>
@@ -62,6 +91,8 @@
             </div>
 
         </div>
+
+
 
         <v-snackbar v-model="snackbar_search_personal.value" :timeout="2500" color="cyan-darken-2">
             <div class="is-flex is-justify-content-center is-align-items-center">
@@ -101,7 +132,9 @@ export default defineComponent({
             emit('saveParent');
         }
 
-        return { props, closeDialogFormChild, saveChild }
+        return {
+            props, closeDialogFormChild, saveChild
+        }
     },//setup
 
     computed: {

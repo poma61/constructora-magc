@@ -129,7 +129,7 @@
                 color="deep-purple-lighten-2" />
             <v-data-table :hover="true" :items="data" :headers="columns" :search="buscar" :loading="loading_data_table"
                 :items-per-page-options="items_per_page_options" :show-current-page="true" :fixed-header="true"
-                :height="500" :sort-by="[{ key: 'id', order: 'desc' }]" locale="es">
+                :height="600" :sort-by="[{ key: 'id', order: 'desc' }]" locale="es">
 
                 <template v-slot:item.fecha_firma_contrato="{ item }">
                     <span class="tag is-rounded is-info as-font-9 m-1">

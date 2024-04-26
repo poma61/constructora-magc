@@ -1,9 +1,9 @@
 @extends('layouts/app')
-@section('title', 'MAGC | Personal')
+@section('title', 'Constructora MAGC | Personal')
 
 @section('template_css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <link href="{{ asset('src/css/data-table-bulma.css') }}" rel="stylesheet">
+    <link href="{{ asset('src/css/data-table/data-table-bulma.css') }}" rel="stylesheet">
 @endsection
 
 @section('template_content')
@@ -38,13 +38,12 @@
 
 
 @section('template_js')
-
     <script src="{{ asset('/src/plugins/axios/Axios.min.js') }}"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="{{ asset('/src/plugins/toastr/ToastConfig.js') }}"></script>
 
     <script src="{{ asset('src/plugins/data-table/DataTableBulma1.13.js') }}"></script>
     <script src="{{ asset('src/js/personal/PersonalRender.js') }}" type="module"></script>
-    <script src="{{ asset('src/plugins/data-table/DataTableConfig.js') }}"></script>
-
+    <script src="{{ asset('src/plugins/data-table/DataTableConfig.js') }}" type="module"></script>
 @endsection

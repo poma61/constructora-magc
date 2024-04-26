@@ -1,9 +1,6 @@
-@extends('layouts.master-login')
+@extends('layouts/base-login')
 
 @section('title', 'Constructora MAGC')
-@section('template_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('src/css/bulma.css') }}" />
-@endsection
 
 @section('template_login')
     <form class="login100-form validate-form" action="{{ route('r-login') }}" method="post">
@@ -46,6 +43,3 @@
     </div>
 @endsection
 
-@section('template_js')
-    <script src="{{ asset('src/js/bulma.js') }}"></script>
-@endsection

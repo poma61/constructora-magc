@@ -1,5 +1,5 @@
+import config from "/src/js/config.js"
 $('#salir').click(function () {
-
   Swal.fire({
     icon: 'question',
     title: '¿Esta seguro  de salir del sistema?',
@@ -29,12 +29,10 @@ $('#salir').click(function () {
       cancelButton: 'button is-danger m-1 is-active'
     },
    
-
-
   }).then((result) => {
     if (result.isConfirmed) {
       setTimeout(()=>{
-        window.location.replace(BASE_URL+"/salir");
+        window.location.replace(config.BASE_URL+"/salir");
       },500);
    
     }

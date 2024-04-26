@@ -9,7 +9,7 @@
                 Clientes | Tablero
             </h1>
 
-            @include('components/cliente/cliente-tabs')
+            @include('components/cliente/cliente-tabs-group')
 
             <nav class="breadcrumb" aria-label="breadcrumbs">
                 <ul>

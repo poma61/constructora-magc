@@ -1,4 +1,4 @@
-
+import config from "/src/js/config.js";
 class Personal {
     constructor(city, url_web) {
         this.city = city;
@@ -9,15 +9,13 @@ class Personal {
             apellido_paterno: '',
             apellido_materno: '',
             cargo: '',
-            grup_number: '',
             ci: '',
             ci_expedido: '',
-            telefono: null,
+            telefono: '',
             direccion: '',
             foto: null,
-            created_at: null,
         }
-        this.config = {
+        this.http_config = {
             headers: {
                 'Accept': 'application/json'
             }
@@ -51,9 +49,9 @@ class Personal {
     async index() {
 
         try {
-            const resolve = await axios.post(BASE_URL + this.url_web + "/index", {
+            const resolve = await axios.post(config.BASE_URL + this.url_web + "/index", {
                 ciudad: this.city,
-            },this.config);
+            },this.http_config);
             this.setRecords(resolve.data.records);
             return resolve.data;
         } catch (error) {
@@ -65,7 +63,7 @@ class Personal {
         datos.append('ciudad', this.city);
 
         try {
-            const resolve = await axios.post(BASE_URL + this.url_web + "/create", datos, this.config);
+            const resolve = await axios.post(config.BASE_URL + this.url_web + "/create", datos, this.http_config);
             this.setFill(resolve.data.record);
 
             return resolve.data;
@@ -77,9 +75,9 @@ class Personal {
     async edit(data_id) {
 
         try {
-            const resolve = await axios.post(BASE_URL + this.url_web + "/edit", {
+            const resolve = await axios.post(config.BASE_URL + this.url_web + "/edit", {
                 id: data_id
-            }, this.config);
+            }, this.http_config);
             this.setFill(resolve.data.record);
             return resolve.data;
         } catch (error) {
@@ -89,9 +87,9 @@ class Personal {
 
     async destroy(data_id) {
         try {
-            const resolve = await axios.post(BASE_URL + this.url_web + "/destroy", {
+            const resolve = await axios.post(config.BASE_URL + this.url_web + "/destroy", {
                 id: data_id
-            }, this.config);
+            }, this.http_config);
             return resolve.data;
         } catch (error) {
             return error.response.data;
@@ -101,8 +99,8 @@ class Personal {
     async update(datos) {
         try {
             // Agregar el encabezado 'X-HTTP-Method-Override': 'PUT' al objeto de encabezados
-            this.config.headers['X-HTTP-Method-Override'] = 'PUT';
-            const resolve = await axios.post(BASE_URL + this.url_web + "/update", datos, this.config);
+            this.http_config.headers['X-HTTP-Method-Override'] = 'PUT';
+            const resolve = await axios.post(config.BASE_URL + this.url_web + "/update", datos, this.http_config);
             this.setFill(resolve.data.record);
 
             return resolve.data;

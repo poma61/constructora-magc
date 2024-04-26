@@ -1,6 +1,5 @@
 @extends('layouts/app')
-@section('title', 'MAGC | Perfil')
-
+@section('title', 'Constuctora MAGC | Perfil')
 
 @section('template_content')
 
@@ -20,6 +19,5 @@
 @endsection
 
 @section('template_js')
-
  @vite('resources/js/authUserProfile.js')
 @endsection

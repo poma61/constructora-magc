@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create('personals', function (Blueprint $table) {
@@ -25,12 +23,10 @@ return new class extends Migration
             $table->text('direccion');
             $table->boolean('status');
             $table->string('foto',250);
-            $table->unsignedBigInteger('id_ciudad');           
-            $table->unsignedBigInteger('id_grupo');           
+            $table->unsignedBigInteger('id_ciudad');              
             $table->timestamps();            
 
             $table->foreign('id_ciudad')->references('id')->on('ciudades');
-            $table->foreign('id_grupo')->references('id')->on('grupos');
             
         });
     }
