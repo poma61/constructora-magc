@@ -1,19 +1,78 @@
 <template>
+
+
   <div class="columns">
     <div class="column">
-      <button class="button is-info icon-text" @click="newForm()">
+      <button class="button is-success icon-text" @click="newForm()" :disabled="city == 'todos' ? false : true">
         <span class="icon">
-          <span class="mdi mdi-plus-box"></span>
+          <span class="mdi mdi-plus"></span>
         </span>
-        <span>Nuevo</span></button>
+        <span>Nuevo usuario</span>
+      </button>
     </div>
   </div>
+  <!--  otros codigos -->
+  <div>
+    <p class="my-3">
+      <span class="mdi mdi-text-search is-size-5"></span>
+      Filtrar por ciudades:
+    </p>
+    <div class="buttons mb-2">
+      <button @click="selectCity('todos')" :class="['button is-info', { 'is-light': city == 'todos' }]">
+        <span class="mdi mdi-text-search is-size-5"></span>&nbsp;Todos
+      </button>
+
+      <button @click="selectCity('Santa-Cruz')" :class="['button is-info', { 'is-light': city == 'Santa-Cruz' }]">
+        <span class="mdi mdi-text-search is-size-5"></span>&nbsp;Santa Cruz
+      </button>
+
+      <button @click="selectCity('Chuquisaca')" :class="['button is-info', { 'is-light': city == 'Chuquisaca' }]">
+        <span class="mdi mdi-text-search is-size-5"></span>&nbsp;Chuquisaca
+      </button>
+
+      <button @click="selectCity('Cochabamba')" :class="['button is-info', { 'is-light': city == 'Cochabamba' }]">
+        <span class="mdi mdi-text-search is-size-5"></span>&nbsp;Cochabamba
+      </button>
+
+      <button @click="selectCity('Potosi')" :class="['button is-info', { 'is-light': city == 'Potosi' }]">
+        <span class="mdi mdi-text-search is-size-5"></span>&nbsp;Potosi
+      </button>
+
+      <button @click="selectCity('Beni')" :class="['button is-info', { 'is-light': city == 'Beni' }]">
+        <span class="mdi mdi-text-search is-size-5"></span>&nbsp;Beni
+      </button>
+
+      <button @click="selectCity('La-Paz')" :class="['button is-info', { 'is-light': city == 'La-Paz' }]">
+        <span class="mdi mdi-text-search is-size-5"></span>&nbsp;La-Paz
+      </button>
+
+      <button @click="selectCity('Pando')" :class="['button is-info', { 'is-light': city == 'Pando' }]">
+        <span class="mdi mdi-text-search is-size-5"></span>&nbsp;Pando
+      </button>
+
+      <button @click="selectCity('Tarija')" :class="['button is-info', { 'is-light': city == 'Tarija' }]">
+        <span class="mdi mdi-text-search is-size-5"></span>&nbsp;Tarija
+      </button>
+
+
+      <button @click="selectCity('Oruro')" :class="['button is-info', { 'is-light': city == 'Oruro' }]">
+        <span class="mdi mdi-text-search is-size-5"></span>&nbsp;Oruro
+      </button>
+
+
+      <button @click="selectCity('Otros')" :class="['button is-info', { 'is-light': city == 'Otros' }]">
+        <span class="mdi mdi-text-search is-size-5"></span>&nbsp;Otros
+      </button>
+    </div>
+  </div>
+
+  <!-- otros codigos -->
   <div class="card">
-    <v-text-field v-model="buscar_registros" append-inner-icon="mdi-file-search-outline" clearable
-      label="Buscar Registros" color="cyan-darken-2">
+    <v-text-field v-model="buscar_registros" append-inner-icon="mdi-magnify" clearable label="Buscar Registros"
+      color="cyan-darken-2">
     </v-text-field>
 
-    <v-data-table :hover="true" :headers="headers" :items="registros" :loading="change"
+    <v-data-table :hover="true" :headers="headers" :items="registros" :loading="change_data_table"
       :items-per-page-options="items_per_page_options" :show-current-page="true" :fixed-header="true"
       :search="buscar_registros" :height="600" :sort-by="[{ key: 'id', order: 'desc' }]">
 
@@ -23,7 +82,7 @@
           <td>{{ item.columns.apellido_paterno }}</td>
           <td>{{ item.columns.apellido_materno }}</td>
           <td>{{ item.columns.ciudad }}</td>
-          <td>{{ item.columns.role }}</td> 
+          <td>{{ item.columns.role }}</td>
           <td>
             <span class="tag is-primary as-font-9 m-1"> {{ date_format.formatDateHour(item.columns.created_at) }}</span>
           </td>
@@ -32,17 +91,16 @@
             </v-btn>
             <v-btn @click="deleteItem(item.raw)" color="red" class="m-1" icon="mdi-delete">
             </v-btn>
-
           </td>
         </tr>
       </template>
-
-
     </v-data-table>
   </div>
 
-  <FormUser :dialog_form_parent="dialog_form" @closeDialogFormParent="closeDialogForm()" :item_user_parent="item_user"
-    @saveParent="save()" :message_errors_field_parent="message_errors_field" />
+  <v-dialog v-model="dialog_form" max-width="1300px" persistent transition="dialog-bottom-transition">
+    <FormUser @closeDialogFormParent="closeDialogForm()" :item_user_parent="item_user" @saveParent="save()"
+      :message_errors_field_parent="message_errors_field" />
+  </v-dialog>
 
   <v-snackbar v-model="snackbar_message_response.value" :timeout="2000" :color="snackbar_message_response.color"
     location="bottom right">
@@ -82,7 +140,7 @@
     </div>
   </v-dialog>
 </template>
-  
+
 <script>
 import { defineComponent } from 'vue';
 import { VDataTable } from 'vuetify/labs/VDataTable'
@@ -97,12 +155,11 @@ export default defineComponent({
   },
 
   data() {
-    const change = null;
+    const change_data_table = null;
     const registros = [];
     const date_format = new DateFormat();
     const dialog_form = false;
-    const parsed_url = new URL(window.location.href);
-    const city = parsed_url.pathname.split('/').pop();
+    const city = "todos";
     const item_user = {};
     const index_array = -1;
     const buscar_registros = "";
@@ -128,11 +185,11 @@ export default defineComponent({
 
     return {
       headers,
-      change,
+      change_data_table,
       registros,
       date_format,
-      dialog_form,
       city,
+      dialog_form,
       item_user,
       index_array,
       items_per_page_options,
@@ -144,32 +201,43 @@ export default defineComponent({
   },
 
   methods: {
-    async initData() {
-
-      const usuario = new Usuario(this.city);
-
-      const respuesta = await usuario.index();
-      if (respuesta.status) {
-        this.snackbarMessageView('success', respuesta.message)
-        this.registros = respuesta.records;
-      } else {
-        this.snackbarMessageView('error', respuesta.message)
-      }
-
+    initData() {
+      this.change_data_table = 'cyan';
+      setTimeout(async () => {
+        const usuario = new Usuario(this.city);
+        const respuesta = await usuario.index();
+        this.change_data_table = null;
+        if (respuesta.status) {
+          this.snackbarMessageView('success', respuesta.message)
+          this.registros = respuesta.records;
+        } else {
+          this.snackbarMessageView('error', respuesta.message)
+        }
+      }, 400);
     },//initData
 
+    selectCity(ciudad) {
+      this.city = ciudad;
+      this.initData();
+    },
+
+
     newForm() {
-      const usuario = new Usuario(this.city);
-      this.item_user = Object.assign({ nombre_completo_personal: "" }, usuario.getFill());
+      const usuario = new Usuario();
+      const additional_attributes_item_user = {
+        nombre_completo_personal: "",
+      }
+      this.item_user = Object.assign(additional_attributes_item_user, usuario.getFill());
       this.dialog_form = true;
     },//newForm
 
     editForm(item) {
       this.index_array = this.registros.indexOf(item);
+      const additional_attributes_item_user = {
+        nombre_completo_personal: `${item.nombres} ${item.apellido_paterno} ${item.apellido_materno}`,
+      }
 
-      const nom_completo_personal = `${item.nombres} ${item.apellido_paterno} ${item.apellido_materno}`;
-
-      this.item_user = Object.assign({ nombre_completo_personal: nom_completo_personal }, this.registros[this.index_array]);
+      this.item_user = Object.assign(additional_attributes_item_user, this.registros[this.index_array]);
       this.dialog_form = true;
     },
 
@@ -261,19 +329,11 @@ export default defineComponent({
   },//metodos
 
   created() {
-    this.change = 'cyan';
-    setTimeout(() => {
-      this.initData();
-      this.change = null;
-    }, 1000);
-
+    this.initData();
   }
-
 
 });
 
 
 
 </script>
-  
-

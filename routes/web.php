@@ -12,7 +12,8 @@ use App\Http\Controllers\ObraController;
 use App\Http\Controllers\FinanzasDeConstruccionController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\CCDController;
-
+use App\Http\Controllers\PermisoController;
+use App\Models\Permiso;
 
 // en un hosting muchas veces no se puede ejecutar php artisan
 // para generar storage link en un hosting se puede hacer desde una peticion get
@@ -58,17 +59,22 @@ Route::group(['middleware' => ['auth', 'check.role.access']], function () {
     Route::post('/microservice/personal/edit', [PersonalController::class, 'edit']);
     Route::put('/microservice/personal/update', [PersonalController::class, 'update']);
     Route::post('/microservice/personal/destroy', [PersonalController::class, 'destroy']);
+    //para buscar personal
+    Route::post('/microservice/personal/buscar-personal-registrado', [PersonalController::class, 'searchByCi']);
 });
-
 
 //user
 Route::group(['middleware' => ['auth', 'check.role.access']], function () {
-    Route::get('/user/view/{ciudad}', [UserController::class, 'indexView'])->name('r-user-view');
+    Route::get('/user/view', [UserController::class, 'indexView'])->name('r-user-view');
     Route::post('/microservice/user/index', [UserController::class, 'index']);
     Route::post('/microservice/user/create', [UserController::class, 'create']);
     Route::put('/microservice/user/update', [UserController::class, 'update']);
     Route::post('/microservice/user/destroy', [UserController::class, 'destroy']);
-    Route::post('/microservice/user/buscar-personal-registrado', [UserController::class, 'buscarPersonal']);
+});
+
+//permisos
+Route::group(['middleware' => ['auth']], function () {
+    Route::post('/microservice/permiso/list', [PermisoController::class, 'index']);
 });
 
 

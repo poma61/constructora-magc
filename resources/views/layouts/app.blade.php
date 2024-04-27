@@ -32,7 +32,7 @@
     @include('layouts/partials/sidebar')
 
     <div class="as-container-page">  
-        @include("system-notifications")
+        @include("layouts/partials/system-notifications")
         @yield('template_content')
     </div>
 

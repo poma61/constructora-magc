@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Models\Ciudad;
-use App\Models\Grupo;
-use App\Models\Personal;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,40 +11,24 @@ use Throwable;
 
 class UserController extends Controller
 {
-
-    public function indexView(string $nombre_ciudad)
+    public function indexView()
     {
-
         try {
-            $ciudad = Ciudad::where('city_name', $nombre_ciudad)->first();
-
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
-
-            return view('user/user-view', ['city' => $nombre_ciudad]);
+            return view('user/user-view');
         } catch (Throwable $th) {
             return view('error-page-view');
         }
     }
 
-
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-
         try {
             $city = $request->input('ciudad');
-            $user = null;
-            $ciudad = Ciudad::where('city_name', $city)->first();
 
-            if ($ciudad != null) {
+            if ($city == "todos") {
                 $user = User::join('personals', 'personals.id', '=', 'users.id_personal')
                     ->join('ciudades', 'ciudades.id', '=', 'personals.id_ciudad')
                     ->select('users.*', 'personals.nombres', 'personals.apellido_paterno', 'personals.apellido_materno', 'ciudades.city_name as ciudad')
-                    ->where('personals.id_ciudad', $ciudad->id)
                     ->where('personals.status', true)
                     ->where('users.status', true)
                     ->get();
@@ -56,9 +38,21 @@ class UserController extends Controller
                     'message' => 'OK',
                     'status' => true,
                 ], 200);
+            } {
+                $user = User::join('personals', 'personals.id', '=', 'users.id_personal')
+                    ->join('ciudades', 'ciudades.id', '=', 'personals.id_ciudad')
+                    ->select('users.*', 'personals.nombres', 'personals.apellido_paterno', 'personals.apellido_materno', 'ciudades.city_name as ciudad')
+                    ->where('ciudades.city_name', $city)
+                    ->where('personals.status', true)
+                    ->where('users.status', true)
+                    ->get();
+                return response()->json([
+                    'records' => $user,
+                    'message' => 'OK',
+                    'status' => true,
+                ], 200);
             }
         } catch (Throwable $th) {
-
             return response()->json([
                 'records' => [],
                 'message' => $th->getMessage(),
@@ -67,9 +61,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(UserRequest $request)
     {
         try {
@@ -112,9 +103,6 @@ class UserController extends Controller
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UserRequest $request)
     {
         try {
@@ -155,9 +143,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request)
     {
         try {
@@ -181,41 +166,5 @@ class UserController extends Controller
         }
     } //destroy
 
-    public function buscarPersonal(Request $request)
-    {
-        try {
-            $nom_ciudad = $request->input('ciudad');
-            $ci = $request->input('ci');
-            $ciudad = Ciudad::where('city_name', $nom_ciudad)->first();
-            $personal = null;
-
-            if ($ciudad != null) {
-                $personal = Personal::where('id_ciudad', $ciudad->id)
-                    ->where('ci', $ci)
-                    ->where('status', true)
-                    ->select('id', 'nombres', 'apellido_paterno', 'apellido_materno')
-                    ->first();
-            }
-
-            if ($personal == null) {
-                return response()->json([
-                    'record' => null,
-                    'message' => 'No existe la ciudad o el ci es incorrecto!',
-                    'status' => false,
-                ], 200);
-            }
-
-            return response()->json([
-                'record' => $personal,
-                'message' => 'OK',
-                'status' => true,
-            ], 200);
-        } catch (Throwable $th) {
-            return response()->json([
-                'record' => null,
-                'message' => $th->getMessage(),
-                'status' => false,
-            ], 500);
-        }
-    } //buscarPersonsl
+   
 }//classs

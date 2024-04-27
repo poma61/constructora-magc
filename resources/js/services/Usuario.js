@@ -43,7 +43,6 @@ class Usuario {
     }
 
     async index() {
-
         try {
             const resolve = await axios.post(app.BASE_URL + '/microservice/user/index', {
                 ciudad: this.city
@@ -100,20 +99,7 @@ class Usuario {
         this.city = city;
     }
 
-    async buscarPersonal(carnet) {
-        try {
-            const resolve = await axios.post(app.BASE_URL + "/microservice/user/buscar-personal-registrado", {
-                ciudad: this.city,
-                ci: carnet
-            }, this.config);
-
-            return resolve.data;
-        } catch (error) {
-            return error.response.data;
-        }
-
-
-    }
+   
 
 }//class
 

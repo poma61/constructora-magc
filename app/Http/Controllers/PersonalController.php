@@ -13,14 +13,13 @@ use Throwable;
 
 class PersonalController extends Controller
 {
-
     public function indexView(string $nombre_ciudad)
     {
         try {
             $ciudad = Ciudad::where('city_name', $nombre_ciudad)->first();
 
             if ($ciudad == null) {
-                return view('error-page-view');
+                return view('not-found');
             } else {
                 return view('personal/personal-view', ["city" => $nombre_ciudad]);
             }
@@ -32,7 +31,6 @@ class PersonalController extends Controller
     public function index(Request $request)
     {
         try {
-            // verificamos si existe la ciudad de la base de datos
             $personal = Personal::join("ciudades", "ciudades.id", "=", "personals.id_ciudad")
                 ->select("personals.*")
                 ->where('personals.status', true)
@@ -58,7 +56,8 @@ class PersonalController extends Controller
     {
         try {
             //verificamos si la ciudad existe por extabilidad del sistema
-            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
+            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))
+                ->first();
 
             if ($ciudad == null) {
                 return response()->json([
@@ -100,7 +99,6 @@ class PersonalController extends Controller
             $personal = Personal::where('id', $request->input('id'))
                 ->where('status', true)
                 ->first();
-
             if ($personal == null) {
                 return response()->json([
                     'status' => false,
@@ -123,7 +121,6 @@ class PersonalController extends Controller
         }
     }
 
-
     public function update(PersonalRequest $request)
     {
         try {
@@ -131,6 +128,16 @@ class PersonalController extends Controller
             $personal = Personal::where('id', $request->input('id'))
                 ->where('status', true)
                 ->first();
+            // verificamos si se encontro un registro
+            if ($personal == null) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "No se encuentro ningun registro con id {$request->input('id')}",
+                    'record' => null,
+                    'type' => 'update',
+                ], 404);
+            }
+
             $personal->fill($request->except('foto'));
 
             if ($request->file('foto') != null) {
@@ -150,6 +157,7 @@ class PersonalController extends Controller
                 'record' => $personal,
                 'type' => 'update',
             ]);
+            
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -188,4 +196,45 @@ class PersonalController extends Controller
             ], 200);
         }
     }
+
+    public function searchByCi(Request $request)
+    {
+        try {
+            $ci = $request->input('ci');
+            $personal = null;
+
+            $personal = Personal::join("ciudades", 'ciudades.id', "=", "personals.id_ciudad")
+                ->where('personals.ci', $ci)
+                ->where('personals.status', true)
+                ->select(
+                    'personals.id',
+                    'personals.nombres',
+                    'personals.apellido_paterno',
+                    'personals.apellido_materno',
+                    'ciudades.city_name as ciudad',
+                )
+                ->first();
+
+            if ($personal == null) {
+                return response()->json([
+                    'record' => null,
+                    'message' => "No se encontro ningun registro con C.I: {$ci}!",
+                    'status' => false,
+                ], 404);
+            }
+
+            return response()->json([
+                'record' => $personal,
+                'message' => "Registro econtrado para C.I. {$ci}",
+                'status' => true,
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'record' => null,
+                'message' => $th->getMessage(),
+                'status' => false,
+            ], 500);
+        }
+    } //buscarPersonsl
+
 }//class

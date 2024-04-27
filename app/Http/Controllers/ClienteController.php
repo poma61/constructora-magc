@@ -66,16 +66,6 @@ class ClienteController extends Controller
     public function tableroView(string $city, string $grupo_num)
     {
         try {
-            //verificamos si los parametros de la Url son validos
-            //solo es para verificar los parametros de la url para estabilidad del sistema
-            $verified_ciudad = Ciudad::where('city_name', $city)->first();
-            $verified_grupo = Grupo::where('grup_number', $grupo_num)->first();
-
-
-            if ($verified_ciudad == null || $verified_grupo == null) {
-                return view('error-page-view');
-            }
-
             //obtenemos todos los grupos que tiene acceso el usuario
             $user = Auth::user();
             $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
@@ -112,13 +102,6 @@ class ClienteController extends Controller
     public function graficoView(string $city, string $grupo_num)
     {
         try {
-            $verified_ciudad = Ciudad::where('city_name', $city)->first();
-            $verified_grupo = Grupo::where('grup_number', $grupo_num)->first();
-
-            if ($verified_ciudad == null || $verified_grupo == null) {
-                return view('error-page-view');
-            }
-
             //obtenemos todos los grupos que tiene acceso el usuario
             $user = Auth::user();
             $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
@@ -151,14 +134,6 @@ class ClienteController extends Controller
     public function calendarioView(string $city, string $grupo_num)
     {
         try {
-            $verified_ciudad = Ciudad::where('city_name', $city)->first();
-            $verified_grupo = Grupo::where('grup_number', $grupo_num)->first();
-            //verificamos si los parametros de la Url son validos
-
-            if ($verified_ciudad == null || $verified_grupo == null) {
-                return view('error-page-view');
-            }
-
             //obtenemos todos los grupos que tiene acceso el usuario
             $user = Auth::user();
             $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
@@ -192,14 +167,6 @@ class ClienteController extends Controller
     public function ganttView(string $city, string $grupo_num)
     {
         try {
-            $verified_ciudad = Ciudad::where('city_name', $city)->first();
-            $verified_grupo = Grupo::where('grup_number', $grupo_num)->first();
-            //verificamos si los parametros de la Url son validos
-
-            if ($verified_ciudad == null || $verified_grupo == null) {
-                return view('error-page-view');
-            }
-
             //obtenemos todos los grupos que tiene acceso el usuario
             $user = Auth::user();
             $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
@@ -233,14 +200,21 @@ class ClienteController extends Controller
     public function tableroIndex(Request $request)
     {
         try {
+            // por estabilidad del sistema verificamos si ciudad y existen en la base de datoa
+            $ciudad = Ciudad::where('city_name', $request
+                ->input('ciudad'))->first();
+            $grupo = Grupo::where('id_ciudad', $ciudad->id)
+                ->where('grup_number', $request->input('grupo'))
+                ->first();
 
-            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
-            //Podriamos haber sacado el id del grupo del Auth::user()->onPersonal()
-            //pero  se hace mas extenso el codigo ya que a que validar... si e administrador...
-            //si administra los todos los grupos, entonces hagaramos directamente de la url
-            //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es      
-            //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo                  
-            $grupo = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
+            if ($ciudad == null || $grupo == null) {
+                return response()->json([
+                    'status' => true,
+                    'records' => [],
+                    'message' => 'No existe la ciudad y/o el grupo.',
+
+                ], 404);
+            }
 
             $meses = [
                 'enero' => '01',

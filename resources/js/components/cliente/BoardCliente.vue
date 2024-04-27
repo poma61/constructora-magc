@@ -262,7 +262,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div>selectCity
             <div class="is-flex is-justify-content-end is-align-items-center">
                 <div class="m-2">
                     <v-btn class="has-background-success has-text-white as-hover__box-shadow"
