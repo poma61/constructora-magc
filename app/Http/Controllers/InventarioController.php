@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\InventarioExport;
 use App\Http\Requests\InventarioRequest;
 use App\Models\Contratista;
+use App\Models\UserHasPermiso;
 use Illuminate\Support\Facades\DB;
 
 class InventarioController extends Controller
@@ -19,12 +20,22 @@ class InventarioController extends Controller
     public function viewCiudad()
     {
         try {
-            $user = Auth::user()->onPersonal()->first();
-            $ciudad = Ciudad::where('id', $user->id_ciudad)->first();
-            $list_ciudades = Ciudad::all();
+            $user = Auth::user();
+            $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
+                ->select("permisos.*")
+                ->where("users_has_permisos.id_user", $user->id)
+                ->where("users_has_permisos.status", true)
+                ->get();
+
+            $ciudades = [];
+            foreach ($user_has_permiso as $row) {
+                if ($row->type_content == 'cities') {
+                    $ciudades[] = $row->code_content;
+                }
+            }
+
             return view('inventario/inventario-ciudad-view', [
-                'ciudad' => $ciudad->city_name,
-                'list_ciudades' => $list_ciudades,
+                'ciudades' => $ciudades,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -34,14 +45,8 @@ class InventarioController extends Controller
     public function viewTablero(String $city)
     {
         try {
-            //verificamos si los paorametros de la url son validos
-            $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
-
             return view('inventario/tablero-inventario-ciudad-view', [
-                'ciudad' => $ciudad->city_name,
+                'ciudad' => $city,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -52,14 +57,8 @@ class InventarioController extends Controller
     public function viewGrafico(String $city)
     {
         try {
-            //verificamos si los paorametros de la url son validos
-            $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
-
             return view('inventario/grafico-inventario-ciudad-view', [
-                'ciudad' => $ciudad->city_name,
+                'ciudad' => $city,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -69,14 +68,8 @@ class InventarioController extends Controller
     public function viewCalendario(String $city)
     {
         try {
-            //verificamos si los paorametros de la url son validos
-            $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
-
             return view('inventario/calendario-inventario-ciudad-view', [
-                'ciudad' => $ciudad->city_name,
+                'ciudad' => $city
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -88,13 +81,8 @@ class InventarioController extends Controller
     {
         try {
             //verificamos si los paorametros de la url son validos
-            $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
-
             return view('inventario/gantt-inventario-ciudad-view', [
-                'ciudad' => $ciudad->city_name,
+                'ciudad' => $city,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');

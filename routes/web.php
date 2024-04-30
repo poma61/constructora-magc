@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\UserController;
@@ -13,7 +13,7 @@ use App\Http\Controllers\FinanzasDeConstruccionController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\CCDController;
 use App\Http\Controllers\PermisoController;
-use App\Models\Permiso;
+
 
 // en un hosting muchas veces no se puede ejecutar php artisan
 // para generar storage link en un hosting se puede hacer desde una peticion get
@@ -31,19 +31,19 @@ Route::get('/storage-link', function () {
 });
 
 
-
 //middleware('guest') si el usuario esta autenticado no permite que el usuario acceda a la vista login
 //entonces esto redirige a la vista principal donde se configura en la siguiente ruta del archivo php
 //app/Providers/RouteServiceProvider.php
-Route::get('/', [LoginController::class, 'index'])->name('r-view-login')->middleware('guest');
-Route::post('/login', [LoginController::class, 'login'])->name("r-login");
+Route::get('/', [AuthController::class, 'index'])->name('r-view-login')->middleware('guest');
+Route::post('/login', [AuthController::class, 'login'])->name("r-login");
 
 //auth
 Route::group(['middleware' => ['auth']], function () {
-    Route::get("/salir", [LoginController::class, 'logout'])->name("r-salir");
-    Route::get("/me", [LoginController::class, 'viewMe'])->name("r-me");
-    Route::post("/microservice/index-me", [LoginController::class, 'me']);
-    Route::put("/microservice/update-credentials-me", [LoginController::class, 'updateCredentials']);
+    Route::get("/salir", [AuthController::class, 'logout'])->name("r-salir");
+    Route::get("/me", [AuthController::class, 'viewMe'])->name("r-me");
+    Route::post("/microservice/auth/me", [AuthController::class, 'me']);
+    Route::put("/microservice/auth/update-credentials-me", [AuthController::class, 'updateCredentials']);
+    Route::post("/microservice/auth/permisos", [AuthController::class, 'isPermission']);
 });
 
 
@@ -52,19 +52,24 @@ Route::get("/home", [HomeController::class, 'index'])->name("r-home")->middlewar
 
 
 //personal
-Route::group(['middleware' => ['auth', 'check.role.access']], function () {
-    Route::get('/personal/view/{city}', [PersonalController::class, 'indexView'])->name("r-personal-index-view");
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/personal/view', [PersonalController::class, 'ciudadView'])->name("r-personal-view");
+      //para buscar personal
+      //no necesita el middleware para valdiar ciudad 
+      Route::post('/microservice/personal/buscar-personal-registrado', [PersonalController::class, 'searchByCi']);
+});
+Route::group(['middleware' => ['auth', 'check.city.access',]], function () {
+    Route::get('/personal/tablero/{ciudad}', [PersonalController::class, 'indexView'])->name("r-tablero-personal-view");
     Route::post('/microservice/personal/index', [PersonalController::class, 'index']);
     Route::post('/microservice/personal/create', [PersonalController::class, 'create']);
     Route::post('/microservice/personal/edit', [PersonalController::class, 'edit']);
     Route::put('/microservice/personal/update', [PersonalController::class, 'update']);
     Route::post('/microservice/personal/destroy', [PersonalController::class, 'destroy']);
-    //para buscar personal
-    Route::post('/microservice/personal/buscar-personal-registrado', [PersonalController::class, 'searchByCi']);
+  
 });
 
 //user
-Route::group(['middleware' => ['auth', 'check.role.access']], function () {
+Route::group(['middleware' => ['auth',]], function () {
     Route::get('/user/view', [UserController::class, 'indexView'])->name('r-user-view');
     Route::post('/microservice/user/index', [UserController::class, 'index']);
     Route::post('/microservice/user/create', [UserController::class, 'create']);
@@ -77,7 +82,6 @@ Route::group(['middleware' => ['auth', 'check.role.access']], function () {
 Route::group(['middleware' => ['auth']], function () {
     Route::post('/microservice/permiso/list', [PermisoController::class, 'index']);
 });
-
 
 //clientes
 Route::group(['middleware' => ['auth']], function () {
@@ -101,7 +105,6 @@ Route::group(['middleware' => ['auth', 'check.city.access', 'check.grup.access']
     Route::post('/microservice/ciudad/grupo/cliente/calendar-meeting', [ClienteController::class, 'calendarMeeting']);
     Route::post('/microservice/ciudad/grupo/cliente/gantt-meeting', [ClienteController::class, 'ganttMeeting']);
 });
-
 
 //Contratos
 Route::get('/contrato/ciudad', [ContratoController::class, 'viewCiudad'])->middleware('auth')->name('r-ciudad-contrato');

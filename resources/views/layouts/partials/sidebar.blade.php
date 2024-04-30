@@ -1,10 +1,35 @@
 @php
-    $routes_cliente = ['r-cliente-index-view', 'r-tablero-cliente-grupo-view', 'r-grafico-cliente-grupo-view', 'r-calendario-cliente-grupo-view', 'r-gantt-cliente-grupo-view'];
+    $routes_cliente = [
+        'r-cliente-index-view',
+        'r-tablero-cliente-grupo-view',
+        'r-grafico-cliente-grupo-view',
+        'r-calendario-cliente-grupo-view',
+        'r-gantt-cliente-grupo-view',
+    ];
     $routes_contrato = ['r-ciudad-contrato', 'r-tablero-contrato', 'r-calendario-contrato', 'r-gantt-contrato'];
-    $routes_finanzas_de_construccion = ['r-ciudad-finanzas-de-construccion', 'r-tablero-finanzas-de-construccion', 'r-grafico-finanzas-de-construccion', 'r-calendario-finanzas-de-construccion', 'r-gantt-finanzas-de-construccion'];
-    $routes_inventario = ['r-ciudad-inventario', 'r-tablero-inventario', 'r-grafico-inventario', 'r-calendario-inventario', 'r-gantt-inventario'];
-    $routes_control_de_obra = ['r-ciudad-control-de-obra', 'r-tablero-control-de-obra', 'r-grafico-control-de-obra', 'r-calendario-control-de-obra', 'r-gantt-control-de-obra'];
+    $routes_finanzas_de_construccion = [
+        'r-ciudad-finanzas-de-construccion',
+        'r-tablero-finanzas-de-construccion',
+        'r-grafico-finanzas-de-construccion',
+        'r-calendario-finanzas-de-construccion',
+        'r-gantt-finanzas-de-construccion',
+    ];
+    $routes_inventario = [
+        'r-ciudad-inventario',
+        'r-tablero-inventario',
+        'r-grafico-inventario',
+        'r-calendario-inventario',
+        'r-gantt-inventario',
+    ];
+    $routes_control_de_obra = [
+        'r-ciudad-control-de-obra',
+        'r-tablero-control-de-obra',
+        'r-grafico-control-de-obra',
+        'r-calendario-control-de-obra',
+        'r-gantt-control-de-obra',
+    ];
     $routes_disenio = ['r-tablero-disenio', 'r-grafico-disenio', 'r-calendario-disenio'];
+    $routes_personal = ['r-personal-view', 'r-tablero-personal-view'];
     //obtenemos el name de la ruta actual que esta en la url
     $route_name_actual = Route::currentRouteName();
 @endphp
@@ -26,14 +51,12 @@
         <div class="sidebar-menu">
             <div class="user-image-sidebar">
                 @php
-                    $user_all = Auth::user()
-                        ->onPersonal()
-                        ->first();
+                    $user = Auth::user()->onPersonal()->first();
                 @endphp
-                <img class="user_img" src="{{ asset($user_all->foto) }}" alt="" height="100" width="100" />
+                <img class="user_img" src="{{ asset($user->foto) }}" alt="" height="100" width="100" />
                 <span class="user_name">
 
-                    {{ $user_all->nombres }} {{ $user_all->apellido_paterno }} {{ $user_all->apellido_materno }}
+                    {{ $user->nombres }} {{ $user->apellido_paterno }} {{ $user->apellido_materno }}
                 </span>
             </div>
 
@@ -140,27 +163,35 @@
                     </a>
                 </li>
 
+                @php
+                    $user_permission = Auth::user()->onPermission();
+                    $list_permisos = [];
+                    foreach ($user_permission as $row) {
+                        $list_permisos[] = $row->code_content;
+                    }
+                @endphp
 
-                {{-- opciones del menu solo cuando es rol administrador --}}
-                @if (Auth::user()->role == 'Administrador')
+                @if (count($user_permission) > 0)
                     <li>
                         <div class="unfold-divider"></div>
                     </li>
-
                     <li>
                         <div class="sidebar-small-cap">Administracion</div>
                     </li>
+                @endif
 
+                @if (in_array('access_personals', $list_permisos))
                     <li>
-                        <a href="{{ route('r-personal-index-view', 'Santa-Cruz') }}"
-                            class="unfold-toggle no-arrow @if ($route_name_actual == 'r-personal-index-view') active @endif">
+                        <a href="{{ route('r-personal-view') }}"
+                            class="unfold-toggle no-arrow @if (in_array($route_name_actual, $routes_personal)) active @endif">
                             <span class="as-icon  mdi mdi-badge-account-outline is-size-5"></span>
                             <span>Personal</span>
                         </a>
                     </li>
-
+                @endif
+                @if (in_array('access_users', $list_permisos))
                     <li>
-                        <a href="{{ route('r-user-view', 'Santa-Cruz') }}"
+                        <a href="{{ route('r-user-view') }}"
                             class="unfold-toggle no-arrow @if ($route_name_actual == 'r-user-view') active @endif">
                             <span class="as-icon mdi mdi-home-account is-size-5"></span>
                             <span>Usuarios</span>

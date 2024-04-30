@@ -4,25 +4,50 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PersonalRequest;
 use App\Models\Ciudad;
-use App\Models\Grupo;
 use App\Models\Personal;
 use App\Models\User;
+use App\Models\UserHasPermiso;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 class PersonalController extends Controller
 {
+    public function ciudadView()
+    {
+        try {
+            $user = Auth::user();
+            $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
+                ->select("permisos.*")
+                ->where("users_has_permisos.id_user", $user->id)
+                ->where("users_has_permisos.status", true)
+                ->get();
+
+            $ciudades = [];
+            foreach ($user_has_permiso as $row) {
+                if ($row->type_content == 'cities') {
+                    $ciudades[] = $row->code_content;
+                }
+            }
+
+            return view('personal/personal-ciudad-view', [
+                "ciudades" => $ciudades,
+            ]);
+        } catch (Throwable $th) {
+            return view('error-page-view');
+        }
+    }
+
     public function indexView(string $nombre_ciudad)
     {
         try {
-            $ciudad = Ciudad::where('city_name', $nombre_ciudad)->first();
-
-            if ($ciudad == null) {
-                return view('not-found');
-            } else {
-                return view('personal/personal-view', ["city" => $nombre_ciudad]);
-            }
+            return view(
+                'personal/personal-tablero-view',
+                [
+                    "ciudad" => $nombre_ciudad,
+                ]
+            );
         } catch (Throwable $th) {
             return view('error-page-view');
         }
@@ -157,7 +182,6 @@ class PersonalController extends Controller
                 'record' => $personal,
                 'type' => 'update',
             ]);
-            
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -201,7 +225,6 @@ class PersonalController extends Controller
     {
         try {
             $ci = $request->input('ci');
-            $personal = null;
 
             $personal = Personal::join("ciudades", 'ciudades.id', "=", "personals.id_ciudad")
                 ->where('personals.ci', $ci)

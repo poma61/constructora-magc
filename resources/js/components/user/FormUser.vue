@@ -7,7 +7,7 @@
         </header>
         <div class="card-content as-form">
             <form>
-                <div class="d-flex is-flex-wrappp-wrap" style="width: 100%;">
+                <div class="is-flex is-flex-wrap-wrap" style="width: 100%;">
                     <v-text-field color="cyan-darken-2" label="Usuario" v-model="item_user.usuario"
                         :error-messages="getValidateErrors('usuario')" autocomplete="none" class="ma-1"
                         style="min-width:250px ;" />
@@ -18,7 +18,7 @@
                         class="ma-1" style="min-width:250px ;" />
                 </div>
 
-                <div class="d-flex">
+                <div class="is-flex">
                     <v-text-field class="ma-1" density="compact" label="Buscar Personal"
                         prepend-inner-icon="mdi-magnify" color="cyan-darken-2" v-model="ci"
                         :loading="change_search_personal" @keyup.enter="searchPersonal()"
@@ -28,20 +28,20 @@
                         @click="searchPersonal()"></v-btn>
                 </div>
 
-                <div class="d-flex is-flex-wrap-wrap">
+                <div class="is-flex is-flex-wrap-wrap">
 
                     <v-text-field class="ma-1" color="cyan-darken-2" label="Personal" readonly
                         v-model="item_user.nombre_completo" :error-messages="getValidateErrors('id_personal')"
                         style="min-width: 250px;" />
 
                     <v-text-field class="ma-1" color="cyan-darken-2" label="Ciudad" readonly v-model="item_user.ciudad"
-                        :error-messages="getValidateErrors('id_personal')" style="min-width: 250px;" />
+                         style="min-width: 250px;" />
                 </div>
 
                 <v-divider class="border-opacity-50"></v-divider>
 
                 <div class="mx-2">
-                    <p class="text-info">Todos los modulos | Administra las ciudades de: </p>
+                    <p class="text-info">Todos los modulos | Acceso a las ciudades de: </p>
                     <div class="as-flex-content-permisions">
                         <!-- renderizamos los permisos la parte de ciudades -->
                         <v-checkbox v-for="(city, index) in list_city_permissions" :key="index"
@@ -71,31 +71,43 @@
                 </div>
 
                 <v-divider class="border-opacity-50"></v-divider>
-                <div>
-                    <v-radio-group v-model="item_user.role" label="Rol" inline
-                        :error-messages="getValidateErrors('role')">
-                        <v-radio label="Normal" value="Normal" color="cyan-darken-2"></v-radio>
-                        <v-radio label="Administrador" value="Administrador" color="cyan-darken-2"></v-radio>
-                    </v-radio-group>
-                    <p class="mx-5" v-if="item_user.role == 'Normal'">
-                        <span class="text-success">Normal:</span>
-                    <ol class="ml-5" style="list-style-type:square;">
-                        <li>Acceso a todos los modulos. Excepto a los modulos <b>personal</b> y <b>usuarios</b>
-                        </li>
-                        <li>Acceso solo a la ciudad a la que pertenece el usuario.</li>
-                        <li>Acceso solo a los datos registrados por el mismo usuario del modulo cliente</li>
-                    </ol>
-                    </p>
-                    <p class="mx-5" v-if="item_user.role == 'Administrador'">
-                        <span class="text-success">Administrador:</span>
 
-                    <ol class="ml-5" style="list-style-type:square;">
-                        <li>Acceso a todos los modulos.</li>
-                        <li>Acceso a todas las ciudades.</li>
-                        <li>Acceso a todos los registros del modulo cliente</li>
-                    </ol>
-                    </p>
+                <div class="mx-2">
+                    <p class="text-info">Modulo administrativo: </p>
+                    <div class="as-flex-content-permisions">
+                        <!-- renderizamos los permisos la parte de ciudades -->
+                        <v-switch v-for="(row, index) in list_modules_permissions" :key="index" :label="row.name"
+                            :value="row.code_content" hide-details color="success" class="item-flex-permisions"
+                            v-model="module_permissions">
+                        </v-switch>
+                    </div>
                 </div>
+
+
+                <v-divider class="border-opacity-50"></v-divider>
+                <div class="mx-2">
+                    <p class="text-info">Registros: </p>
+                    <v-radio-group v-model="record_permissions" inline>
+                        <v-radio v-for="(record, index) in list_records_permissions" :key="index" :label="record.name"
+                            :value="record.code_content" color="cyan-darken-2"></v-radio>
+                    </v-radio-group>
+                </div>
+                <!-- permisos -->
+                <v-divider class="border-opacity-50"></v-divider>
+                <div class="mx-2">
+                    <p class="text-info">Todos los usuarios tiene acceso por defecto a los modulos: </p>
+                    <ol class="ml-5">
+                        <ul><span class="mdi mdi-arrow-right-bottom"></span> Clientes</ul>
+                        <ul><span class="mdi mdi-arrow-right-bottom"></span> Contratos</ul>
+                        <ul><span class="mdi mdi-arrow-right-bottom"></span> Control de obras</ul>
+                        <ul><span class="mdi mdi-arrow-right-bottom"></span> Finanzas de construccion</ul>
+                        <ul><span class="mdi mdi-arrow-right-bottom"></span> Inventario</ul>
+                        <ul><span class="mdi mdi-arrow-right-bottom"></span> CCD</ul>
+                        <ul><span class="mdi mdi-arrow-right-bottom"></span> Diseño</ul>
+                    </ol>
+                </div>
+
+
             </form>
         </div>
 
@@ -112,7 +124,7 @@
             </div>
         </div>
     </div>
-    
+
     <v-overlay v-model="change_overlay" class="align-center justify-center" persistent>
         <div class="text-center">
             <v-progress-circular color="info" size="100" indeterminate></v-progress-circular>
@@ -141,17 +153,25 @@ export default defineComponent({
         const list_groups_permissions = [];
         const item_user = this.props.item_user_parent;
         const message_errors_field = {};
+        const list_modules_permissions = [];
+        const list_records_permissions = [];
+        const module_permissions = [];
+        const record_permissions = null;
         return {
             show,
             ci,
             change_search_personal,
             list_city_permissions,
             list_groups_permissions,
+            list_modules_permissions,
+            list_records_permissions,
             groups_permissions,
             city_permissions,
+            module_permissions,
             item_user,
             message_errors_field,
             change_overlay,
+            record_permissions,
         }
     },//data
 
@@ -197,13 +217,18 @@ export default defineComponent({
             const response = await permiso.index();
             if (response.status) {
                 const list_permisos = response.records;
-                // Filtrar solo los elementos de tipo "ciudades"
-                this.list_city_permissions = list_permisos.filter(row => row.content_type == 'ciudades');
-                //filtrar todos los grupos
-                const list_groups = list_permisos.filter(row => row.content_type == 'grupos');
+                // Filtrar solo los elementos de tipo "all_module", para permisos de ciudad de todos los modulos
+                this.list_city_permissions = list_permisos.filter(row => row.type == 'all_module');
 
+                //filtrar elementos de tipo module, para permisos de modulo
+                this.list_modules_permissions = list_permisos.filter(row => row.type == "module")
+
+                //filtrar elementos de tipo module, para permisos de modulo
+                this.list_records_permissions = list_permisos.filter(row => row.type == "records")
+
+                //filtrar elementos de tipo module_cliente, para permisos de grupos
+                const list_groups = list_permisos.filter(row => row.type == 'module_cliente');
                 const list_ciudades = this.list_city_permissions.map(row => row.code_content);
-
                 //ahora agrupamos las ciudades con sus respectivos grupos
                 list_ciudades.forEach(city => {
                     const grupos = list_groups.filter(item => item.code_content.includes(city)).map(item => item.code_content);
@@ -222,8 +247,16 @@ export default defineComponent({
         async save() {
             const usuario = new Usuario();
             usuario.setFill(this.item_user);
+            const all_permissions = [
+                ...this.city_permissions,
+                ...this.groups_permissions,
+                ...this.module_permissions,
+            ];
+            if (this.record_permissions != null) {
+                all_permissions.push(this.record_permissions);
+            }
             usuario.setParameter({
-                permissions: [...this.city_permissions, ...this.groups_permissions]
+                permissions: all_permissions
             });
 
             if (this.item_user.id > 0) {
@@ -266,12 +299,17 @@ export default defineComponent({
             const response = await usuario.userPermission();
             if (response.status) {
                 const permisos = response.records;
+
                 //filter => objetos segun condicion
                 //map => nos devulve un array
-                this.city_permissions = permisos.filter(row => row.content_type == 'ciudades').map(row => row.code_content);
-                this.groups_permissions = permisos.filter(row => row.content_type == 'grupos').map(row => row.code_content);
+                this.city_permissions = permisos.filter(row => row.type_content == 'cities').map(row => row.code_content);
+                this.groups_permissions = permisos.filter(row => row.type_content == 'groups').map(row => row.code_content);
+                this.module_permissions = permisos.filter(row => row.type == 'module').map(row => row.code_content);
+                const is_record_permissions = permisos.filter(row => row.type == 'records');
+                is_record_permissions.forEach(row => {
+                    this.record_permissions = row.code_content;
+                })
             }
-
         },
 
     },//methods

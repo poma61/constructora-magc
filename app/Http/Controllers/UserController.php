@@ -71,7 +71,6 @@ class UserController extends Controller
             $user->password = Hash::make($request->input('password'));
             $user->id_personal = $request->input('id_personal');
             $user->status = true;
-            $user->role = $request->input('role');
             $user->save();
 
 
@@ -124,15 +123,12 @@ class UserController extends Controller
                 ], 404);
             }
 
-
             $user->usuario = $request->input('usuario');
             //el campo password NO esta vacio entonces empty devolvera false y se encriptara la contraseña
             if (empty($request->input('password')) == false) {
                 $user->password = Hash::make($request->input('password'));
             }
-
             $user->id_personal = $request->input('id_personal');
-            $user->role = $request->input('role');
             $user->update();
 
 

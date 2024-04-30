@@ -13,7 +13,7 @@
                     <li>
                         <div class="has-text-info">
                             <span class="icon is-small">
-                                <i class="mdi mdi-city" aria-hidden="true"></i>
+                                <i class="mdi mdi-arrow-right-bold-outline" aria-hidden="true"></i>
                             </span>
                             <span>{{ $ciudad}}</span>
                         </div>

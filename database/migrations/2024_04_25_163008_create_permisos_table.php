@@ -14,7 +14,8 @@ return new class extends Migration
 
             $table->id();
             $table->string("name");
-            $table->string("content_type");
+            $table->string("type");
+            $table->string("type_content");
             $table->string("code_content");
           
         });

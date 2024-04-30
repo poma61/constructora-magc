@@ -13,18 +13,29 @@ use Throwable;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ObraExport;
+use App\Models\UserHasPermiso;
 
 class ObraController extends Controller
 {
     public function viewCiudad()
     {
         try {
-            $user = Auth::user()->onPersonal()->first();
-            $ciudad = Ciudad::where('id', $user->id_ciudad)->first();
-            $list_ciudades = Ciudad::all();
+            $user = Auth::user();
+            $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
+                ->select("permisos.*")
+                ->where("users_has_permisos.id_user", $user->id)
+                ->where("users_has_permisos.status", true)
+                ->get();
+
+            $ciudades = [];
+            foreach ($user_has_permiso as $row) {
+                if ($row->type_content == 'cities') {
+                    $ciudades[] = $row->code_content;
+                }
+            }
+            
             return view('control-de-obra/control-de-obra-ciudad-view', [
-                'ciudad' => $ciudad->city_name,
-                'list_ciudades' => $list_ciudades,
+                'ciudades' => $ciudades,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -34,14 +45,9 @@ class ObraController extends Controller
     public function viewTablero(String $city)
     {
         try {
-            //verificamos si los paorametros de la url son validos
-            $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
-
+     
             return view('control-de-obra/tablero-control-de-obra-ciudad-view', [
-                'ciudad' => $ciudad->city_name,
+                'ciudad' => $city,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -54,12 +60,9 @@ class ObraController extends Controller
         try {
             //verificamos si los paorametros de la url son validos
             $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
 
             return view('control-de-obra/grafico-control-de-obra-ciudad-view', [
-                'ciudad' => $ciudad->city_name,
+                'ciudad' => $city,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -71,12 +74,9 @@ class ObraController extends Controller
         try {
             //verificamos si los paorametros de la url son validos
             $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
 
             return view('control-de-obra/calendario-control-de-obra-ciudad-view', [
-                'ciudad' => $ciudad->city_name,
+                'ciudad' => $city,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -88,13 +88,9 @@ class ObraController extends Controller
     {
         try {
             //verificamos si los paorametros de la url son validos
-            $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
 
             return view('control-de-obra/gantt-control-de-obra-ciudad-view', [
-                'ciudad' => $ciudad->city_name,
+                'ciudad' => $city,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');

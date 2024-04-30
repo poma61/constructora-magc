@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ContratoAllRequest;
 
-use App\Models\Ciudad;
 use App\Models\Cliente;
 use App\Models\Contrato;
 use App\Models\DetalleContrato;
@@ -32,7 +31,7 @@ class ContratoController extends Controller
 
             $ciudades = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->content_type == 'ciudades') {
+                if ($row->type_content == 'cities') {
                     $ciudades[] = $row->code_content;
                 }
             }
@@ -60,8 +59,6 @@ class ContratoController extends Controller
     public function viewCalendario(String $city)
     {
         try {
-
-
             return view('contrato/calendario-contrato-ciudad-view', [
                 'ciudad' => $city,
             ]);

@@ -51,7 +51,7 @@ class CheckGrupAccess
 
             $user_permisos = UserHasPermiso::join("permisos", 'permisos.id', '=', 'users_has_permisos.id_permiso')
                 ->select("permisos.*")
-                ->where("permisos.content_type", 'grupos')
+                ->where("permisos.type_content", 'groups')
                 ->where("users_has_permisos.status", true)
                 ->where("users_has_permisos.id_user", Auth::user()->id)
                 ->get();

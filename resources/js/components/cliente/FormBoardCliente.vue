@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="props.dialog_form_parent" max-width="500px" persistent transition="dialog-bottom-transition">
+    <v-dialog v-model="props.dialog_form_parent" max-width="800px" persistent transition="dialog-bottom-transition">
         <div class="card">
             <div class="card-header has-background-success">
                 <p class="card-header-title has-text-white">
@@ -11,7 +11,7 @@
                         <li>
                             <div class="has-text-black">
                                 <span class="icon is-small">
-                                    <i class="mdi mdi-city" aria-hidden="true"></i>
+                                    <i class="mdi mdi-arrow-right-bold-outline" aria-hidden="true"></i>
                                 </span>
                                 <span>{{ props.city_parent }}</span>
                             </div>
@@ -19,7 +19,7 @@
                         <li>
                             <div class="has-text-black">
                                 <span class="icon is-small">
-                                    <i class="mdi mdi-group" aria-hidden="true"></i>
+                                    <i class="mdi mdi-arrow-right-bold-outline" aria-hidden="true"></i>
                                 </span>
                                 <span>Grupo {{ props.group_parent }}</span>
                             </div>

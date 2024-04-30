@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthProfileRequest;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
-class LoginController extends Controller
+class AuthController extends Controller
 {
 
     public function index()
@@ -53,7 +53,7 @@ class LoginController extends Controller
     {
         try {
             $user_autenticate = User::join('personals', 'personals.id', '=', 'users.id_personal')
-                ->select('users.id as id_usuario', 'users.role', 'users.usuario', 'personals.*')
+                ->select('users.id as id_usuario', 'users.usuario', 'personals.*')
                 ->where('personals.status', true)
                 ->where('users.status', true)
                 ->where('users.id', Auth::user()->id)
@@ -105,4 +105,25 @@ class LoginController extends Controller
             ], 500);
         }
     }
+
+
+    public function isPermission()
+    {
+        try {
+            $list_user_permission = Auth::user()->onPermission();
+
+            return response()->json([
+                'records' => $list_user_permission,
+                'message' => "OK",
+                'status' => true,
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'records' => [],
+                'message' => $th->getMessage(),
+                'status' => false,
+            ], 500);
+        }
+    } //listUserPermissions
+    
 }//class

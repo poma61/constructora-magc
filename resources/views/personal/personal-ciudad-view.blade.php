@@ -1,15 +1,13 @@
 @extends('layouts/app')
-@section('title', 'MAGC | Finanzas de construccion')
+@section('title', 'Constructora MAGC | Personal')
 
 @section('template_content')
 
-
     <div class="card mt-5">
-
         <div class="card-content">
             <h1
-                class="as-main-title has-background-info is-size-5 has-text-centered has-text-white animate__animated animate__zoomInDown">
-                Finanzas de construccion
+                class="as-main-title has-background-link is-size-5 has-text-centered has-text-white animate__animated animate__zoomInDown">
+                Panel de administracion del personal
             </h1>
 
             <div class="is-flex is-justify-content-center is-align-items-center is-flex-wrap-wrap">
@@ -27,18 +25,19 @@
                             </figure>
                             <p> {{ $city }}</p>
 
-                            <a href="{{ route('r-tablero-finanzas-de-construccion', $city) }}"
-                                class="button is-success is-rounded">
+                            <a href="{{ route('r-tablero-personal-view', $city) }}"
+                                class="button is-primary is-outlined is-rounded">
                                 <span class="icon is-small">
                                     <i class="mdi mdi-check"></i>
                                 </span>
-                                <span>Administrar finanzas</span>
+                                <span>Administrar personal</span>
                             </a>
                         </div>
                     </div>
                 @endforeach
-            </div>
 
+            </div>
         </div>
     </div>
+
 @endsection

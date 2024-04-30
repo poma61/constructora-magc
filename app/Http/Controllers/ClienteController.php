@@ -33,14 +33,14 @@ class ClienteController extends Controller
 
             $ciudades = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->content_type == 'ciudades') {
+                if ($row->type_content == 'cities') {
                     $ciudades[] = $row->code_content;
                 }
             }
 
             $city_groups = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->content_type == 'grupos') {
+                if ($row->type_content == 'groups') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
                     // al aplicar explode, tenemnos un array, de este tipo ['Santa-Cruz', '02']
@@ -78,7 +78,7 @@ class ClienteController extends Controller
 
             $manage_groups = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->content_type == 'grupos') {
+                if ($row->type_content == 'groups') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
                     // al aplicar explode, tenemnos un array, de este tipo ['Santa-Cruz', '02']
@@ -116,7 +116,7 @@ class ClienteController extends Controller
 
             $manage_groups = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->content_type == 'grupos') {
+                if ($row->type_content == 'groups') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
                     // al aplicar explode, tenemnos un array, de este tipo ['Santa-Cruz', '02']
@@ -154,7 +154,7 @@ class ClienteController extends Controller
 
             $manage_groups = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->content_type == 'grupos') {
+                if ($row->type_content == 'groups') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
                     $parts = explode('_', $row->code_content);
@@ -192,7 +192,7 @@ class ClienteController extends Controller
 
             $manage_groups = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->content_type == 'grupos') {
+                if ($row->type_content == 'groups') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
                     // obtenemos un array de esta manera ['Santa-Cruz', '02']

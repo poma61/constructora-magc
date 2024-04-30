@@ -81,7 +81,6 @@
           <td>{{ item.columns.apellido_paterno }}</td>
           <td>{{ item.columns.apellido_materno }}</td>
           <td>{{ item.columns.ciudad }}</td>
-          <td>{{ item.columns.role }}</td>
           <td>
             <span class="tag is-primary as-font-9 m-1"> {{ date_format.formatDateHour(item.columns.created_at) }}</span>
           </td>
@@ -113,11 +112,10 @@
 
   <v-dialog v-model="dialog_delete" max-width="500px" persistent transition="dialog-bottom-transition">
     <div class="card">
-
       <div class="card-content">
         <div class="content">
           <div class="is-flex is-justify-content-center is-align-items-center  is-flex-direction-column">
-            <v-icon icon="mdi-file-question-outline" size="90" color="warning"
+            <v-icon icon="mdi-trash-can-outline" size="90" color="warning"
               class="animate__animated animate__bounce" />
             <p class="is-size-5 has-text-centered">¿Desea eliminar el registro seleccionado?</p>
           </div>
@@ -126,12 +124,12 @@
 
       <div class="is-flex is-justify-content-center  is-align-items-center p-2" style="width: 100%;">
         <div class="m-1">
-          <v-btn variant="outlined" color="cyan-darken-1" @click="confirmDeleteItem()">
+          <v-btn variant="elevated" color="cyan-darken-1" @click="confirmDeleteItem()">
             <v-icon icon="mdi-content-save-all"></v-icon>&nbsp;Aceptar
           </v-btn>
         </div>
         <div class="m-1">
-          <v-btn variant="outlined" color="red" @click="closeDialogDelete()">
+          <v-btn variant="elevated" color="red" @click="closeDialogDelete()">
             <v-icon icon="mdi-cancel"></v-icon>&nbsp;Cancelar
           </v-btn>
         </div>
@@ -183,7 +181,6 @@ export default defineComponent({
       { title: 'Apellido Paterno', key: 'apellido_paterno', divider: true, },
       { title: 'Apellido Materno', key: 'apellido_materno', divider: true, },
       { title: 'Ciudad', key: 'ciudad', divider: true, },
-      { title: 'Rol', key: 'role', divider: true, },
       { title: 'Creado el', key: 'created_at', divider: true, },
       { title: 'Acciones', key: 'actions', divider: true, },
     ];

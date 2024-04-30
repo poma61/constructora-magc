@@ -10,11 +10,23 @@
 
     <div class="card mt-5">
         <div class="card-content">
-            <h1 class="as-main-title has-background-primary is-size-5 has-text-centered has-text-white animate__animated animate__fadeInRightBig">
+            <h1
+                class="as-main-title has-background-primary is-size-5 has-text-centered has-text-white animate__animated animate__fadeInRightBig">
                 Administracion del personal
             </h1>
 
-            @include('components/personal/personal-tabs')
+            <nav class="breadcrumb" aria-label="breadcrumbs">
+                <ul>
+                    <li>
+                        <div class="has-text-info">
+                            <span class="icon is-small">
+                                <i class="mdi mdi-arrow-right-bold-outline" aria-hidden="true"></i>
+                            </span>
+                            <span>{{ $ciudad }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
 
             <div class="columns is-desktop">
                 <div class="column">

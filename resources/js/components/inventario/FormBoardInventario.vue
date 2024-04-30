@@ -1,16 +1,16 @@
 <template>
-    <v-dialog v-model="props.dialog_form_prop" max-width="600px" persistent>
+    <v-dialog v-model="props.dialog_form_prop" max-width="800px" persistent>
         <div class="card">
             <div class="card-header has-background-info">
                 <p class="card-header-title has-text-white">
-                    <span class="mdi mdi-file-account-outline is-size-2"></span>
+                    <span class="mdi mdi-file-table-box-outline is-size-2"></span>
                     &nbsp;REGISTRAR INVENTARIO |&nbsp;
                 <nav class="breadcrumb" aria-label="breadcrumbs">
                     <ul>
                         <li>
                             <div class="has-text-black">
                                 <span class="icon is-small">
-                                    <i class="mdi mdi-city" aria-hidden="true"></i>
+                                    <i class="mdi mdi-arrow-right-bold-outline" aria-hidden="true"></i>
                                 </span>
                                 <span>{{ props.city_prop.toUpperCase() }}</span>
                             </div>

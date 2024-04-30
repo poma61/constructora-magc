@@ -37,7 +37,7 @@
                                         <span class="icon is-small">
                                             <i class="mdi mdi-check"></i>
                                         </span>
-                                        <span>Administrar</span>
+                                        <span>Administrar contratos</span>
                                     </a>
 
                                 </div>

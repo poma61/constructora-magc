@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'MAGC | Administracion')
+@section('title', 'Constructora MAGC | Administracion')
 
 @section('template_content')
 
@@ -9,7 +9,7 @@
 
         <div class="card-content">
             <h1
-                class="as-main-title has-background-primary is-size-5 has-text-centered has-text-white has-text-white animate__animated animate__bounce">
+                class="as-main-title has-background-info is-size-5 has-text-centered has-text-white has-text-white animate__animated animate__bounce">
                 Bienvenido al sistema MAGC
             </h1>
 
@@ -17,7 +17,7 @@
                 <div class="tile is-vertical is-8">
                     <div class="tile">
                         <div class="tile is-parent is-vertical">
-                            <article class="tile is-child notification is-info">
+                            <article class="tile is-child notification is-link">
                                 <p class="title">Vision</p>
                                 <div class="content">
                                     <p>
@@ -27,7 +27,7 @@
                                     </p>
                                 </div>
                             </article>
-                            <article class="tile is-child notification is-info">
+                            <article class="tile is-child notification is-link">
                                 <p class="title">Mision</p>
                                 <div class="content">
                                     <p>
@@ -41,7 +41,7 @@
                             </article>
                         </div>
                         <div class="tile is-parent">
-                            <article class="tile is-child notification is-info">
+                            <article class="tile is-child notification is-link">
                                 <p class="title">¿Quienes somos?</p>
                                 <div class="content">
                                     <p>

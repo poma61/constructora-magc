@@ -5,7 +5,7 @@
     <div class="card mt-5">
         <div class="card-content">
             <h1
-                class="as-main-title as-background-orange is-size-5 has-text-centered has-text-white animate__animated animate__jello">
+                class="as-main-title as-background-orange is-size-5 has-text-centered has-text-white">
                 Administracion de clientes por ciudades
             </h1>
             {{-- ciudades --}}
@@ -67,7 +67,7 @@
                                         <span class="icon is-small">
                                             <i class="mdi mdi-check"></i>
                                         </span>
-                                        <span>Administrar</span>
+                                        <span>Administrar clientes</span>
                                     </a>
                                 @endif
                             </div>

@@ -49,7 +49,7 @@ class CheckCityAccess
         $user_permisos = UserHasPermiso::join("permisos", 'permisos.id', '=', 'users_has_permisos.id_permiso')
             ->select("permisos.*")
             ->where("users_has_permisos.status", true)
-            ->where("permisos.content_type", "ciudades")
+            ->where("permisos.type_content", "cities")
             ->where("users_has_permisos.id_user", Auth::user()->id)
             ->get();
 

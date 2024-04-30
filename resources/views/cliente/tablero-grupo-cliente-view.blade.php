@@ -1,11 +1,11 @@
 @extends('layouts/app')
-@section('title', 'MAGC | Clientes')
+@section('title', 'Constructora MAGC | Clientes')
 
 
 @section('template_content')
     <div class="card mt-5">
         <div class="card-content">
-            <h1 class="as-main-title as-background-orange is-size-5 has-text-centered has-text-white animate__animated animate__rubberBand">
+            <h1 class="as-main-title as-background-orange is-size-5 has-text-centered has-text-white">
                 Clientes | Tablero
             </h1>
 
@@ -16,7 +16,7 @@
                     <li>
                         <div class="has-text-info">
                             <span class="icon is-small">
-                                <i class="mdi mdi-city" aria-hidden="true"></i>
+                                <i class="mdi mdi-arrow-right-bold-outline" aria-hidden="true"></i>
                             </span>
                             <span>{{ $city }}</span>
                         </div>
@@ -24,7 +24,7 @@
                     <li>
                         <div class="has-text-info">
                             <span class="icon is-small">
-                                <i class="mdi mdi-group" aria-hidden="true"></i>
+                                <i class="mdi mdi-arrow-right-bold-outline" aria-hidden="true"></i>
                             </span>
                             <span> Grupo {{ $grupo_active }}</span>
                         </div>

@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ContratistaExport;
 use App\Http\Requests\HistorialPagoContratistaRequest;
 use App\Models\HistorialPagoContratista;
+use App\Models\UserHasPermiso;
 use Illuminate\Support\Facades\DB;
 
 class FinanzasDeConstruccionController extends Controller
@@ -21,12 +22,22 @@ class FinanzasDeConstruccionController extends Controller
     public function viewCiudad()
     {
         try {
-            $user = Auth::user()->onPersonal()->first();
-            $ciudad = Ciudad::where('id', $user->id_ciudad)->first();
-            $list_ciudades = Ciudad::all();
+            $user = Auth::user();
+            $user_has_permiso = UserHasPermiso::join("permisos", "permisos.id", "=", 'users_has_permisos.id_permiso')
+                ->select("permisos.*")
+                ->where("users_has_permisos.id_user", $user->id)
+                ->where("users_has_permisos.status", true)
+                ->get();
+
+            $ciudades = [];
+            foreach ($user_has_permiso as $row) {
+                if ($row->type_content == 'cities') {
+                    $ciudades[] = $row->code_content;
+                }
+            }
+
             return view('finanzas-de-construccion/ciudad-finanzas-de-construccion-view', [
-                'ciudad' => $ciudad->city_name,
-                'list_ciudades' => $list_ciudades,
+                'ciudades' => $ciudades,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -37,14 +48,8 @@ class FinanzasDeConstruccionController extends Controller
     public function viewTableroContratista(String $city)
     {
         try {
-            //verificamos si los paorametros de la url son validos
-            $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
-
             return view('finanzas-de-construccion/tablero-ciudad-contratista-view', [
-                'ciudad' => $ciudad->city_name,
+                'ciudad' => $city,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -55,14 +60,9 @@ class FinanzasDeConstruccionController extends Controller
     public function viewGraficoContratista(String $city)
     {
         try {
-            //verificamos si los paorametros de la url son validos
-            $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
 
             return view('finanzas-de-construccion/grafico-ciudad-contratista-view', [
-                'ciudad' => $ciudad->city_name,
+                'ciudad' => $city,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -72,14 +72,8 @@ class FinanzasDeConstruccionController extends Controller
     public function viewCalendarioContratista(String $city)
     {
         try {
-            //verificamos si los paorametros de la url son validos
-            $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
-
             return view('finanzas-de-construccion/calendario-ciudad-contratista-view', [
-                'ciudad' => $ciudad->city_name,
+                'ciudad' => $city,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');
@@ -90,14 +84,9 @@ class FinanzasDeConstruccionController extends Controller
     public function viewGanttContratista(String $city)
     {
         try {
-            //verificamos si los paorametros de la url son validos
-            $ciudad = Ciudad::where('city_name', $city)->first();
-            if ($ciudad == null) {
-                return view('error-page-view');
-            }
 
             return view('finanzas-de-construccion/gantt-ciudad-contratista-view', [
-                'ciudad' => $ciudad->city_name,
+                'ciudad' => $city,
             ]);
         } catch (Throwable $th) {
             return view('error-page-view');

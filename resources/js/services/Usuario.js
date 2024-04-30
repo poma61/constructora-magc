@@ -9,7 +9,6 @@ class Usuario {
             usuario: "",
             password: "",
             id_personal: "",
-            role: '',
         }
         this.parameter = {};
         this.config = {

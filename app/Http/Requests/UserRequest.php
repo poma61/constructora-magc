@@ -10,25 +10,17 @@ use Illuminate\Http\Response;
 
 class UserRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
-     */
     public function rules(): array
     {
         $rules = [
             // si estamos haciendo un update debe permitir el ingreso del mismo usuario en caso de que no se modifique
             'usuario' => 'required|unique:users,usuario,' . $this->input('id'),
-            'role' => 'required',
             'id_personal' => 'required',
         ];
 
@@ -45,11 +37,7 @@ class UserRequest extends FormRequest
         return $rules;
     }
 
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array<string, string>
-     */
+
     public function messages(): array
     {
         return [
