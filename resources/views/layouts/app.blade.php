@@ -17,9 +17,7 @@
 
     <link rel="stylesheet" type="text/css" href="{{ asset('src/css/bulma/bulma.css') }}" media="all" />
     <link rel="stylesheet" type="text/css" href="{{ asset('src/css/animate/animate.css') }}" media="all" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('src/css/sidebar/style.css') }}" media="all" />
-
-    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('src/css/style.css') }}" media="all" />
 
     <link rel="icon" href="{{ asset('src/images/logo-empresa.jpeg') }}" />
     @yield('template_css')

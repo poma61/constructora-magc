@@ -7,15 +7,15 @@
         </header>
         <div class="card-content as-form">
             <form>
-                <div class="d-flex is-flex-wrap-wrap" style="width: 100%;">
-                    <v-text-field color="cyan-darken-2" label="Usuario" v-model="props.item_user_parent.usuario"
+                <div class="d-flex is-flex-wrappp-wrap" style="width: 100%;">
+                    <v-text-field color="cyan-darken-2" label="Usuario" v-model="item_user.usuario"
                         :error-messages="getValidateErrors('usuario')" autocomplete="none" class="ma-1"
                         style="min-width:250px ;" />
 
                     <v-text-field color="cyan-darken-2" label="Contraseña" :type="show ? 'text' : 'password'"
                         :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'" @click:append-inner="show = !show"
-                        v-model="props.item_user_parent.password" :error-messages="getValidateErrors('password')"
-                        autocomplete="none" class="ma-1" style="min-width:250px ;" />
+                        v-model="item_user.password" :error-messages="getValidateErrors('password')" autocomplete="none"
+                        class="ma-1" style="min-width:250px ;" />
                 </div>
 
                 <div class="d-flex">
@@ -31,51 +31,53 @@
                 <div class="d-flex is-flex-wrap-wrap">
 
                     <v-text-field class="ma-1" color="cyan-darken-2" label="Personal" readonly
-                        v-model="props.item_user_parent.nombre_completo_personal"
-                        :error-messages="getValidateErrors('id_personal')" style="min-width: 250px;" />
-
-                    <v-text-field class="ma-1" color="cyan-darken-2" label="Ciudad" readonly
-                        v-model="props.item_user_parent.ciudad" :error-messages="getValidateErrors('id_personal')"
+                        v-model="item_user.nombre_completo" :error-messages="getValidateErrors('id_personal')"
                         style="min-width: 250px;" />
+
+                    <v-text-field class="ma-1" color="cyan-darken-2" label="Ciudad" readonly v-model="item_user.ciudad"
+                        :error-messages="getValidateErrors('id_personal')" style="min-width: 250px;" />
                 </div>
 
-                <v-divider class="border-opacity-50" ></v-divider>
+                <v-divider class="border-opacity-50"></v-divider>
 
                 <div class="mx-2">
                     <p class="text-info">Todos los modulos | Administra las ciudades de: </p>
                     <div class="as-flex-content-permisions">
                         <!-- renderizamos los permisos la parte de ciudades -->
-                        <v-checkbox v-for="(city, index) in list_city_permisions" :key="index"
+                        <v-checkbox v-for="(city, index) in list_city_permissions" :key="index"
                             :label="city.code_content" :value="city.code_content" hide-details color="success"
-                            class="item-flex-permisions" v-model="permisions_city">
+                            class="item-flex-permisions" v-model="city_permissions">
                         </v-checkbox>
                     </div>
                 </div>
 
-                <v-divider class="border-opacity-50" ></v-divider>
+                <v-divider class="border-opacity-50"></v-divider>
 
                 <div class="mx-2">
                     <!-- renderizamos los permisos la parte de grupos -->
-                    <div v-for="(ciudad_grupo, index) in list_group_permisions" :key="index">
-                        <p class="text-info">Modulo Cliente | {{ ciudad_grupo.ciudad }}  | Administra grupos:</p>
+                    <div v-for="(ciudad_grupo, index) in list_groups_permissions" :key="index">
+                        <p class="text-info">Modulo Cliente | {{ ciudad_grupo.ciudad }} | Administra grupos:</p>
                         <div class="as-flex-content-permisions">
+                            <!-- el grupo viene de esta forma "Santa-Cruz_01" -->
+                            <!-- split => divide un string a partir de "_" y obtenemos ["Santa-Cruzz","01"] -->
                             <v-switch v-for="(grupo, grupo_index) in ciudad_grupo.grupos" :key="grupo_index"
                                 :label="grupo.split('_')[1]" :value="grupo" class="item-flex-permisions" color="success"
-                                hide-details inset :disabled = "permisions_city.includes(ciudad_grupo.ciudad) ? false : true" >
+                                hide-details inset
+                                :disabled="city_permissions.includes(ciudad_grupo.ciudad) ? false : true"
+                                v-model="groups_permissions">
                             </v-switch>
                         </div>
                     </div>
                 </div>
 
-                <v-divider class="border-opacity-50" ></v-divider>
-
+                <v-divider class="border-opacity-50"></v-divider>
                 <div>
-                    <v-radio-group v-model="props.item_user_parent.role" label="Rol" inline
+                    <v-radio-group v-model="item_user.role" label="Rol" inline
                         :error-messages="getValidateErrors('role')">
                         <v-radio label="Normal" value="Normal" color="cyan-darken-2"></v-radio>
                         <v-radio label="Administrador" value="Administrador" color="cyan-darken-2"></v-radio>
                     </v-radio-group>
-                    <p class="mx-5" v-if="props.item_user_parent.role == 'Normal'">
+                    <p class="mx-5" v-if="item_user.role == 'Normal'">
                         <span class="text-success">Normal:</span>
                     <ol class="ml-5" style="list-style-type:square;">
                         <li>Acceso a todos los modulos. Excepto a los modulos <b>personal</b> y <b>usuarios</b>
@@ -84,7 +86,7 @@
                         <li>Acceso solo a los datos registrados por el mismo usuario del modulo cliente</li>
                     </ol>
                     </p>
-                    <p class="mx-5" v-if="props.item_user_parent.role == 'Administrador'">
+                    <p class="mx-5" v-if="item_user.role == 'Administrador'">
                         <span class="text-success">Administrador:</span>
 
                     <ol class="ml-5" style="list-style-type:square;">
@@ -99,121 +101,71 @@
 
         <div class="is-flex is-justify-content-end  is-align-items-center p-2" style="width: 100%;">
             <div class="m-1">
-                <v-btn variant="outlined" color="cyan-darken-1" @click="saveChild()">
+                <v-btn variant="elevated" color="cyan-darken-1" @click="save">
                     <v-icon icon="mdi-content-save-all"></v-icon>&nbsp;Guardar
                 </v-btn>
             </div>
             <div class="m-1">
-                <v-btn variant="outlined" color="red" @click="closeDialogFormChild()">
+                <v-btn variant="elevated" color="red" @click="emit('isCloseDialogForm')">
                     <v-icon icon="mdi-cancel"></v-icon>&nbsp;Cancelar
                 </v-btn>
             </div>
         </div>
-
     </div>
-    <v-snackbar v-model="snackbar.value" :timeout="2500" location="bottom right"
-        :color="snackbar.type == 'success' ? 'success' : 'red-darken-1'">
-        <div class="is-flex is-justify-content-center is-align-items-center">
-            <v-icon :icon="snackbar.type == 'success' ? 'mdi-check' : 'mdi-alert'" size="50" />
-            <p class="is-size-6">
-                <span class="has-text-weight-bold">{{ snackbar.text }}</span>
-            </p>
+    
+    <v-overlay v-model="change_overlay" class="align-center justify-center" persistent>
+        <div class="text-center">
+            <v-progress-circular color="info" size="100" indeterminate></v-progress-circular>
+            <h1 class="is-size-5 text-white text-center">Cargando datos...</h1>
         </div>
-    </v-snackbar>
+    </v-overlay>
 
 </template>
-
 
 <script>
 import { defineComponent } from 'vue';
 import Personal from '@/services/Personal';
 import Permiso from '@/services/Permiso';
+import Usuario from '@/services/Usuario';
 export default defineComponent({
-    props: ["dialog_form_parent", 'item_user_parent', 'message_errors_field_parent'],
-    emits: ['closeDialogFormParent', 'saveParent'],
+    props: ['item_user_parent'],
+    emits: ['isCloseDialogForm', 'isUpdateLocalDataTable', 'isSnackbarMessageView',],
     data() {
+        const change_overlay = false;
         const show = false;
         const ci = "";
-        const snackbar = { value: false, text: "", type: "" };
         const change_search_personal = null;
-        const permisions_groups =[];
-        const permisions_city =[];
-        const list_city_permisions = [];
-        const list_group_permisions = [
-            {
-                ciudad: "Santa-Cruz",
-                grupos: []
-            },
-            {
-                ciudad: "Chuquisaca",
-                grupos: []
-            },
-            {
-                ciudad: "Cochabamba",
-                grupos: []
-            },
-            {
-                ciudad: "Potosi",
-                grupos: []
-            },
-            {
-                ciudad: "Beni",
-                grupos: []
-            },
-            {
-                ciudad: "La-Paz",
-                grupos: []
-            },
-
-            {
-                ciudad: "Pando",
-                grupos: []
-            },
-
-            {
-                ciudad: "Tarija",
-                grupos: []
-            },
-            {
-                ciudad: "Oruro",
-                grupos: []
-            },
-            {
-                ciudad: "Otros",
-                grupos: []
-            },
-
-        ];
-
+        const groups_permissions = [];
+        const city_permissions = [];
+        const list_city_permissions = [];
+        const list_groups_permissions = [];
+        const item_user = this.props.item_user_parent;
+        const message_errors_field = {};
         return {
             show,
             ci,
-            snackbar,
             change_search_personal,
-            list_city_permisions,
-            list_group_permisions,
-            permisions_groups,
-            permisions_city,
+            list_city_permissions,
+            list_groups_permissions,
+            groups_permissions,
+            city_permissions,
+            item_user,
+            message_errors_field,
+            change_overlay,
         }
     },//data
 
     setup(props, { emit }) {
-        const closeDialogFormChild = () => {
-            emit('closeDialogFormParent');
-        }
-        const saveChild = () => {
-            emit('saveParent');
-        }
         return {
-            props, closeDialogFormChild, saveChild
+            props, emit
         }
     },//setup
 
     computed: {
         getValidateErrors() {
             return function (property) {
-                if (this.props.message_errors_field_parent && this.props.message_errors_field_parent[property]) {
-                    return this.props.message_errors_field_parent[property][0];
+                if (this.message_errors_field && this.message_errors_field[property]) {
+                    return this.message_errors_field[property][0];
                 }
                 return "";
             };
@@ -226,63 +178,136 @@ export default defineComponent({
             setTimeout(async () => {
                 const response = await usuario.searchByCi(this.ci);
                 this.change_search_personal = null;
-                this.snackbar.value = true;
                 if (response.status) {
-                    this.props.item_user_parent.nombre_completo_personal = `${response.record.nombres} ${response.record.apellido_paterno} ${response.record.apellido_materno}`;
+                    this.props.item_user_parent.nombre_completo = `${response.record.nombres} ${response.record.apellido_paterno} ${response.record.apellido_materno}`;
                     this.props.item_user_parent.id_personal = response.record.id;
                     this.props.item_user_parent.ciudad = response.record.ciudad;
-                    this.snackbar.type = "success";
-                    this.snackbar.text = response.message;
+                    this.emit('isSnackbarMessageView', 'success', response.message)
+
                 } else {
-                    this.snackbar.type = "error";
-                    this.snackbar.text = response.message;
+                    this.emit('isSnackbarMessageView', 'error', response.message)
                 }
-                this.ci = "";
+                this.ci = ""; 'Santa-Cruz'
             }, 800);
 
         },
 
-        // nos quedamos en esta parte 
-        // renderizando los permisos
-        // debe entender bien el codigo
         async listPermissions() {
             const permiso = new Permiso();
             const response = await permiso.index();
             if (response.status) {
                 const list_permisos = response.records;
                 // Filtrar solo los elementos de tipo "ciudades"
-                this.list_city_permisions = list_permisos.filter(row => row.content_type == 'ciudades');
+                this.list_city_permissions = list_permisos.filter(row => row.content_type == 'ciudades');
+                //filtrar todos los grupos
+                const list_groups = list_permisos.filter(row => row.content_type == 'grupos');
 
-                //ESTA PARTE DEL CODIGO AUN NO ENTIENDO TRATAR DE ENTENDER LO MAS EXPLICITO POSIBLE
-                // Filtrar objetos según las ciudades especificadas
-                list_permisos.forEach(row => {
-                    if (row.content_type == 'grupos') {
-                        const ciudad = row.code_content.split("_")[0];
-                        const ciudadExistente = this.list_group_permisions.find(item => item.ciudad == ciudad);
+                const list_ciudades = this.list_city_permissions.map(row => row.code_content);
 
-                        if (ciudadExistente) {
-                            ciudadExistente.grupos.push(row.code_content);
-                        }
-
-                    }
-
+                //ahora agrupamos las ciudades con sus respectivos grupos
+                list_ciudades.forEach(city => {
+                    const grupos = list_groups.filter(item => item.code_content.includes(city)).map(item => item.code_content);
+                    this.list_groups_permissions.push({
+                        ciudad: city,
+                        grupos: grupos,
+                    });
                 });
 
             } else {
-                this.snackbar.value = true;
-                this.snackbar.type = "error";
-                this.snackbar.text = response.message;
+                this.emit('isSnackbarMessageView', 'error', response.message)
             }
 
         },
+
+        async save() {
+            const usuario = new Usuario();
+            usuario.setFill(this.item_user);
+            usuario.setParameter({
+                permissions: [...this.city_permissions, ...this.groups_permissions]
+            });
+
+            if (this.item_user.id > 0) {
+                // cuando sea update 
+                const response = await usuario.update();
+                if (response.status) {
+                    this.emit('isSnackbarMessageView', 'success', response.message)
+                    this.emit('isUpdateLocalDataTable', 'edit', response.record);
+                    this.emit('isCloseDialogForm');
+                } else {
+                    if (response.message_errors != undefined) {
+                        this.message_errors_field = response.message_errors;
+                    }
+                    this.emit('isSnackbarMessageView', 'error', response.message)
+                }
+
+            } else {
+                //cuando es un registro nuevo
+                const response = await usuario.create()
+
+                if (response.status) {
+                    this.message_errors_field = response.message_errors;
+                    this.emit('isSnackbarMessageView', 'success', response.message)
+                    this.emit('isUpdateLocalDataTable', 'new', response.record);
+                    this.emit('isCloseDialogForm');
+
+                } else {
+                    if (response.message_errors != undefined) {
+                        this.message_errors_field = response.message_errors;
+                    }
+                    this.emit('isSnackbarMessageView', 'error', response.message)
+                }
+            }
+
+        },//save
+
+        async loadUserPermission() {
+            const usuario = new Usuario(this.item_user);
+
+            const response = await usuario.userPermission();
+            if (response.status) {
+                const permisos = response.records;
+                //filter => objetos segun condicion
+                //map => nos devulve un array
+                this.city_permissions = permisos.filter(row => row.content_type == 'ciudades').map(row => row.code_content);
+                this.groups_permissions = permisos.filter(row => row.content_type == 'grupos').map(row => row.code_content);
+            }
+
+        },
+
     },//methods
-    mounted() {
-        this.listPermissions();
+
+    watch: {
+        // verifica si el usuario ha selecciona una ciudad
+        // en group_permissions solo debe de haber los grupos de las ciudades habilitadas por el usuario
+        city_permissions(new_value, old_value) {
+            let copy_groups_permissions = [];
+            new_value.forEach(city => {
+                // ise con el metodo filter para filtrar por ciudad, NO funciona ( this.groups_permissions.filter() )
+                // porque el orden de iteracion segun el valor de city  y crea un copy_groups_permissions solo para un ciudad 
+                for (let i = 0; i < this.groups_permissions.length; i++) {
+                    if (this.groups_permissions[i].includes(city)) {
+                        copy_groups_permissions.push(this.groups_permissions[i]);
+                    }
+                }
+            });
+            this.groups_permissions = copy_groups_permissions;
+
+        }
+    },
+    async mounted() {
+        this.change_overlay = true;
+        setTimeout(async () => {
+            await this.listPermissions();
+            //cuando es update listamos los permisos de usuarios
+            if (this.item_user.id > 0) {
+                await this.loadUserPermission();
+            }
+            this.change_overlay = false;
+        }, 400);
+
     },
 
 });
-
-
 </script>
 
 <style scoped>

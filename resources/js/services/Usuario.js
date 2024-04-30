@@ -3,28 +3,24 @@ import axios from "axios";
 
 class Usuario {
 
-    constructor(city) {
-
+    constructor(user) {
         this.user = {
             id: 0,
             usuario: "",
             password: "",
             id_personal: "",
-            ciudad: city,
             role: '',
         }
-
+        this.parameter = {};
         this.config = {
             headers: {
                 'Accept': 'application/json'
             }
         }
-        this.city = "";
 
-        if (city != undefined) {
-            this.city = city;
+        if (user != undefined) {
+            this.setFill(user);
         }
-
 
     }
 
@@ -42,10 +38,10 @@ class Usuario {
         return this.user;
     }
 
-    async index() {
+    async index(city) {
         try {
             const resolve = await axios.post(app.BASE_URL + '/microservice/user/index', {
-                ciudad: this.city
+                ciudad: city
             }, this.config)
             return resolve.data;
         } catch (error) {
@@ -56,7 +52,10 @@ class Usuario {
 
     async create() {
         try {
-            const resolve = await axios.post(app.BASE_URL + '/microservice/user/create', this.getFill(), this.config);
+            const resolve = await axios.post(app.BASE_URL + '/microservice/user/create', {
+                ... this.getFill(),
+                ...this.getParameter(),
+            }, this.config);
             return resolve.data;
 
         } catch (error) {
@@ -65,11 +64,13 @@ class Usuario {
     }//create
 
 
-
     async update() {
         try {
             this.config.headers['X-HTTP-Method-Override'] = 'PUT';
-            const resolve = await axios.post(app.BASE_URL + '/microservice/user/update', this.getFill(), this.config);
+            const resolve = await axios.post(app.BASE_URL + '/microservice/user/update', {
+                ... this.getFill(),
+                ...this.getParameter(),
+            }, this.config);
             return resolve.data;
         } catch (error) {
             return error.response.data;
@@ -91,15 +92,28 @@ class Usuario {
 
     }
 
-    getCity() {
-        return this.city;
+    async userPermission() {
+        try {
+            const resolve = await axios.post(app.BASE_URL + '/microservice/user/user-permisos', {
+                id: this.getFill().id
+            }, this.config);
+
+            return resolve.data;
+
+        } catch (error) {
+
+            return error.response.data
+        }
     }
 
-    setCity(city) {
-        this.city = city;
+
+    getParameter() {
+        return this.parameter
     }
 
-   
+    setParameter(parameter) {
+        Object.assign(this.parameter, parameter);
+    }
 
 }//class
 

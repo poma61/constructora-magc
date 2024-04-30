@@ -5,7 +5,7 @@ import MainApplication from '@/components/user/ListUser.vue';
 // Vuetify
 import { createVuetify } from 'vuetify';
 //solo importamos los componenetes que utilizaremos para reducir el css 
-import { VDialog, VTextField, VBtn, VSnackbar,VRadioGroup, VRadio, VIcon, VSwitch, VCheckbox ,VDivider } from 'vuetify/components';
+import { VDialog, VTextField, VBtn, VSnackbar,VRadioGroup, VRadio, VIcon, VSwitch, VCheckbox ,VDivider,VOverlay, VProgressCircular } from 'vuetify/components';
 import 'vuetify/styles';
 
 //para traducciones
@@ -14,7 +14,6 @@ import { createI18n, useI18n } from 'vue-i18n';
 // Importa las traducciones desde node_modules  de vuetify
 import esTranslations from 'vuetify/lib/locale/es.mjs';
 import enTranslations from 'vuetify/lib/locale/en.mjs';
-
 
 
 const messages = {
@@ -61,6 +60,8 @@ const vuetify = new  createVuetify({
     VSwitch,
     VCheckbox,
     VDivider,
+    VOverlay,
+    VProgressCircular,
   },
  
 });

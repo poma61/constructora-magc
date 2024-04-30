@@ -31,16 +31,19 @@ class ClienteController extends Controller
                 ->where("users_has_permisos.status", true)
                 ->get();
 
+            $ciudades = [];
             foreach ($user_has_permiso as $row) {
                 if ($row->content_type == 'ciudades') {
                     $ciudades[] = $row->code_content;
                 }
             }
 
+            $city_groups = [];
             foreach ($user_has_permiso as $row) {
                 if ($row->content_type == 'grupos') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
+                    // al aplicar explode, tenemnos un array, de este tipo ['Santa-Cruz', '02']
                     $parts = explode('_', $row->code_content);
 
                     $city_groups[] = [
@@ -49,7 +52,6 @@ class ClienteController extends Controller
                     ];
                 }
             }
-
 
             return view(
                 'cliente/ciudad-view',
@@ -74,10 +76,12 @@ class ClienteController extends Controller
                 ->where("users_has_permisos.status", true)
                 ->get();
 
+            $manage_groups = [];
             foreach ($user_has_permiso as $row) {
                 if ($row->content_type == 'grupos') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
+                    // al aplicar explode, tenemnos un array, de este tipo ['Santa-Cruz', '02']
                     $parts = explode('_', $row->code_content);
                     if ($parts[0] == $city) {
                         $manage_groups[] = $parts[1];
@@ -110,16 +114,22 @@ class ClienteController extends Controller
                 ->where("users_has_permisos.status", true)
                 ->get();
 
+            $manage_groups = [];
             foreach ($user_has_permiso as $row) {
                 if ($row->content_type == 'grupos') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
+                    // al aplicar explode, tenemnos un array, de este tipo ['Santa-Cruz', '02']
                     $parts = explode('_', $row->code_content);
                     if ($parts[0] == $city) {
                         $manage_groups[] = $parts[1];
                     }
                 }
             }
+
+            // Ordenamos los grupos de forma ascendente
+            // porque podria haber la posibilidad de que esten desordenados [10, 02, 03, 01, 04]
+            sort($manage_groups);
 
             return view('cliente/grafico-grupo-cliente-view', [
                 "manage_groups" => $manage_groups,
@@ -142,6 +152,7 @@ class ClienteController extends Controller
                 ->where("users_has_permisos.status", true)
                 ->get();
 
+            $manage_groups = [];
             foreach ($user_has_permiso as $row) {
                 if ($row->content_type == 'grupos') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
@@ -152,6 +163,10 @@ class ClienteController extends Controller
                     }
                 }
             }
+
+            // Ordenamos los grupos de forma ascendente
+            // porque podria haber la posibilidad de que esten desordenados [10, 02, 03, 01, 04]
+            sort($manage_groups);
 
             return view('cliente/calendar-grupo-cliente-view', [
                 "manage_groups" => $manage_groups,
@@ -175,6 +190,7 @@ class ClienteController extends Controller
                 ->where("users_has_permisos.status", true)
                 ->get();
 
+            $manage_groups = [];
             foreach ($user_has_permiso as $row) {
                 if ($row->content_type == 'grupos') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
@@ -186,6 +202,10 @@ class ClienteController extends Controller
                     }
                 }
             }
+            // Ordenamos los grupos de forma ascendente
+            // porque podria haber la posibilidad de que esten desordenados [10, 02, 03, 01, 04]
+            sort($manage_groups);
+
 
             return view('cliente/gantt-grupo-cliente-view', [
                 "manage_groups" => $manage_groups,

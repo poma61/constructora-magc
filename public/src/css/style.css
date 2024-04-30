@@ -1,3 +1,4 @@
+/* ESTILOS GENERALES Y SIDEBAR */
 .header {
     position: fixed;
     height: 70px;
@@ -650,7 +651,14 @@
 }
 
 .as-swal-popup {
-    border-radius: 10px !important;
+    border-radius: 10px !important;.as-form {
+        height: 70vh;
+        overflow: hidden;
+        overflow-y: auto;
+        width: 100%;
+        padding: 15px;
+        border-bottom: 1px solid #00000055;
+    }
     width: 600px;
 }
 

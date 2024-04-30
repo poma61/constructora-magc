@@ -1,6 +1,5 @@
 <template>
-
-
+  
   <div class="columns">
     <div class="column">
       <button class="button is-success icon-text" @click="newForm()" :disabled="city == 'todos' ? false : true">
@@ -87,29 +86,30 @@
             <span class="tag is-primary as-font-9 m-1"> {{ date_format.formatDateHour(item.columns.created_at) }}</span>
           </td>
           <td>
-            <v-btn @click="editForm(item.raw)" class="m-1" color="cyan-darken-2" icon="mdi-pencil">
-            </v-btn>
-            <v-btn @click="deleteItem(item.raw)" color="red" class="m-1" icon="mdi-delete">
-            </v-btn>
+            <div style="min-width: 200px;">
+              <v-btn @click="showDetailUser(item.raw)" color="success" class="m-1" icon="mdi-account-details-outline">
+              </v-btn>
+
+              <v-btn @click="editForm(item.raw)" class="m-1" color="cyan-darken-2" icon="mdi-pencil">
+              </v-btn>
+
+              <v-btn @click="deleteItem(item.raw)" color="red" class="m-1" icon="mdi-delete">
+              </v-btn>
+            </div>
           </td>
         </tr>
       </template>
     </v-data-table>
   </div>
 
-  <v-dialog v-model="dialog_form" max-width="1300px" persistent transition="dialog-bottom-transition">
-    <FormUser @closeDialogFormParent="closeDialogForm()" :item_user_parent="item_user" @saveParent="save()"
-      :message_errors_field_parent="message_errors_field" />
+  <v-dialog v-model="dialog_form" max-width="1400px" persistent transition="dialog-bottom-transition">
+    <FormUser @isCloseDialogForm="closeDialogForm()" :item_user_parent="item_user"
+      @isUpdateLocalDataTable="updateLocalDataTable" @isSnackbarMessageView="snackbarMessageView" />
   </v-dialog>
 
-  <v-snackbar v-model="snackbar_message_response.value" :timeout="2000" :color="snackbar_message_response.color"
-    location="bottom right">
-    <div class="is-flex is-justify-content-center is-align-items-center">
-      <v-icon :icon="snackbar_message_response.icon" size="50"></v-icon>
-      <p class="is-size-6">{{ snackbar_message_response.text }}
-      </p>
-    </div>
-  </v-snackbar>
+  <v-dialog v-model="dialog_detail_user" max-width="1000px" persistent transition="dialog-bottom-transition">
+    <DetailUser :item_user_parent="item_user" @isCloseDialogDetailUser="closeDialogDetailUser" />
+  </v-dialog>
 
   <v-dialog v-model="dialog_delete" max-width="500px" persistent transition="dialog-bottom-transition">
     <div class="card">
@@ -139,6 +139,16 @@
 
     </div>
   </v-dialog>
+
+  <v-snackbar v-model="snackbar_message_response.value" :timeout="2000" :color="snackbar_message_response.color"
+    location="bottom right">
+    <div class="is-flex is-justify-content-center is-align-items-center">
+      <v-icon :icon="snackbar_message_response.icon" size="50"></v-icon>
+      <p class="is-size-6">{{ snackbar_message_response.text }}
+      </p>
+    </div>
+  </v-snackbar>
+
 </template>
 
 <script>
@@ -147,11 +157,13 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 import Usuario from '@/services/Usuario';
 import DateFormat from '@/util/DateFormat';
 import FormUser from '@/components/user/FormUser.vue';
+import DetailUser from '@/components/user/DetailUser.vue';
 
 export default defineComponent({
   components: {
     VDataTable,
     FormUser,
+    DetailUser,
   },
 
   data() {
@@ -163,9 +175,9 @@ export default defineComponent({
     const item_user = {};
     const index_array = -1;
     const buscar_registros = "";
-    const message_errors_field = null;
     const snackbar_message_response = { value: false, text: "", icon: "", color: "" };
     const dialog_delete = false;
+    const dialog_detail_user = false;
     const headers = [
       { title: 'Nombres', key: 'nombres', divider: true, },
       { title: 'Apellido Paterno', key: 'apellido_paterno', divider: true, },
@@ -180,7 +192,6 @@ export default defineComponent({
       { value: 10, title: '10' },
       { value: 25, title: '25' },
       { value: 50, title: '50' },
-      { value: 100, title: '100' },
     ];
 
     return {
@@ -194,9 +205,9 @@ export default defineComponent({
       index_array,
       items_per_page_options,
       buscar_registros,
-      message_errors_field,
       snackbar_message_response,
       dialog_delete,
+      dialog_detail_user,
     }
   },
 
@@ -204,11 +215,10 @@ export default defineComponent({
     initData() {
       this.change_data_table = 'cyan';
       setTimeout(async () => {
-        const usuario = new Usuario(this.city);
-        const respuesta = await usuario.index();
+        const usuario = new Usuario();
+        const respuesta = await usuario.index(this.city);
         this.change_data_table = null;
         if (respuesta.status) {
-          this.snackbarMessageView('success', respuesta.message)
           this.registros = respuesta.records;
         } else {
           this.snackbarMessageView('error', respuesta.message)
@@ -221,11 +231,10 @@ export default defineComponent({
       this.initData();
     },
 
-
     newForm() {
       const usuario = new Usuario();
       const additional_attributes_item_user = {
-        nombre_completo_personal: "",
+        nombre_completo: "",
       }
       this.item_user = Object.assign(additional_attributes_item_user, usuario.getFill());
       this.dialog_form = true;
@@ -234,7 +243,7 @@ export default defineComponent({
     editForm(item) {
       this.index_array = this.registros.indexOf(item);
       const additional_attributes_item_user = {
-        nombre_completo_personal: `${item.nombres} ${item.apellido_paterno} ${item.apellido_materno}`,
+        nombre_completo: `${item.nombres} ${item.apellido_paterno} ${item.apellido_materno}`,
       }
 
       this.item_user = Object.assign(additional_attributes_item_user, this.registros[this.index_array]);
@@ -248,7 +257,7 @@ export default defineComponent({
     },//deleteItem
 
     async confirmDeleteItem() {
-      const usuario = new Usuario(this.city);
+      const usuario = new Usuario();
       usuario.setFill(this.item_user);
       const response = await usuario.destroy();
       if (response.status) {
@@ -261,41 +270,6 @@ export default defineComponent({
       }
       this.closeDialogDelete();
     },
-
-    async save() {
-      const usuario = new Usuario(this.city);
-      usuario.setFill(this.item_user);
-      if (this.item_user.id > 0) {
-        // cuando sea update
-        const response = await usuario.update();
-        if (response.status) {
-          this.snackbarMessageView('success', response.message)
-          //buscamos el registro y cambiamos valores
-          Object.assign(this.registros[this.index_array], response.record);
-          this.closeDialogForm();
-        } else {
-          this.message_errors_field = response.message_errors;
-          this.snackbarMessageView('error', response.message)
-        }
-
-      } else {
-        //cuando es un registro nuevo
-        const response = await usuario.create()
-
-        if (response.status) {
-          this.message_errors_field = response.message_errors;
-          this.snackbarMessageView('success', response.message)
-          //agregamos el registro al array de datos
-          this.registros.push(response.record);
-          this.closeDialogForm();
-        } else {
-          this.message_errors_field = response.message_errors;
-          this.snackbarMessageView('error', response.message)
-
-        }
-      }
-
-    },//save
 
     snackbarMessageView(type, message) {
       if (type == 'success') {
@@ -320,12 +294,40 @@ export default defineComponent({
     },//closedialogDelete
 
     clear() {
-      this.message_errors_field = {};
       this.item_user = {};
       this.index_array = -1;
     },//clear
 
+    updateLocalDataTable(type, item) {
+      switch (type) {
+        case 'new':
+          //agregamosel registro al array de datos
+          this.registros.push(item);
+          break;
+        case 'edit':
+          //buscamos el registro y actualizamos valores
+          Object.assign(this.registros[this.index_array], item);
+          break;
+        default:
+          this.snackbarMessageView('error', 'Error method updateLocalDataTable');
+          break;
 
+      }
+    },
+
+    showDetailUser(item) {
+      const additional_attributes_item_user = {
+        nombre_completo: `${item.nombres} ${item.apellido_paterno} ${item.apellido_materno}`,
+      }
+
+      this.item_user = Object.assign(additional_attributes_item_user, item);
+      this.dialog_detail_user = true;
+    },
+
+    closeDialogDetailUser() {
+      this.clear();
+      this.dialog_detail_user = false;
+    }
   },//metodos
 
   created() {
@@ -333,7 +335,4 @@ export default defineComponent({
   }
 
 });
-
-
-
 </script>

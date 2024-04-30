@@ -30,6 +30,7 @@ class ContratoController extends Controller
                 ->where("users_has_permisos.status", true)
                 ->get();
 
+            $ciudades = [];
             foreach ($user_has_permiso as $row) {
                 if ($row->content_type == 'ciudades') {
                     $ciudades[] = $row->code_content;
@@ -137,7 +138,7 @@ class ContratoController extends Controller
         }
     }
 
-  
+
     public function rowTableroCreate(ContratoAllRequest $request)
     {
         try {
@@ -213,7 +214,7 @@ class ContratoController extends Controller
         return  "{$year}/{$num_result}_{$ciudades_key[$ciudad]}";
     }
 
-  
+
     public function rowTableroUpdate(ContratoAllRequest $request,)
     {
         try {
@@ -427,7 +428,7 @@ class ContratoController extends Controller
                 $contrato = Contrato::join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
                     ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
                     ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
-                    ->select('clientes.nombres', 'clientes.apellido_paterno', 'clientes.apellido_materno', 'contratos.fecha_firma_contrato','contratos.n_contrato')
+                    ->select('clientes.nombres', 'clientes.apellido_paterno', 'clientes.apellido_materno', 'contratos.fecha_firma_contrato', 'contratos.n_contrato')
                     ->where('clientes.status', true)
                     ->where('contratos.status', true)
                     ->where('ciudades.city_name',  $request->input('ciudad'))
@@ -437,7 +438,7 @@ class ContratoController extends Controller
                 $contrato = Contrato::join('clientes', 'clientes.id', '=', 'contratos.id_cliente')
                     ->join('grupos', 'grupos.id', '=', 'clientes.id_grupo')
                     ->join('ciudades', 'ciudades.id', '=', 'grupos.id_ciudad')
-                    ->select('clientes.nombres', 'clientes.apellido_paterno', 'clientes.apellido_materno', 'contratos.fecha_firma_contrato','contratos.n_contrato')
+                    ->select('clientes.nombres', 'clientes.apellido_paterno', 'clientes.apellido_materno', 'contratos.fecha_firma_contrato', 'contratos.n_contrato')
                     ->where('clientes.status', true)
                     ->where('contratos.status', true)
                     ->where('ciudades.city_name',  $request->input('ciudad'))
@@ -459,5 +460,4 @@ class ContratoController extends Controller
             ], 500);
         }
     }
-    
 }//class

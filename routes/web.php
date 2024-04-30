@@ -70,6 +70,7 @@ Route::group(['middleware' => ['auth', 'check.role.access']], function () {
     Route::post('/microservice/user/create', [UserController::class, 'create']);
     Route::put('/microservice/user/update', [UserController::class, 'update']);
     Route::post('/microservice/user/destroy', [UserController::class, 'destroy']);
+    Route::post('/microservice/user/user-permisos', [UserController::class, 'userPermission']);
 });
 
 //permisos

@@ -44,7 +44,7 @@ class CheckCityAccess
                 // si son peticiones del navegador 
                 return response()->view('not-found');
             }
-        }// $verified_city
+        } // $verified_city
 
         $user_permisos = UserHasPermiso::join("permisos", 'permisos.id', '=', 'users_has_permisos.id_permiso')
             ->select("permisos.*")
@@ -53,6 +53,7 @@ class CheckCityAccess
             ->where("users_has_permisos.id_user", Auth::user()->id)
             ->get();
 
+        $manage_city = [];
         foreach ($user_permisos as $row) {
             $manage_city[] = $row->code_content;
         }
@@ -71,6 +72,6 @@ class CheckCityAccess
                 // si son peticiones normales
                 return response()->view('no-autorizado-view');
             }
-        }// in_array
+        } // in_array
     }
 }//class

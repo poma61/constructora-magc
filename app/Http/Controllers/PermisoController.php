@@ -11,11 +11,11 @@ class PermisoController extends Controller
     public function index()
     {
         try {
-            $permiso = Permiso::all();
+            $list_permiso = Permiso::all();
             return response()->json([
                 'status' => true,
                 'message' => 'OK',
-                "records" => $permiso,
+                "records" => $list_permiso,
             ]);
         } catch (Throwable $th) {
             return response()->json([
@@ -26,3 +26,4 @@ class PermisoController extends Controller
         }
     }
 }// class
+
