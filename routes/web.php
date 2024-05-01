@@ -46,30 +46,28 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post("/microservice/auth/permisos", [AuthController::class, 'isPermission']);
 });
 
-
 //home
 Route::get("/home", [HomeController::class, 'index'])->name("r-home")->middleware("auth");
 
-
 //personal
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'module.administrative.permissions:access_personals']], function () {
     Route::get('/personal/view', [PersonalController::class, 'ciudadView'])->name("r-personal-view");
-      //para buscar personal
-      //no necesita el middleware para valdiar ciudad 
-      Route::post('/microservice/personal/buscar-personal-registrado', [PersonalController::class, 'searchByCi']);
+    //para buscar personal
+    //no necesita el middleware para validar ciudad 
+    Route::post('/microservice/personal/buscar-personal-registrado', [PersonalController::class, 'searchByCi']);
 });
-Route::group(['middleware' => ['auth', 'check.city.access',]], function () {
+Route::group(['middleware' => ['auth', 'city.permissions', 'module.administrative.permissions:access_personals']], function () {
     Route::get('/personal/tablero/{ciudad}', [PersonalController::class, 'indexView'])->name("r-tablero-personal-view");
     Route::post('/microservice/personal/index', [PersonalController::class, 'index']);
     Route::post('/microservice/personal/create', [PersonalController::class, 'create']);
     Route::post('/microservice/personal/edit', [PersonalController::class, 'edit']);
     Route::put('/microservice/personal/update', [PersonalController::class, 'update']);
     Route::post('/microservice/personal/destroy', [PersonalController::class, 'destroy']);
-  
 });
 
+
 //user
-Route::group(['middleware' => ['auth',]], function () {
+Route::group(['middleware' => ['auth', 'module.administrative.permissions:access_users',]], function () {
     Route::get('/user/view', [UserController::class, 'indexView'])->name('r-user-view');
     Route::post('/microservice/user/index', [UserController::class, 'index']);
     Route::post('/microservice/user/create', [UserController::class, 'create']);
@@ -87,7 +85,7 @@ Route::group(['middleware' => ['auth']], function () {
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/cliente/view', [ClienteController::class, 'indexView'])->name('r-cliente-index-view');
 });
-Route::group(['middleware' => ['auth', 'check.city.access', 'check.grup.access']], function () {
+Route::group(['middleware' => ['auth', 'city.permissions', 'group.permissions']], function () {
     //vistas
     Route::get('/cliente/tablero/{ciudad}/{grupo}', [ClienteController::class, 'tableroView'])->name('r-tablero-cliente-grupo-view');
     Route::get('/cliente/grafico/{ciudad}/{grupo}', [ClienteController::class, 'graficoView'])->name('r-grafico-cliente-grupo-view');
@@ -108,7 +106,7 @@ Route::group(['middleware' => ['auth', 'check.city.access', 'check.grup.access']
 
 //Contratos
 Route::get('/contrato/ciudad', [ContratoController::class, 'viewCiudad'])->middleware('auth')->name('r-ciudad-contrato');
-Route::group(['middleware' => ['auth', 'check.city.access']], function () {
+Route::group(['middleware' => ['auth', 'city.permissions']], function () {
     //vistas
     Route::get('/contrato/tablero/{ciudad}', [ContratoController::class, 'viewTablero'])->name('r-tablero-contrato');
     Route::get('/contrato/calendario/{ciudad}', [ContratoController::class, 'viewCalendario'])->name('r-calendario-contrato');
@@ -129,7 +127,7 @@ Route::group(['middleware' => ['auth', 'check.city.access']], function () {
 
 //control de obras
 Route::get('/control-de-obra/ciudad', [ObraController::class, 'viewCiudad'])->middleware('auth')->name('r-ciudad-control-de-obra');
-Route::group(['middleware' => ['auth', 'check.city.access']], function () {
+Route::group(['middleware' => ['auth', 'city.permissions']], function () {
     //vistas
     Route::get('/control-de-obra/tablero/{ciudad}', [ObraController::class, 'viewTablero'])->name('r-tablero-control-de-obra');
     Route::get('/control-de-obra/grafico/{ciudad}', [ObraController::class, 'viewGrafico'])->name('r-grafico-control-de-obra');
@@ -152,7 +150,7 @@ Route::group(['middleware' => ['auth', 'check.city.access']], function () {
 
 //Finanzas de construccion
 Route::get('/finanzas-de-construccion/ciudad', [FinanzasDeConstruccionController::class, 'viewCiudad'])->middleware('auth')->name('r-ciudad-finanzas-de-construccion');
-Route::group(['middleware' => ['auth', 'check.city.access']], function () {
+Route::group(['middleware' => ['auth', 'city.permissions']], function () {
     //vistas
     Route::get('/finanzas-de-construccion/contratista/tablero/{ciudad}', [FinanzasDeConstruccionController::class, 'viewTableroContratista'])->name('r-tablero-finanzas-de-construccion');
     Route::get('/finanzas-de-construccion/contratista/grafico/{ciudad}', [FinanzasDeConstruccionController::class, 'viewGraficoContratista'])->name('r-grafico-finanzas-de-construccion');
@@ -177,10 +175,9 @@ Route::group(['middleware' => ['auth', 'check.city.access']], function () {
 });
 
 
-
 //Inventario
 Route::get('/inventario/ciudad', [InventarioController::class, 'viewCiudad'])->middleware('auth')->name('r-ciudad-inventario');
-Route::group(['middleware' => ['auth', 'check.city.access']], function () {
+Route::group(['middleware' => ['auth', 'city.permissions']], function () {
     //vistas
     Route::get('/inventario/tablero/{ciudad}', [InventarioController::class, 'viewTablero'])->name('r-tablero-inventario');
     Route::get('/inventario/grafico/{ciudad}', [InventarioController::class, 'viewGrafico'])->name('r-grafico-inventario');

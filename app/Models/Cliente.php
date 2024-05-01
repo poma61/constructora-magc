@@ -31,4 +31,14 @@ class Cliente extends Model
         'updated_at',
         'status',
     ];
-}
+
+
+    // //este metodo agrega un where a cualquier tipo de consulta
+    // protected static function booted()
+    // {
+    //     // static::addGlobalScope('usuario_actual', function ($query) {
+    //     //     $query->where('nombres', "Juan");
+    //     // });
+    // }
+
+}//class

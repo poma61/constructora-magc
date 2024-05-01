@@ -25,6 +25,7 @@ class InventarioController extends Controller
                 ->select("permisos.*")
                 ->where("users_has_permisos.id_user", $user->id)
                 ->where("users_has_permisos.status", true)
+                ->orderBy("permisos.id", "ASC")
                 ->get();
 
             $ciudades = [];

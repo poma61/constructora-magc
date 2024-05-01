@@ -51,60 +51,60 @@
     </div>
 
     <div class="buttons">
-        <button @click="selectMont('todos')" :class="['button is-info', { 'is-light': month == 'todos' }]">
+        <button @click="selectMont('todos')" :class="['button is-info', { 'is-light': month === 'todos' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Todos
         </button>
 
-        <button @click="selectMont('enero')" :class="['button is-info', { 'is-light': month == 'enero' }]">
+        <button @click="selectMont('enero')" :class="['button is-info', { 'is-light': month === 'enero' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Enero
         </button>
 
-        <button @click="selectMont('febrero')" :class="['button is-info', { 'is-light': month == 'febrero' }]">
+        <button @click="selectMont('febrero')" :class="['button is-info', { 'is-light': month === 'febrero' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Febrero
         </button>
 
-        <button @click="selectMont('marzo')" :class="['button is-info', { 'is-light': month == 'marzo' }]">
+        <button @click="selectMont('marzo')" :class="['button is-info', { 'is-light': month === 'marzo' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Marzo
         </button>
 
-        <button @click="selectMont('abril')" :class="['button is-info', { 'is-light': month == 'abril' }]">
+        <button @click="selectMont('abril')" :class="['button is-info', { 'is-light': month === 'abril' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Abril
         </button>
 
-        <button @click="selectMont('mayo')" :class="['button is-info', { 'is-light': month == 'mayo' }]">
+        <button @click="selectMont('mayo')" :class="['button is-info', { 'is-light': month === 'mayo' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Mayo
         </button>
 
-        <button @click="selectMont('junio')" :class="['button is-info', { 'is-light': month == 'junio' }]">
+        <button @click="selectMont('junio')" :class="['button is-info', { 'is-light': month === 'junio' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Junio
         </button>
 
-        <button @click="selectMont('julio')" :class="['button is-info', { 'is-light': month == 'julio' }]">
+        <button @click="selectMont('julio')" :class="['button is-info', { 'is-light': month === 'julio' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Julio
         </button>
 
 
-        <button @click="selectMont('agosto')" :class="['button is-info', { 'is-light': month == 'agosto' }]">
+        <button @click="selectMont('agosto')" :class="['button is-info', { 'is-light': month === 'agosto' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Agosto
         </button>
 
 
-        <button @click="selectMont('septiembre')" :class="['button is-info', { 'is-light': month == 'septiembre' }]">
+        <button @click="selectMont('septiembre')" :class="['button is-info', { 'is-light': month === 'septiembre' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Septiembre
         </button>
 
 
-        <button @click="selectMont('octubre')" :class="['button is-info', { 'is-light': month == 'octubre' }]">
+        <button @click="selectMont('octubre')" :class="['button is-info', { 'is-light': month === 'octubre' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Octubre
         </button>
 
 
-        <button @click="selectMont('noviembre')" :class="['button is-info', { 'is-light': month == 'noviembre' }]">
+        <button @click="selectMont('noviembre')" :class="['button is-info', { 'is-light': month === 'noviembre' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Noviembre
         </button>
 
 
-        <button @click="selectMont('diciembre')" :class="['button is-info', { 'is-light': month == 'diciembre' }]">
+        <button @click="selectMont('diciembre')" :class="['button is-info', { 'is-light': month === 'diciembre' }]">
             <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Diciembre
         </button>
 
@@ -122,7 +122,7 @@
 
         <v-data-table :hover="true" :items="data" :headers="columns" :loading="change_table"
             :items-per-page-options="items_per_page_options" :show-current-page="true" :fixed-header="true" :search="buscar"
-            :height="600" :sort-by="[{ key: 'id', order: 'desc' }]">
+            :height="500" :sort-by="[{ key: 'id', order: 'desc' }]">
 
             <template v-slot:item.estado="{ item }">
                 <span class="tag is-danger as-font-9 m-1" v-if="item.columns.estado == 'Cancelada'">
@@ -255,14 +255,14 @@
                                 <th>{{ row.apellido_materno }}</th>
                                 <th>
                                     <span class="tag is-primary as-font-9 m-1">
-                                        {{ date_format.formatDateHour(row.created_at) }}
+                                        {{ date_format.formatDateHour(row.created_at+"") }}
                                     </span>
                                 </th>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>selectCity
+            </div>
             <div class="is-flex is-justify-content-end is-align-items-center">
                 <div class="m-2">
                     <v-btn class="has-background-success has-text-white as-hover__box-shadow"
@@ -470,7 +470,6 @@ export default defineComponent({
                     }
                     this.snackbarMessageView('error', response.message);
                 }
-
             } else {
                 //cuando sea un nuevo registro
                 const response = await cliente.create();
@@ -484,30 +483,27 @@ export default defineComponent({
                         this.message_errors_field = response.message_errors;
                     }
                 }
-
             }
-
-
-
         },
 
         openClienteResponsable(item) {
             this.dialog_cliente_responsable = true;
             this.loading_table_cliente_responsable = true;
             this.item_cliente = Object.assign({}, item);
+
             setTimeout(async () => {
                 const cliente = new Cliente(this.city, this.group);
                 const response = await cliente.clienteResponsable(item.id);
+
                 this.loading_table_cliente_responsable = false;//dejamos de cargar la tabla de cliente responsable
 
                 if (response.status) {
-                    this.data_cliente_responable = response.records;
-
+                    this.data_cliente_responable = Object.assign({},response.records);
                 } else {
                     this.snackbarMessageView('error', response.message);
                 }
 
-            }, 1500);
+            }, 800);
         },
 
         closeClienteResponsable() {
@@ -537,4 +533,3 @@ export default defineComponent({
 });
 
 </script>
-

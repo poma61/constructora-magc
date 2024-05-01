@@ -107,7 +107,8 @@
   </v-dialog>
 
   <v-dialog v-model="dialog_detail_user" max-width="1000px" persistent transition="dialog-bottom-transition">
-    <DetailUser :item_user_parent="item_user" @isCloseDialogDetailUser="closeDialogDetailUser" />
+    <DetailUser :item_user_parent="item_user" @isCloseDialogDetailUser="closeDialogDetailUser" 
+    @isSnackbarMessageView ="snackbarMessageView"/>
   </v-dialog>
 
   <v-dialog v-model="dialog_delete" max-width="500px" persistent transition="dialog-bottom-transition">

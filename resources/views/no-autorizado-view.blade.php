@@ -1,9 +1,6 @@
 @extends('layouts.app')
-@section('title', 'MAGC | No Autorizado')
+@section('title', 'No Autorizado | Constructora MAGC')
 
-@section('template_css')
-
-@endsection
 
 @section('template_content')
 
@@ -13,6 +10,3 @@
 
 @endsection
 
-@section('template_js')
-
-@endsection

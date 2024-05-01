@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use Illuminate\Database\Seeder;
 use App\Models\Ciudad;
 use App\Models\Grupo;
@@ -267,8 +266,9 @@ class DatabaseSeeder extends Seeder
             ["name" => "Modulo Usuario", "type" => "module", "type_content" => "users",  "code_content" => 'access_users'],
             ["name" => "Modulo Personal",  "type" => "module", "type_content" => "personals",  "code_content" => 'access_personals'],
 
-            ["name" => "Acceso a todos los registros", "type" => "records", "type_content" => "all",  "code_content" => 'all_records'],
-            ["name" => "Acceso solo a registros de usuario",  "type" => "records", "type_content" => "users",  "code_content" => 'users_records'],
+            ["name" => "Acceso a todos los clientes", "type" => "records", "type_content" => "cliente_records",  "code_content" => 'all_clients_records'],
+            ["name" => "Acceso solo a clientes del responsable, usuario",  "type" => "records", "type_content" => "cliente_records",  "code_content" => 'responsable_clients_records'],
+
         ]);
 
         Personal::create([
@@ -294,7 +294,8 @@ class DatabaseSeeder extends Seeder
 
         # Asigamos permisos a usuarios
         UserHasPermiso::insert([
-            ["id_user" => 1, "id_permiso" => 1, "status" => true],
+            ["id_user" => 1, "id_permiso" => 111, "status" => true],
+            ["id_user" => 1, "id_permiso" => 112, "status" => true],
             // ["id_user" => 1, "id_permiso" => 2, "status" => true],
             // ["id_user" => 1, "id_permiso" => 3, "status" => true],
             // ["id_user" => 1, "id_permiso" => 4, "status" => true],

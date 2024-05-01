@@ -10,13 +10,11 @@ class Responsable extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nombres',
-        'apellido_paterno',
-        'apellido_materno',
         'id_personal',
+        'id_cliente'
     ];
 
     protected $hidden = [
-        'updated_at'
+        'updated_at',
     ];
 }

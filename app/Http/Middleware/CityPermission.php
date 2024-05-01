@@ -9,10 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-
-class CheckCityAccess
+class CityPermission
 {
-
     public function handle(Request $request, Closure $next): Response
     {
         //VERIFICAR QUE TIPO DE METODO ES 

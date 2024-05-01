@@ -1,5 +1,5 @@
 @extends('layouts/app')
-@section('title', 'MAGC | Finanzas de construccion')
+@section('title', 'Finanzas de construccion | Constructora MAGC')
 
 @section('template_content')
 

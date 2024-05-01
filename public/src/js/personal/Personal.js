@@ -61,9 +61,10 @@ class Personal {
 
     async create(datos) {
         datos.append('ciudad', this.city);
-
+        
         try {
             const resolve = await axios.post(config.BASE_URL + this.url_web + "/create", datos, this.http_config);
+
             this.setFill(resolve.data.record);
 
             return resolve.data;
@@ -76,7 +77,8 @@ class Personal {
 
         try {
             const resolve = await axios.post(config.BASE_URL + this.url_web + "/edit", {
-                id: data_id
+                id: data_id,
+                ciudad:this.city,
             }, this.http_config);
             this.setFill(resolve.data.record);
             return resolve.data;
@@ -88,7 +90,8 @@ class Personal {
     async destroy(data_id) {
         try {
             const resolve = await axios.post(config.BASE_URL + this.url_web + "/destroy", {
-                id: data_id
+                id: data_id, 
+                ciudad:this.city,
             }, this.http_config);
             return resolve.data;
         } catch (error) {
@@ -98,6 +101,7 @@ class Personal {
 
     async update(datos) {
         try {
+            datos.append('ciudad', this.city);
             // Agregar el encabezado 'X-HTTP-Method-Override': 'PUT' al objeto de encabezados
             this.http_config.headers['X-HTTP-Method-Override'] = 'PUT';
             const resolve = await axios.post(config.BASE_URL + this.url_web + "/update", datos, this.http_config);

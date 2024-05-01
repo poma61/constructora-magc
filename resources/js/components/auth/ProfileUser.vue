@@ -9,52 +9,52 @@
         <progress class="progress is-small is-info" max="100" v-if="loading_data_profile">100%</progress>
 
         <div class="is-flex is-justify-content-center is-align-items-center" v-if="!loading_data_profile">
-        <div class="box">
-            <form class="is-flex is-flex-wrap-wrap">
-                <div class="field m-1">
-                    <label class="label has-text-info">Usuario</label>
-                    <p class="control has-icons-left">
-                        <input class="input" type="text" placeholder="Escriba aquí..." v-model="is_user.usuario">
-                        <span class="icon is-small is-left has-text-info">
-                            <span class="mdi mdi-account"></span>
+            <div class="box">
+                <form class="is-flex is-flex-wrap-wrap">
+                    <div class="field m-1">
+                        <label class="label has-text-info">Usuario</label>
+                        <p class="control has-icons-left">
+                            <input class="input" type="text" placeholder="Escriba aquí..." v-model="is_user.usuario">
+                            <span class="icon is-small is-left has-text-info">
+                                <span class="mdi mdi-account"></span>
+                            </span>
+                        </p>
+                        <p class="has-text-danger as-font-9">{{ getValidateErrors('usuario') }}</p>
+                    </div>
+                    <div class="field m-1">
+                        <label class="label has-text-info">Contraseña anterior</label>
+                        <p class="control has-icons-left">
+                            <input class="input" type="password" placeholder="Escriba aquí..."
+                                v-model="is_user.old_password" autocomplete="none">
+                            <span class="icon is-small is-left has-text-info">
+                                <span class="mdi mdi-lock-outline"></span>
+                            </span>
+                        </p>
+                        <p class="has-text-danger as-font-9">{{ getValidateErrors('old_password') }}</p>
+                    </div>
+                    <div class="field m-1">
+                        <label class="label has-text-info">Contraseña nueva</label>
+                        <p class="control has-icons-left">
+                            <input class="input" type="password" placeholder="Escriba aquí..."
+                                v-model="is_user.new_password" autocomplete="none">
+                            <span class="icon is-small is-left has-text-info">
+                                <span class="mdi mdi-lock-outline"></span>
+                            </span>
+                        </p>
+                        <p class="has-text-danger as-font-9">{{ getValidateErrors('new_password') }}</p>
+                    </div>
+                </form>
+                <div class="is-flex is-justify-content-end is-align-items-center m-2">
+                    <button :class="loading_save_credentials ? 'button is-info is-loading' : 'button is-info'"
+                        @click="saveCredentials()">
+                        <span class="icon is-size-5">
+                            <span class="mdi mdi-account-lock"></span>
                         </span>
-                    </p>
-                    <p class="has-text-danger as-font-9">{{ getValidateErrors('usuario') }}</p>
+                        <span>Actualizar credenciales</span>
+                    </button>
                 </div>
-                <div class="field m-1">
-                    <label class="label has-text-info">Contraseña anterior</label>
-                    <p class="control has-icons-left">
-                        <input class="input" type="password" placeholder="Escriba aquí..."
-                            v-model="is_user.old_password" autocomplete="none">
-                        <span class="icon is-small is-left has-text-info">
-                            <span class="mdi mdi-lock-outline"></span>
-                        </span>
-                    </p>
-                    <p class="has-text-danger as-font-9">{{ getValidateErrors('old_password') }}</p>
-                </div>
-                <div class="field m-1">
-                    <label class="label has-text-info">Contraseña nueva</label>
-                    <p class="control has-icons-left">
-                        <input class="input" type="password" placeholder="Escriba aquí..."
-                            v-model="is_user.new_password" autocomplete="none">
-                        <span class="icon is-small is-left has-text-info">
-                            <span class="mdi mdi-lock-outline"></span>
-                        </span>
-                    </p>
-                    <p class="has-text-danger as-font-9">{{ getValidateErrors('new_password') }}</p>
-                </div>
-            </form>
-            <div class="is-flex is-justify-content-end is-align-items-center m-2">
-                <button :class="loading_save_credentials ? 'button is-info is-loading' : 'button is-info'"
-                    @click="saveCredentials()">
-                    <span class="icon is-size-5">
-                        <span class="mdi mdi-account-lock"></span>
-                    </span>
-                    <span>Actualizar credenciales</span>
-                </button>
             </div>
         </div>
-    </div>
         <div class="is-flex is-justify-content-center is-flex-direction-column is-align-items-center"
             v-if="!loading_data_profile">
             <div class="m-1">
@@ -136,6 +136,19 @@
                         </tr>
 
                         <tr>
+                            <th> Modulo Cliente | Acceso a los clientes registrados:</th>
+                            <td>
+                                <span v-if="record_permissions != null" class="tag is-info m-1">
+                                    {{ record_permissions }}
+                                </span>
+
+                                <span v-else class="tag is-danger m-1">
+                                    Sin asignar registros.
+                                </span>
+                            </td>
+                        </tr>
+                        
+                        <tr>
                             <th>
                                 Acceso a modulos administrativos:
                             </th>
@@ -153,19 +166,6 @@
                             </td>
                         </tr>
 
-
-                        <tr>
-                            <th>Registros :</th>
-                            <td>
-                                <span v-if="record_permissions != null" class="tag is-info m-1">
-                                    {{ record_permissions }}
-                                </span>
-
-                                <span v-else class="tag is-danger m-1">
-                                    Sin asignar registros.
-                                </span>
-                            </td>
-                        </tr>
                         <tr>
                             <th>Acceso por defecto a los modulos:</th>
                             <td>
@@ -178,15 +178,12 @@
                                 <span class="tag is-link m-1"> Diseño</span>
                             </td>
                         </tr>
-
                     </tbody>
                 </table>
 
             </div>
         </div>
     </div>
-
-
 
     <div class="m-5">
         <p class="has-text-danger as-font-9">NOTA: Solo se puede actualizar las credenciales de inicio de sesion, para
@@ -196,7 +193,6 @@
             los
             datos.</p>
     </div>
-
 </template>
 <script setup>
 import app from '@/config/app.js';

@@ -60,6 +60,19 @@
                     </tr>
 
                     <tr>
+                        <th> Modulo Cliente | Acceso a los clientes registrados:</th>
+                        <td>
+                            <span v-if="record_permissions != null" class="tag is-info m-1">
+                                {{ record_permissions }}
+                            </span>
+
+                            <span v-else class="tag is-danger m-1">
+                                Sin asignar registros.
+                            </span>
+                        </td>
+                    </tr>
+                    
+                    <tr>
                         <th>
                             Acceso a modulos administrativos:
                         </th>
@@ -77,19 +90,6 @@
                         </td>
                     </tr>
 
-
-                    <tr>
-                        <th>Registros :</th>
-                        <td>
-                            <span v-if="record_permissions != null" class="tag is-info m-1">
-                                {{ record_permissions }}
-                            </span>
-
-                            <span v-else class="tag is-danger m-1">
-                                Sin asignar registros.
-                            </span>
-                        </td>
-                    </tr>
                     <tr>
                         <th>Acceso por defecto a los modulos:</th>
                         <td>
@@ -130,7 +130,7 @@ import Usuario from '@/services/Usuario';
 
 export default defineComponent({
     props: ['item_user_parent'],
-    emits: ['isCloseDialogDetailUser'],
+    emits: ['isCloseDialogDetailUser', 'isSnackbarMessageView'],
     data() {
         const change_overlay = false;
         const item_user = this.props.item_user_parent;
@@ -193,6 +193,8 @@ export default defineComponent({
                     });
                 });
 
+            }else{
+                this.emit('isSnackbarMessageView', 'error', response.message)
             }
 
         },

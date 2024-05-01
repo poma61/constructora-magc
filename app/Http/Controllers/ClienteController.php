@@ -7,7 +7,6 @@ use App\Http\Requests\ClienteRequest;
 
 use App\Models\Ciudad;
 use App\Models\Cliente;
-use App\Models\ClienteResponsable;
 use App\Models\Grupo;
 use App\Models\Responsable;
 use App\Models\UserHasPermiso;
@@ -20,7 +19,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ClienteController extends Controller
 {
-
     public function indexView()
     {
         try {
@@ -29,6 +27,7 @@ class ClienteController extends Controller
                 ->select("permisos.*")
                 ->where("users_has_permisos.id_user", $user->id)
                 ->where("users_has_permisos.status", true)
+                ->orderBy("permisos.id", "ASC")
                 ->get();
 
             $ciudades = [];
@@ -220,22 +219,6 @@ class ClienteController extends Controller
     public function tableroIndex(Request $request)
     {
         try {
-            // por estabilidad del sistema verificamos si ciudad y existen en la base de datoa
-            $ciudad = Ciudad::where('city_name', $request
-                ->input('ciudad'))->first();
-            $grupo = Grupo::where('id_ciudad', $ciudad->id)
-                ->where('grup_number', $request->input('grupo'))
-                ->first();
-
-            if ($ciudad == null || $grupo == null) {
-                return response()->json([
-                    'status' => true,
-                    'records' => [],
-                    'message' => 'No existe la ciudad y/o el grupo.',
-
-                ], 404);
-            }
-
             $meses = [
                 'enero' => '01',
                 'febrero' => '02',
@@ -251,19 +234,60 @@ class ClienteController extends Controller
                 'diciembre' => '12',
             ];
 
-            if ($request->input('month') == 'todos') {
-                $cliente = Cliente::where('id_grupo', $grupo->id)
-                    ->where('status', true)
-                    ->whereYear('fecha_reunion', $request->input('year'))
-                    ->get();
-            } else {
-                $cliente = Cliente::where('id_grupo', $grupo->id)
-                    ->where('status', true)
-                    ->whereYear('fecha_reunion', $request->input('year'))
-                    ->whereMonth('fecha_reunion', $meses[$request->input('month')])
-                    ->get();
+            $ciudad = Ciudad::where(
+                'city_name',
+                $request->input('ciudad')
+            )->first();
+            $grupo = Grupo::where('id_ciudad', $ciudad->id)
+                ->where('grup_number', $request->input('grupo'))
+                ->first();
+
+            $user_permissions = Auth::user()->onPermission();
+            $list_records_cliente_permissions = [];
+            foreach ($user_permissions as $row) {
+                if ($row->type == 'records') {
+                    $list_records_cliente_permissions[] = $row->code_content;
+                }
             }
 
+            if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
+
+                $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
+                    ->select("clientes.*")
+                    ->where('clientes.id_grupo', $grupo->id)
+                    ->where('responsables.id_personal', Auth::user()->id_personal)
+                    ->where('clientes.status', true)
+                    ->whereYear('clientes.fecha_reunion', $request->input('year'))
+                    ->when(
+                        $request->input('month') != 'todos', // si la expresion es verdadero aplica la funcion query
+                        function ($query) use ($meses, $request) {
+                            return $query->whereMonth('clientes.fecha_reunion', $meses[$request->input('month')]);
+                        }
+                    )
+                    ->get();
+            } elseif (in_array('all_clients_records', $list_records_cliente_permissions)) {
+
+                $cliente = Cliente::where('status', true)
+                    ->where('id_grupo', $grupo->id)
+                    ->whereYear('fecha_reunion', $request->input('year'))
+                    ->when(
+                        $request->input('month') != 'todos',
+                        function ($query) use ($meses, $request) {
+                            return $query->whereMonth('fecha_reunion', $meses[$request->input('month')]);
+                        }
+                    )
+                    ->get();
+            } else {
+                $cliente = null;
+            }
+
+            if ($cliente == null) {
+                return response()->json([
+                    'status' => false,
+                    'records' => [],
+                    'message' => 'No tienes acceso a los registros!',
+                ], 401);
+            }
 
             return response()->json([
                 'status' => true,
@@ -285,32 +309,22 @@ class ClienteController extends Controller
     {
         try {
             $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
-            $cliente = new Cliente($request->except('ciudad', 'grupo'));
 
-            //tambien se podria haber sacado el id del grupo del Auth::user()->onPersonal()
-            //pero  se hace mas extenso el codigo ya que a que validar... si e administrador...
-            //si administra los todos los grupos, entonces hagaramos directamente de la url
-            //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es   
-            //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo          
-            $grupo_obj1 = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
-            $cliente->id_grupo = $grupo_obj1->id;
+            $grupo = Grupo::where('id_ciudad', $ciudad->id)
+                ->where('grup_number', $request->input('grupo'))
+                ->first();
+
+            $cliente = new Cliente($request->except('ciudad', 'grupo'));
+            $cliente->id_grupo = $grupo->id;
             $cliente->status = true;
             $cliente->save();
 
-            //guardamos el responsable del cliente como es una relacion de muchos a muchos entre responsables y clientes
-            //se crea una tabla extra clientes_responsables
+            //guardamos el responsable del cliente 
             $personal = Auth::user()->onPersonal()->first();
             $responsable = new Responsable();
-            $responsable->nombres = $personal->nombres;
-            $responsable->apellido_paterno = $personal->apellido_paterno;
-            $responsable->apellido_materno = $personal->apellido_materno;
             $responsable->id_personal = $personal->id;
+            $responsable->id_cliente = $cliente->id;
             $responsable->save();
-            //guardamos datos en la tabla extra clientes_responsables
-            $cliente_responsable = new ClienteResponsable();
-            $cliente_responsable->id_cliente = $cliente->id;
-            $cliente_responsable->id_responsable = $responsable->id;
-            $cliente_responsable->save();
 
             // Formatear la hora antes de incluirla en la respuesta JSON
             //esto solo se debe   hacer a un update y create
@@ -337,28 +351,59 @@ class ClienteController extends Controller
     public function rowTableroUpdate(ClienteRequest $request)
     {
         try {
-            $cliente = Cliente::where('status', true)->where('id', $request->input('id'))->first();
+            $user_permissions = Auth::user()->onPermission();
+            $list_records_cliente_permissions = [];
+            foreach ($user_permissions as $row) {
+                if ($row->type == 'records') {
+                    $list_records_cliente_permissions[] = $row->code_content;
+                }
+            }
+
+            // verificar si el responsable del cliente esta editando 
+            if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
+
+                $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
+                    ->select("clientes.*")
+                    ->where('responsables.id_personal', Auth::user()->id_personal)
+                    ->where('clientes.id', $request->input('id'))
+                    ->first();
+
+                if ($cliente == null) {
+                    return response()->json([
+                        'status' => false,
+                        'records' => [],
+                        'message' => 'No tienes acceso al cliente registrado!',
+                    ], 401);
+                }
+            } elseif (in_array('all_clients_records', $list_records_cliente_permissions)) {
+
+                $cliente = Cliente::where('status', true)
+                    ->where('id', $request->input('id'))
+                    ->first();
+            } else {
+                $cliente = null;
+            }
+
+            if ($cliente == null) {
+                return response()->json([
+                    'status' => false,
+                    'records' => [],
+                    'message' => 'No se encontro ningun registro!',
+                ], 404);
+            }
+
             $personal = Auth::user()->onPersonal()->first();
 
-            //si no encuentro el responsable significa que es un nuevo responsable  el que esta editando este  dato del cliente
-            // entonces agreamos al  otro responsable del cliente
-            $verified_responable = ClienteResponsable::join('responsables', 'responsables.id', '=', 'clientes_responsables.id_responsable')
-                ->where('clientes_responsables.id_cliente', $cliente->id)
-                ->where('responsables.id_personal', $personal->id)->first();
+            // verificamos si el responsable esta registrado o es un nuevo responsable que esta editando el registro
+            $verified_responable = Responsable::where('id_cliente', $cliente->id)
+                ->where('id_personal', $personal->id)
+                ->first();
 
             if ($verified_responable == null) {
-                //se crea una tabla extra clientes_responsables
                 $responsable = new Responsable();
-                $responsable->nombres = $personal->nombres;
-                $responsable->apellido_paterno = $personal->apellido_paterno;
-                $responsable->apellido_materno = $personal->apellido_materno;
                 $responsable->id_personal = $personal->id;
+                $responsable->id_cliente = $cliente->id;
                 $responsable->save();
-                //guardamos datos en la tabla extra clientes_responsables
-                $cliente_responsable = new ClienteResponsable();
-                $cliente_responsable->id_cliente = $cliente->id;
-                $cliente_responsable->id_responsable = $responsable->id;
-                $cliente_responsable->save();
             }
             $cliente->fill($request->except('grupo', 'ciudad'));
             $cliente->update();
@@ -368,6 +413,7 @@ class ClienteController extends Controller
             // cuando hacemos un update a la base de datos el formato de hora se vuelve asi '23:59' lo mismo pasa al hacer un create
             //entonces '23:59', ya no es un formato de hora valido
             $cliente->hora_reunion = Carbon::parse($cliente->hora_reunion)->format('H:i:s');
+
 
             return response()->json([
                 'status' => true,
@@ -387,27 +433,61 @@ class ClienteController extends Controller
     public function  rowTableroDestroy(Request $request)
     {
         try {
-            $cliente = Cliente::find($request->input('id'));
+            $user_permissions = Auth::user()->onPermission();
+            $list_records_cliente_permissions = [];
+            foreach ($user_permissions as $row) {
+                if ($row->type == 'records') {
+                    $list_records_cliente_permissions[] = $row->code_content;
+                }
+            }
+
+            // verificar si el responsable del cliente esta editando 
+            if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
+
+                $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
+                    ->select("clientes.*")
+                    ->where('responsables.id_personal', Auth::user()->id_personal)
+                    ->where('clientes.id', $request->input('id'))
+                    ->first();
+
+                if ($cliente == null) {
+                    return response()->json([
+                        'status' => false,
+                        'records' => [],
+                        'message' => 'No tienes acceso al cliente registrado!',
+                    ], 401);
+                }
+            } elseif (in_array('all_clients_records', $list_records_cliente_permissions)) {
+
+                $cliente = Cliente::where('status', true)
+                    ->where('id', $request->input('id'))
+                    ->first();
+            } else {
+                $cliente = null;
+            }
+
+            if ($cliente == null) {
+                return response()->json([
+                    'status' => false,
+                    'records' => [],
+                    'message' => 'No tienes acceso a los registros!',
+                ], 401);
+            }
+
             //verificamos si el responsable esta editando y si no es asi no permitimos la edicion 
             $personal = Auth::user()->onPersonal()->first();
 
             //si no encuentro el responsable significa que es un nuevo responsable  el que esta eliminando el registro del cliente
             // entonces agreamos al  otro responsable del cliente
-            //de esta forma sabremos quienes maniplaron este registro
-            $verified_responable = Responsable::where('id_personal', $personal->id)->first();
+            //de esta forma sabremos quienes manipularon este registro
+            $verified_responable = Responsable::where('id_cliente', $cliente->id)
+                ->where('id_personal', $personal->id)
+                ->first();
             if ($verified_responable == null) {
-                //se crea una tabla extra clientes_responsables
                 $responsable = new Responsable();
-                $responsable->nombres = $personal->nombres;
-                $responsable->apellido_paterno = $personal->apellido_paterno;
-                $responsable->apellido_materno = $personal->apellido_materno;
                 $responsable->id_personal = $personal->id;
+                $responsable->id_cliente = $cliente->id;
                 $responsable->save();
-                //guardamos datos en la tabla extra clientes_responsables
-                $cliente_responsable = new ClienteResponsable();
-                $cliente_responsable->id_cliente = $cliente->id;
-                $cliente_responsable->id_responsable = $responsable->id;
-                $cliente_responsable->save();
             }
             $cliente->status = false;
             $cliente->update();
@@ -428,11 +508,16 @@ class ClienteController extends Controller
     public function recordClienteResponsable(Request $request)
     {
         try {
-            $cliente = Cliente::join('clientes_responsables', 'clientes_responsables.id_cliente', '=', 'clientes.id')
-                ->join('responsables', 'responsables.id', '=', 'clientes_responsables.id_responsable')
-                ->select('responsables.*', 'clientes_responsables.id_responsable', 'clientes_responsables.id_cliente')
+            $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
+                ->join('personals', 'personals.id', '=', 'responsables.id_personal')
+                ->select(
+                    'personals.nombres',
+                    'personals.apellido_paterno',
+                    'personals.apellido_materno',
+                    'responsables.*',
+                )
                 ->where('clientes.id', $request->input('id_cliente'))
-                ->orderBy('id', 'ASC')
+                ->orderBy('responsables.id', 'ASC')
                 ->get();
 
             return response()->json([
@@ -452,7 +537,6 @@ class ClienteController extends Controller
     public function generateExcel(Request $request)
     {
         try {
-
             // Descargar el archivo Excel directamente usando Excel::download
             //enviarlo como respues a vue donde axios 
             return Excel::download(new ClienteExport($request), 'archivo.xlsx', \Maatwebsite\Excel\Excel::XLSX, [
@@ -471,13 +555,12 @@ class ClienteController extends Controller
     public function graphicEstado(Request $request)
     {
         try {
-            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
-            //Podriamos haber sacado el id del grupo del Auth::user()->onPersonal()
-            //pero  se hace mas extenso el codigo ya que a que validar... si e administrador...
-            //si administra los todos los grupos, entonces hagaramos directamente de la url
-            //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es      
-            //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo                  
-            $grupo = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
+            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))
+                ->first();
+
+            $grupo = Grupo::where('id_ciudad', $ciudad->id)
+                ->where('grup_number', $request->input('grupo'))
+                ->first();
 
             $meses = [
                 'enero' => '01',
@@ -493,24 +576,55 @@ class ClienteController extends Controller
                 'noviembre' => '11',
                 'diciembre' => '12',
             ];
-            if ($request->input('month') == 'todos') {
-                $cliente = Cliente::where('status', true)
+
+            $user_permissions = Auth::user()->onPermission();
+            $list_records_cliente_permissions = [];
+            foreach ($user_permissions as $row) {
+                if ($row->type == 'records') {
+                    $list_records_cliente_permissions[] = $row->code_content;
+                }
+            }
+            if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
+
+                $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
+                    ->select('clientes.estado', DB::raw('COUNT(clientes.estado) as total'))
+                    ->where('clientes.id_grupo', $grupo->id)
+                    ->where('responsables.id_personal', Auth::user()->id_personal)
+                    ->where('clientes.status', true)
+                    ->whereYear('clientes.fecha_reunion', $request->input('year'))
+                    ->when(
+                        $request->input('month') !=  'todos',
+                        function ($query) use ($meses, $request) {
+                            return $query->whereMonth('clientes.fecha_reunion', $meses[$request->input('month')]);
+                        }
+                    )
+                    ->groupBy('clientes.estado')
+                    ->get();
+            } elseif (in_array('all_clients_records', $list_records_cliente_permissions)) {
+
+                $cliente = Cliente::select('estado', DB::raw('COUNT(estado) as total'))
                     ->where('id_grupo', $grupo->id)
-                    ->select('estado', DB::raw('COUNT(estado) as total'))
+                    ->where('status', true)
                     ->whereYear('fecha_reunion', $request->input('year'))
+                    ->when(
+                        $request->input('month') !=  'todos',
+                        function ($query) use ($meses, $request) {
+                            return $query->whereMonth('fecha_reunion', $meses[$request->input('month')]);
+                        }
+                    )
                     ->groupBy('estado')
                     ->get();
             } else {
-                $cliente = Cliente::where('status', true)
-                    ->where('id_grupo', $grupo->id)
-                    ->select('estado', DB::raw('COUNT(estado) as total'))
-                    ->whereYear('fecha_reunion', $request->input('year'))
-                    ->whereMonth('fecha_reunion', $meses[$request->input('month')])
-                    ->groupBy('estado')
-                    ->get();
+                $cliente = null;
             }
 
-
+            if ($cliente == null) {
+                return response()->json([
+                    'status' => false,
+                    'records' => [],
+                    'message' => 'No tienes acceso a los registros!',
+                ], 404);
+            }
 
             return response()->json([
                 'status' => true,
@@ -530,17 +644,52 @@ class ClienteController extends Controller
     public function  calendarMeeting(Request $request)
     {
         try {
-            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
-            //Podriamos haber sacado el id del grupo del Auth::user()->onPersonal()
-            //pero  se hace mas extenso el codigo ya que a que validar... si e administrador...
-            //si administra los todos los grupos, entonces hagaramos directamente de la url
-            //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es      
-            //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo
+            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))
+                ->first();
 
-            $grupo = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
-            $cliente = Cliente::where('status', true)
-                ->where('id_grupo', $grupo->id)
-                ->select('nombres', 'apellido_paterno', 'apellido_materno', 'hora_reunion', 'fecha_reunion')->get();
+            $grupo = Grupo::where('id_ciudad', $ciudad->id)
+                ->where('grup_number', $request->input('grupo'))
+                ->first();
+
+
+            $user_permissions = Auth::user()->onPermission();
+            $list_records_cliente_permissions = [];
+            foreach ($user_permissions as $row) {
+                if ($row->type == 'records') {
+                    $list_records_cliente_permissions[] = $row->code_content;
+                }
+            }
+            if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
+
+                $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
+                    ->select(
+                        'clientes.nombres',
+                        'clientes.apellido_paterno',
+                        'clientes.apellido_materno',
+                        'clientes.hora_reunion',
+                        'clientes.fecha_reunion'
+                    )
+                    ->where('clientes.id_grupo', $grupo->id)
+                    ->where('responsables.id_personal', Auth::user()->id_personal)
+                    ->where('clientes.status', true)
+                    ->get();
+            } elseif (in_array('all_clients_records', $list_records_cliente_permissions)) {
+
+                $cliente = Cliente::select('nombres', 'apellido_paterno', 'apellido_materno', 'hora_reunion', 'fecha_reunion')
+                    ->where('id_grupo', $grupo->id)
+                    ->where('status', true)
+                    ->get();
+            } else {
+                $cliente = null;
+            }
+
+            if ($cliente == null) {
+                return response()->json([
+                    'status' => false,
+                    'records' => [],
+                    'message' => 'No tienes acceso a los registros!',
+                ], 404);
+            }
 
             return response()->json([
                 'status' => true,
@@ -560,9 +709,7 @@ class ClienteController extends Controller
 
     public function ganttMeeting(Request $request)
     {
-
         try {
-
             $meses = [
                 'enero' => '01',
                 'febrero' => '02',
@@ -578,27 +725,63 @@ class ClienteController extends Controller
                 'diciembre' => '12',
             ];
 
-            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))->first();
-            //Podriamos haber sacado el id del grupo del Auth::user()->onPersonal()
-            //pero  se hace mas extenso el codigo ya que a que validar... si e administrador...
-            //si administra los todos los grupos, entonces hagaramos directamente de la url
-            //y los middleware protegen las rutas..segun el grupo que le corresponda al personal y segun el role que es      
-            //en sintesis los middleware solo dejan acceder a las rutas que el personal tiene acceso  segun la ciudad y el grupo   
-            $grupo = Grupo::where('id_ciudad', $ciudad->id)->where('grup_number', $request->input('grupo'))->first();
+            $ciudad = Ciudad::where('city_name', $request->input('ciudad'))
+                ->first();
+            $grupo = Grupo::where('id_ciudad', $ciudad->id)
+                ->where('grup_number', $request->input('grupo'))
+                ->first();
 
-            if ($request->input('month') == 'todos') {
-                $cliente = Cliente::where('status', true)
+            $user_permissions = Auth::user()->onPermission();
+            $list_records_cliente_permissions = [];
+            foreach ($user_permissions as $row) {
+                if ($row->type == 'records') {
+                    $list_records_cliente_permissions[] = $row->code_content;
+                }
+            }
+            if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
+
+                $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
+                    ->select(
+                        'clientes.nombres',
+                        'clientes.apellido_paterno',
+                        'clientes.apellido_materno',
+                        'clientes.fecha_reunion',
+                        'clientes.hora_reunion',
+                    )
+                    ->where('clientes.id_grupo', $grupo->id)
+                    ->where('responsables.id_personal', Auth::user()->id_personal)
+                    ->where('clientes.status', true)
+                    ->whereYear('clientes.fecha_reunion', $request->input('year'))
+                    ->when(
+                        $request->input('month') !=  'todos',
+                        function ($query) use ($meses, $request) {
+                            return $query->whereMonth('clientes.fecha_reunion', $meses[$request->input('month')]);
+                        }
+                    )
+                    ->get();
+            } elseif (in_array('all_clients_records', $list_records_cliente_permissions)) {
+
+                $cliente = Cliente::select('nombres', 'apellido_paterno', 'apellido_materno', 'fecha_reunion', 'hora_reunion')
                     ->where('id_grupo', $grupo->id)
+                    ->where('status', true)
                     ->whereYear('fecha_reunion', $request->input('year'))
-                    ->select('nombres', 'apellido_paterno', 'apellido_materno', 'fecha_reunion', 'hora_reunion')
+                    ->when(
+                        $request->input('month') !=  'todos',
+                        function ($query) use ($meses, $request) {
+                            return $query->whereMonth('fecha_reunion', $meses[$request->input('month')]);
+                        }
+                    )
                     ->get();
             } else {
-                $cliente = Cliente::where('status', true)
-                    ->where('id_grupo', $grupo->id)
-                    ->whereYear('fecha_reunion', $request->input('year'))
-                    ->whereMonth('fecha_reunion', $meses[$request->input('month')])
-                    ->select('nombres', 'apellido_paterno', 'apellido_materno', 'fecha_reunion', 'hora_reunion')
-                    ->get();
+                $cliente = null;
+            }
+
+            if ($cliente == null) {
+                return response()->json([
+                    'status' => false,
+                    'records' => [],
+                    'message' => 'No tienes acceso a los registros!',
+                ], 401);
             }
 
             return response()->json([

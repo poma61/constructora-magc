@@ -138,7 +138,6 @@ const url_web = "/microservice/personal";
 
 // Obtener la URL
 const parsed_url = new URL(window.location.href);
-
 // Obtener el valor  de la url get=> por donde se pasa el nombre de la ciudad
 const city = parsed_url.pathname.split('/').pop();
 
@@ -218,8 +217,8 @@ async function initDataTable() {
         ],
         responsive: true,
         autoWidth: true,
-        lengthMenu: [10, 25, 50, 100],
-        order: [[0, 'desc']], //laravel nos devuelve de forma ascendente lo registro y datatble lo ordena de manera desc
+        lengthMenu: [10, 25, 50],
+        order: [[0, 'desc']], //laravel nos devuelve de forma ascendente lo registro y datable lo ordena de manera desc
 
     });
 
@@ -317,7 +316,7 @@ function showForm(personal, data_table_row_index) {
                         toastr.error(response.message, 'Error interno!');
                     } else {
                         ValidateError.validator(response.message_errors, '.field');
-                        toastr.error(response.message, 'Error de validacio!');
+                        toastr.error(response.message, 'Error!');
                     }
 
                 }
@@ -351,11 +350,16 @@ $(function () {
     // Delegar el evento de clic al contenedor de la tabla y seleccionar los botones internos
     $('#table-container').on("click", '.edit-record', async function () {
         const personal = new Personal(city, url_web);
-        const data_id = $(this).data('id')
-        const data_table_row_index = $(this).data('rowindex')
-        await personal.edit(data_id);
-
-        showForm(personal, data_table_row_index);
+        const data_id = $(this).data('id');
+        
+        const data_table_row_index = $(this).data('rowindex');
+        const response = await personal.edit(data_id);
+        if(response.status){
+            showForm(personal, data_table_row_index);
+        }else{
+            toastr.error(response.message, 'Error');
+        }
+       
     });
 
     $('#table-container').on('click', '.delete-record', function () {

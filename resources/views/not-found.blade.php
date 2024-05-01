@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Constructora MAGC | Recurso no encontrado')
+@section('title', 'Recurso no encontrado | Constructora MAGC')
 
 @section('template_content')
     <div class="is-flex is-justify-content-center is-align-items-center is-flex-direction-column" style="height:100%">

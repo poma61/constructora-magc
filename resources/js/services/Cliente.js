@@ -21,7 +21,7 @@ class Cliente {
 
         this.config = {
             headers: {
-                'Assept': 'Application/json'
+                'Assept': 'application/json'
             }
         }
         this.city = "";
@@ -74,14 +74,15 @@ class Cliente {
     }//index
 
     async create() {
-        const cliente = this.getFill();
         //enviamos estos parametros para que el middleware  check.city.access y check.grup.access verifique y proteja la ruta
         //practicamente no es necesario porque podemos saber mediante el usuario la ciudad y el grupo
         // pero para que el middleware proteja la ruta y que el sistema tena una seguridad optima debemos de enviar esos parametros
-        cliente['ciudad'] = this.city;
-        cliente['grupo'] = this.grupo;
         try {
-            const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/create', cliente, this.config);
+            const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/create', {
+                ...this.getFill(),
+                ciudad: this.city,
+                grupo: this.grupo,
+            }, this.config);
 
             return resolve.data;
 
@@ -111,15 +112,16 @@ class Cliente {
 
 
     async update() {
-        const cliente = this.getFill();
         //enviamos estos parametros para que el middleware  check.city.access y check.grup.access verifique y proteja la ruta
         //practicamente no es necesario porque podemos saber mediante el usuario la ciudad y el grupo
         // pero para que el middleware proteja la ruta y que el sistema tena una seguridad optima debemos de enviar esos parametros
-        cliente['ciudad'] = this.city;
-        cliente['grupo'] = this.grupo;
         this.config.headers['X-HTTP-Method-Override'] = 'PUT';
         try {
-            const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/update', this.getFill(), this.config)
+            const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/update', {
+                ...this.getFill(),
+                ciudad: this.city,
+                grupo: this.grupo,
+            }, this.config)
             return resolve.data;
 
         } catch (error) {
@@ -130,11 +132,11 @@ class Cliente {
     }//update
 
 
-    async clienteResponsable(id_cli) {
+    async clienteResponsable(id) {
         try {
 
             const resolve = await axios.post(app.BASE_URL + '/microservice/ciudad/grupo/cliente/record-cliente-responsable', {
-                id_cliente: id_cli,
+                id_cliente: id,
                 ciudad: this.city,
                 grupo: this.grupo,
             }, this.config);

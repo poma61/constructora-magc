@@ -1,12 +1,12 @@
 @extends('layouts/app')
-@section('title', 'Constructora MAGC | Clientes')
+@section('title', 'Clientes | Constructora MAGC')
 
 @section('template_content')
     <div class="card mt-5">
         <div class="card-content">
             <h1
                 class="as-main-title as-background-orange is-size-5 has-text-centered has-text-white">
-                Administracion de clientes por ciudades
+                Administracion de clientes
             </h1>
             {{-- ciudades --}}
             <div class="list has-hoverable-list-items has-visible-pointer-controls px-5">
@@ -36,6 +36,7 @@
                                         }
                                     }
                                     // Ordenamos los grupos de forma ascendente
+                                    // porque hay la probabilidad de que esten desordenados 01, 10, 05
                                     sort($city_ordered_groups);
                                 @endphp
 

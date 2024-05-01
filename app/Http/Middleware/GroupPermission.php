@@ -10,11 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckGrupAccess
+class GroupPermission
 {
-
     public function handle(Request $request, Closure $next): Response
-    { {
+    { 
             //VERIFICAR QUE TIPO DE METODO ES 
             if ($request->isMethod('GET')) {
                 // SI ES METODO GET
@@ -49,6 +48,7 @@ class CheckGrupAccess
                 }
             } // $verified_group
 
+            
             $user_permisos = UserHasPermiso::join("permisos", 'permisos.id', '=', 'users_has_permisos.id_permiso')
                 ->select("permisos.*")
                 ->where("permisos.type_content", 'groups')
@@ -82,6 +82,6 @@ class CheckGrupAccess
                     return response()->view('no-autorizado-view');
                 }
             } // in_array
-        }
+        
     }
 }

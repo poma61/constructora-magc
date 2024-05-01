@@ -97,7 +97,8 @@
             </button>
 
 
-            <button @click="selectMont('septiembre')" :class="['button is-primary', { 'is-light': month == 'septiembre' }]">
+            <button @click="selectMont('septiembre')"
+                :class="['button is-primary', { 'is-light': month == 'septiembre' }]">
                 <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Septiembre
             </button>
 
@@ -107,12 +108,14 @@
             </button>
 
 
-            <button @click="selectMont('noviembre')" :class="['button is-primary', { 'is-light': month == 'noviembre' }]">
+            <button @click="selectMont('noviembre')"
+                :class="['button is-primary', { 'is-light': month == 'noviembre' }]">
                 <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Noviembre
             </button>
 
 
-            <button @click="selectMont('diciembre')" :class="['button is-primary', { 'is-light': month == 'diciembre' }]">
+            <button @click="selectMont('diciembre')"
+                :class="['button is-primary', { 'is-light': month == 'diciembre' }]">
                 <span class="mdi mdi-calendar-check-outline is-size-5"></span>&nbsp;Diciembre
             </button>
 
@@ -145,7 +148,7 @@
 
                 <template v-slot:item.archivo_pdf="{ item }">
                     <v-btn @click="viewPDF(item.raw)" color="yellow-darken-3" icon="mdi-file-account-outline"
-                        class="m-1 as-hover__box-shadow"  />
+                        class="m-1 as-hover__box-shadow" />
                 </template>
 
 
@@ -154,7 +157,7 @@
                         <v-btn @click="editForm(item.raw)" color="deep-purple-lighten-2" icon="mdi-pencil"
                             class="m-1 as-hover__box-shadow" />
                         <v-btn @click="openDeleteData(item.raw)" color="red" icon="mdi-delete"
-                            class="m-1 as-hover__box-shadow"  />
+                            class="m-1 as-hover__box-shadow" />
                     </div>
                 </template>
 
@@ -169,7 +172,8 @@
         <div class="card">
             <div class="card-content">
                 <div class="is-flex is-justify-content-center is-align-items-center is-flex-direction-column">
-                    <span class="mdi mdi-file-question as-icon-7 has-text-danger animate__animated animate__flip"></span>
+                    <span
+                        class="mdi mdi-file-question as-icon-7 has-text-danger animate__animated animate__flip"></span>
                     <p class="is-size-5 has-text-centered">
                         ¿Esta seguro(a) de eliminar el registro seleccionado?
                     </p>
@@ -211,7 +215,7 @@
     </v-dialog>
 
     <v-snackbar v-model="snackbar_message_response.value" :timeout="2000" :color="snackbar_message_response.color"
-        location="bottom right"  min-height="70px">
+        location="bottom right" min-height="70px">
         <div class="is-flex is-justify-content-center is-align-items-center">
             <span :class="snackbar_message_response.icon"></span>
             <p class="is-size-6">{{ snackbar_message_response.text }}</p>
@@ -311,6 +315,8 @@ const editForm = async (item) => {
     item_contrato.value = Object.assign({}, item);
     edit_form.value = true
     const detalle_contrato = new Contrato();
+    detalle_contrato.setCity(city.value);
+
     const response = await detalle_contrato.byIdDetalleContrato(item_contrato.value.id);
     if (response.status) {
         item_detalle_contrato.value = Object.assign({}, response.record);
@@ -406,4 +412,3 @@ onMounted(() => {
 });
 
 </script>
-

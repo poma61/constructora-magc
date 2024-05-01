@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Constructora MAGC | Administracion')
+@section('title', 'Administracion | Constructora MAGC')
 
 @section('template_content')
 

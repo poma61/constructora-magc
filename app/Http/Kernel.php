@@ -55,8 +55,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         //agregados
-        'check.city.access' => \App\Http\Middleware\CheckCityAccess::class,
-        'check.grup.access' => \App\Http\Middleware\CheckGrupAccess::class,
-        'check.permisions' => \App\Http\Middleware\CheckPermisions::class,
+        'city.permissions' => \App\Http\Middleware\CityPermission::class,
+        'group.permissions' => \App\Http\Middleware\GroupPermission::class,
+        'module.administrative.permissions' => \App\Http\Middleware\AdministrativeModulePermission::class,
     ];
 }

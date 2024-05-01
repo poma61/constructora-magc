@@ -71,6 +71,15 @@
                 </div>
 
                 <v-divider class="border-opacity-50"></v-divider>
+                <div class="mx-2">
+                    <p class="text-info">Modulo Cliente | Acceso a los clientes registrados: </p>
+                    <v-radio-group v-model="record_permissions" inline>
+                        <v-radio v-for="(record, index) in list_records_permissions" :key="index" :label="record.name"
+                            :value="record.code_content" color="cyan-darken-2"></v-radio>
+                    </v-radio-group>
+                </div>
+
+                <v-divider class="border-opacity-50"></v-divider>
 
                 <div class="mx-2">
                     <p class="text-info">Modulo administrativo: </p>
@@ -83,15 +92,6 @@
                     </div>
                 </div>
 
-
-                <v-divider class="border-opacity-50"></v-divider>
-                <div class="mx-2">
-                    <p class="text-info">Registros: </p>
-                    <v-radio-group v-model="record_permissions" inline>
-                        <v-radio v-for="(record, index) in list_records_permissions" :key="index" :label="record.name"
-                            :value="record.code_content" color="cyan-darken-2"></v-radio>
-                    </v-radio-group>
-                </div>
                 <!-- permisos -->
                 <v-divider class="border-opacity-50"></v-divider>
                 <div class="mx-2">

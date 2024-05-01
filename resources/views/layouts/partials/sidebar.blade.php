@@ -167,11 +167,13 @@
                     $user_permission = Auth::user()->onPermission();
                     $list_permisos = [];
                     foreach ($user_permission as $row) {
-                        $list_permisos[] = $row->code_content;
+                        if($row->type == 'module'){
+                            $list_permisos[] = $row->code_content;
+                        }
                     }
                 @endphp
 
-                @if (count($user_permission) > 0)
+                @if (count($list_permisos) > 0)
                     <li>
                         <div class="unfold-divider"></div>
                     </li>

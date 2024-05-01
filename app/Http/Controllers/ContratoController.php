@@ -27,6 +27,7 @@ class ContratoController extends Controller
                 ->select("permisos.*")
                 ->where("users_has_permisos.id_user", $user->id)
                 ->where("users_has_permisos.status", true)
+                ->orderBy("permisos.id", "ASC")
                 ->get();
 
             $ciudades = [];
@@ -281,14 +282,12 @@ class ContratoController extends Controller
                 ->where('clientes.status', true)
                 ->where('ciudades.city_name', $request->input('ciudad'))
                 ->where('clientes.ci', $request->input('ci'))
-                ->where('clientes.estado', 'Firma de contrato')
                 ->first();
 
             if ($cliente == null) {
                 return response()->json([
                     'status' => false,
-                    'message' => "Ningun registro coincide con el ci {$request->input('ci')},
-                    verifique el estado del cliente, 
+                    'message' => "Ningun registro coincide con el C.I. {$request->input('ci')},
                     verifique si el cliente esta registrado
                      y/o el cliente no pertenece a la ciudad de {$request->input('ciudad')}!",
                     'record' => [],

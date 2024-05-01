@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Constructora MAGC | Error interno')
+@section('title', 'Error interno | Constructora MAGC')
 
 @section('template_content')
 <div class="is-flex is-justify-content-center is-align-items-center is-flex-direction-column" style="height:100%">

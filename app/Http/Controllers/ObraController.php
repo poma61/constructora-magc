@@ -25,6 +25,7 @@ class ObraController extends Controller
                 ->select("permisos.*")
                 ->where("users_has_permisos.id_user", $user->id)
                 ->where("users_has_permisos.status", true)
+                ->orderBy("permisos.id", "ASC")
                 ->get();
 
             $ciudades = [];
@@ -58,9 +59,6 @@ class ObraController extends Controller
     public function viewGrafico(String $city)
     {
         try {
-            //verificamos si los paorametros de la url son validos
-            $ciudad = Ciudad::where('city_name', $city)->first();
-
             return view('control-de-obra/grafico-control-de-obra-ciudad-view', [
                 'ciudad' => $city,
             ]);
