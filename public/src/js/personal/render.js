@@ -1,7 +1,7 @@
 
 function html(datos) {
     return `
-    <form id="custom-form" nctype="multipart/form-data" class="as-form">
+    <form id="custom-form" enctype="multipart/form-data" class="as-form">
 
     <input type="hidden" value="${datos.id}" name="id">
     <div class="field">

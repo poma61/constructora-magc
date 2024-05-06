@@ -51,11 +51,13 @@
 
 @section('template_js')
     <script src="{{ asset('/src/plugins/axios/Axios.min.js') }}"></script>
-
+  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="{{ asset('/src/plugins/toastr/ToastConfig.js') }}"></script>
 
     <script src="{{ asset('src/plugins/data-table/DataTableBulma1.13.js') }}"></script>
-    <script src="{{ asset('src/js/personal/PersonalRender.js') }}" type="module"></script>
     <script src="{{ asset('src/plugins/data-table/DataTableConfig.js') }}" type="module"></script>
+    
+    <script src="{{ asset('src/js/personal/render.js') }}" type="module"></script>
+  
 @endsection
