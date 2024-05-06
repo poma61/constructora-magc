@@ -299,7 +299,7 @@ export default defineComponent({
             const response = await usuario.userPermission();
             if (response.status) {
                 const permisos = response.records;
-
+     
                 //filter => objetos segun condicion
                 //map => nos devulve un array
                 this.city_permissions = permisos.filter(row => row.type_content == 'cities').map(row => row.code_content);
@@ -309,6 +309,8 @@ export default defineComponent({
                 is_record_permissions.forEach(row => {
                     this.record_permissions = row.code_content;
                 })
+            }else{
+                this.emit('isSnackbarMessageView', 'error', response.message)
             }
         },
 
