@@ -10,6 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users_has_permisos', function (Blueprint $table) {
+            $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
             $table->id();
             $table->foreignId("id_user");
             $table->foreignId("id_permiso");

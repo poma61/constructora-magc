@@ -14,20 +14,16 @@ use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\CCDController;
 use App\Http\Controllers\PermisoController;
 
+use Database\Seeders\DatabaseSeeder;
+use Illuminate\Support\Facades\Artisan;
 
 // en un hosting muchas veces no se puede ejecutar php artisan
 // para generar storage link en un hosting se puede hacer desde una peticion get
 Route::get('/storage-link', function () {
-    if (file_exists(public_path('storage'))) {
-        return 'The "public/storage" directory already exists.';
-    }
-
-    app('files')->link(
-        storage_path('app/public'),
-        public_path('storage')
-    );
-
-    return 'The [public/storage] directory has bee linked.';
+    // Ejecutar el comando de enlace simbólico
+Artisan::call('storage:link');
+    
+    return 'Enlace simbólico creado correctamente';
 });
 
 
@@ -241,3 +237,11 @@ Route::group(['middleware' => ['auth']], function () {
 
 //CCD
 Route::get('/operacion/ccd', [CCDController::class, 'index'])->middleware('auth')->name('r-ccd-operation');
+
+
+// // ESTE codigo fue comentado por razones de seguridad
+// Route::get('/seed-database', function () {
+//     $seeder = new DatabaseSeeder(); // Crea una instancia del seeder
+//     $seeder->run(); // Ejecuta el seeder
+//     return  response("Database seeded successfully!");
+// });
