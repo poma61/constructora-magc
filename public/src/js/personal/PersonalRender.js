@@ -249,20 +249,19 @@ function save(type, data_table_row_index, obj_datos) {
 }
 
 
-function showForm(personal, data_table_row_index) {
+ function showForm(personal, data_table_row_index) {
     const title = `${personal.getFill().id > 0 ? 'Editar' : 'Nuevo'} personal`;
     const ciudad = personal.getCity();
     const ciudad_parse = ciudad.replace(/-/g, ' ');//quitamos el '-' del nombre de la ciudad
-    Swal.fire({
+     Swal.fire({
         title: title + ` | <span class='as-text-color-100'>  ${ciudad_parse} </span>`,
         html: html(personal.getFill()),
-
+        width: 800,
         showConfirmButton: true,
         showCancelButton: true,
         cancelButtonText: '<i class="mdi mdi-cancel"></i> Cancelar',
         confirmButtonText: '<i class="mdi mdi-content-save-all"></i> Guardar',
         buttonsStyling: true,
-
         showClass: {
             popup: 'animate__animated animate__flipInX'
         },
