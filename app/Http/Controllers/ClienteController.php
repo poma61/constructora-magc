@@ -361,7 +361,7 @@ class ClienteController extends Controller
 
             // verificar si el responsable del cliente esta editando 
             $cliente = null;
-            if (in_array('edit_clients_records', $list_user_permissions)) {
+            if (in_array('action_edit_records_clients', $list_user_permissions)) {
                 $cliente = Cliente::where('status', true)
                     ->where('id', $request->input('id'))
                     ->first();
@@ -371,7 +371,7 @@ class ClienteController extends Controller
                 return response()->json([
                     'status' => false,
                     'records' => [],
-                    'message' => 'Lo sentimos, pero no tienes los permisos necesarios para editar este registro!',
+                    'message' => 'Lo sentimos, no tienes los permisos necesarios para editar este registro!',
                 ], 401);
             }
 
@@ -426,7 +426,7 @@ class ClienteController extends Controller
 
             // verificar si tiene permisos para eliminar registro
             $cliente = null;
-            if (in_array('delete_clients_records', $list_user_permissions)) {
+            if (in_array('action_delete_records_clients', $list_user_permissions)) {
                 $cliente = Cliente::where('status', true)
                     ->where('id', $request->input('id'))
                     ->first();
@@ -436,7 +436,7 @@ class ClienteController extends Controller
                 return response()->json([
                     'status' => false,
                     'records' => [],
-                    'message' => 'Lo sentimos, pero no tienes los permisos necesarios para eliminar este registro!',
+                    'message' => 'Lo sentimos, no tienes los permisos necesarios para eliminar este registro!',
                 ], 401);
             }
 
