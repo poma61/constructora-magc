@@ -73,13 +73,11 @@
                 <v-divider class="border-opacity-50"></v-divider>
                 <div class="mx-2">
                     <p class="text-info">Modulo Cliente | Registros: </p>
-                    <div class="as-flex-content-permisions">
-                        <v-switch v-for="(record, index) in list_cliente_records_permissions" :key="index"
-                            :label="record.name" :value="record.code" hide-details color="cyan-darken-2"
-                            v-model="user_cliente_record_permissions"  class="item-flex-permisions"
-                            style = "min-width: 300px;" />
-                    </div>
-                </div> 
+                    <v-switch v-for="(record, index) in list_cliente_records_permissions" :key="index"
+                        :label="record.name" :value="record.code" hide-details color="cyan-darken-2"
+                        v-model="user_cliente_record_permissions" />
+
+                </div>
 
                 <v-divider class="border-opacity-50"></v-divider>
 
@@ -305,7 +303,7 @@ export default defineComponent({
 
             const response = await usuario.userPermission();
 
-            if (response.status) { 
+            if (response.status) {
                 const permisos = response.records;
 
                 // filter => objetos segun condicion
@@ -317,7 +315,7 @@ export default defineComponent({
                 this.user_cliente_groups_permissions = permisos.filter(row => row.type_content == 'module_cliente_groups').map(row => row.code);
 
                 this.user_cliente_record_permissions = permisos.filter(row => row.type_content == 'module_cliente_records').map(row => row.code);
-                
+
 
             } else {
                 this.emit('isSnackbarMessageView', 'error', response.message)

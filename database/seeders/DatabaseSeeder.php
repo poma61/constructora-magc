@@ -266,13 +266,13 @@ class DatabaseSeeder extends Seeder
             ["name" => "Modulo Clientes | Otros | Grupo 09", "type" => "groups",  "type_content" => "module_cliente_groups",  "code" => 'Otros_09'],
             ["name" => "Modulo Clientes | Otros | Grupo 10", "type" => "groups",  "type_content" => "module_cliente_groups",  "code" => 'Otros_10'],
 
-            // otros
+            // MODULOE CLIENTE
+            ["name" => "Acceso a registros que el usuario ha registrado",  "type" => "records", "type_content" => "module_cliente_records",  "code" => 'responsable_clients_records'],
+            ["name" => "Acceso a todos los registros", "type" => "records", "type_content" => "module_cliente_records",  "code" => 'all_clients_records'],
             ["name" => "Editar registros", "type" => "records", "type_content" => "module_cliente_records",  "code" => 'delete_clients_records'],
             ["name" => "Eliminar registros", "type" => "records", "type_content" => "module_cliente_records",  "code" => 'edit_clients_records'],
-
-            ["name" => "Acceso a todos los registros", "type" => "records", "type_content" => "module_cliente_records",  "code" => 'all_clients_records'],
-            ["name" => "Acceso a registros que el usuario ha registrado",  "type" => "records", "type_content" => "module_cliente_records",  "code" => 'responsable_clients_records'],
-
+            
+            //ACCESO A MODULOS ADMINISTRATIVOS
             ["name" => "Modulo Usuario", "type" => "module", "type_content" => "users",  "code" => 'access_users'],
             ["name" => "Modulo Personal",  "type" => "module", "type_content" => "personals",  "code" => 'access_personals'],
 
@@ -306,3 +306,5 @@ class DatabaseSeeder extends Seeder
         ]);
     }
 }//class
+
+// NOTA: no se puede hacer un seeder en una app en produccion
