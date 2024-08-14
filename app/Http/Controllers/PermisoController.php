@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Permiso;
-use Illuminate\Http\Request;
 use Throwable;
 
 class PermisoController extends Controller

@@ -168,9 +168,10 @@
                     $list_permisos = [];
                     foreach ($user_permission as $row) {
                         if($row->type == 'module'){
-                            $list_permisos[] = $row->code_content;
+                            $list_permisos[] = $row->code;
                         }
                     }
+
                 @endphp
 
                 @if (count($list_permisos) > 0)
@@ -178,10 +179,10 @@
                         <div class="unfold-divider"></div>
                     </li>
                     <li>
-                        <div class="sidebar-small-cap">Administracion</div>
+                        <div class="sidebar-small-cap"> Administracion </div>
                     </li>
                 @endif
-
+               
                 @if (in_array('access_personals', $list_permisos))
                     <li>
                         <a href="{{ route('r-personal-view') }}"

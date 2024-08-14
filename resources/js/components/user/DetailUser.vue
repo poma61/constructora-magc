@@ -31,16 +31,17 @@
                     <tr>
                         <th>Todos los modulos | Acceso a las ciudades de :</th>
                         <td>
-                            <span class="tag is-info m-1" v-for="(city, index) in city_permissions" :key="index">
+                            <span class="tag is-info m-1" v-for="(city, index) in user_city_permissions" :key="index">
                                 {{ city }}
                             </span>
-                            <span class="tag is-danger m-1" v-if="city_permissions.length == 0">
+                            <span class="tag is-danger m-1" v-if="user_city_permissions.length == 0">
                                 Sin asignar ciudad.
                             </span>
                         </td>
                     </tr>
 
-                    <tr v-for="(city_group, index_city_group) in groups_permissions" :key="index_city_group">
+                    <tr v-for="(city_group, index_city_group) in user_cliente_groups_permissions"
+                        :key="index_city_group">
                         <th>
                             Modulo Cliente | {{ city_group.ciudad }} | Administra grupos:
                         </th>
@@ -60,31 +61,33 @@
                     </tr>
 
                     <tr>
-                        <th> Modulo Cliente | Acceso a los clientes registrados:</th>
+                        <th> Modulo Cliente | Registros:</th>
                         <td>
-                            <span v-if="record_permissions != null" class="tag is-info m-1">
-                                {{ record_permissions }}
+                            <span v-for="(permission, idx) in user_cliente_record_permissions" class="tag is-info m-1"
+                                :index="idx">
+                                {{ permission }}
                             </span>
 
-                            <span v-else class="tag is-danger m-1">
-                                Sin asignar registros.
-                            </span>
+                            <span  class="tag is-danger m-1" v-if="user_cliente_record_permissions.length  == 0" >
+                                Sin asignar.
+                            </span>  
+
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <th>
                             Acceso a modulos administrativos:
                         </th>
                         <td>
-                            <span class="tag is-success m-1" v-for="(module, index) in module_permissions" :key="index"
-                                :index="index">
+                            <span class="tag is-success m-1" v-for="(module, index) in user_module_permissions"
+                                :key="index" :index="index">
                                 <!-- el grupo viene de esta forma "Santa-Cruz_01" -->
                                 <!-- split => divide un string a partir de "_" y obtenemos ["Santa-Cruzz","01"] -->
                                 {{ module }}
                             </span>
 
-                            <span class="tag is-danger m-1" v-if="module_permissions.length == 0">
+                            <span class="tag is-danger m-1" v-if="user_module_permissions.length == 0">
                                 Sin asignar modulos administrativos.
                             </span>
                         </td>
@@ -134,10 +137,10 @@ export default defineComponent({
     data() {
         const change_overlay = false;
         const item_user = this.props.item_user_parent;
-        const city_permissions = [];
-        const module_permissions = [];
-        const groups_permissions = [];
-        const record_permissions = null;
+        const user_city_permissions = [];
+        const user_module_permissions = [];
+        const user_cliente_groups_permissions = [];
+        const user_cliente_record_permissions = [];
         const ciudades = [
             "Santa-Cruz",
             "Chuquisaca",
@@ -152,53 +155,57 @@ export default defineComponent({
         ];
         return {
             item_user,
-            city_permissions,
-            groups_permissions,
+            user_city_permissions,
+            user_cliente_groups_permissions,
             ciudades,
             change_overlay,
-            record_permissions,
-            module_permissions,
+            user_cliente_record_permissions,
+            user_module_permissions,
         }
     },
     setup(props, { emit }) {
         return { props, emit }
     },
     methods: {
+
         async loadUserPermission() {
             const usuario = new Usuario(this.item_user);
 
             const response = await usuario.userPermission();
             if (response.status) {
-                const permisos = response.records;
+                const user_permisos = response.records;
 
-                this.city_permissions = permisos.filter(row => row.type_content == 'cities').map(row => row.name);
-                this.module_permissions = permisos.filter(row => row.type == 'module').map(row => row.name);
-                const is_record_permissions = permisos.filter(row => row.type == 'records');
-                is_record_permissions.forEach(row => {
-                    this.record_permissions = row.name;
-                })
+                this.user_city_permissions = user_permisos.filter(row => row.type == 'cities').map(row => row.name);
+                this.user_module_permissions = user_permisos.filter(row => row.type == 'module').map(row => row.name);
 
-                //ahora agrupamos las ciudades con sus respectivos grupos
-                //filter => devuelve un array de objetos segun cumplan la condicion
+                this.user_cliente_record_permissions = user_permisos.filter(row => row.type_content == 'module_cliente_records').map(row => row.name);
+
+                // ahora agrupamos las ciudades con sus respectivos grupos
+                // filter => devuelve un array de objetos segun cumplan la condicion
                 // map => devuelve un array
-                const list_groups = permisos.filter(row => row.type_content == 'groups');
+                const user_cliente_list_groups = user_permisos.filter(row => row.type_content == 'module_cliente_groups');
                 let grupos;
                 this.ciudades.forEach(city => {
-                    //filter => devulve un array segun condicion
-                    //map => nos devulve un array
-                    grupos = list_groups.filter(item => item.code_content.includes(city)).map(item => item.code_content);
-                    this.groups_permissions.push({
+                    // filter => devulve un array segun condicion
+                    // map => nos devulve un array
+                    grupos = user_cliente_list_groups.filter(item => item.code.includes(city)).map(item => item.code);
+
+                    // ordenar el array grupos, porque puede venir desordenado
+                    grupos = grupos.sort()
+                    this.user_cliente_groups_permissions.push({
                         ciudad: city,
                         grupos: grupos,
                     });
                 });
 
-            }else{
+            } else {
                 this.emit('isSnackbarMessageView', 'error', response.message)
             }
 
         },
-    },
+
+
+    },//method
     mounted() {
         this.change_overlay = true;
         setTimeout(async () => {
@@ -209,3 +216,4 @@ export default defineComponent({
     }
 });
 </script>
+ 

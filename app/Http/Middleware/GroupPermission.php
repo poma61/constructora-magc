@@ -51,7 +51,7 @@ class GroupPermission
             
             $user_permisos = UserHasPermiso::join("permisos", 'permisos.id', '=', 'users_has_permisos.id_permiso')
                 ->select("permisos.*")
-                ->where("permisos.type_content", 'groups')
+                ->where("permisos.type", 'groups')
                 ->where("users_has_permisos.status", true)
                 ->where("users_has_permisos.id_user", Auth::user()->id)
                 ->get();
@@ -61,7 +61,7 @@ class GroupPermission
                 // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                 // Entonces debemos separar la ciudad y su correspondiente grupo
                 // obtenemos un array de esta manera ['Santa-Cruz', '02']
-                $parts = explode("_", $row->code_content);
+                $parts = explode("_", $row->code);
                 if ($parts[0] == $request_city) { // verificamos si tiene acceso a algun grupo segun la  ciudad
                     $manage_groups[] = $parts[1];
                 }

@@ -77,7 +77,7 @@ class UserController extends Controller
             //asignamos todos los permisos necesarios
             $permissions_request = $request->input('permissions');
             for ($i = 0; $i < count($permissions_request); $i++) {
-                $permiso = Permiso::where('code_content', $permissions_request[$i])
+                $permiso = Permiso::where('code', $permissions_request[$i])
                     ->first();
                 $user_has_permiso = new UserHasPermiso();
                 $user_has_permiso->id_user = $user->id;
@@ -142,9 +142,11 @@ class UserController extends Controller
 
             $permissions_request = $request->input('permissions');
             for ($i = 0; $i < count($permissions_request); $i++) {
-                //Creamos los nuevos permisos
-                $permiso = Permiso::where('code_content', $permissions_request[$i])
+                // consultamos a la base de datos para poder saber el id del permiso
+                $permiso = Permiso::where('code', $permissions_request[$i])
                     ->first();
+
+                //Creamos los nuevos permisos
                 $user_has_permiso = new UserHasPermiso();
                 $user_has_permiso->id_user = $user->id;
                 $user_has_permiso->status = true;

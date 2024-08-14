@@ -47,13 +47,13 @@ class CityPermission
         $user_permisos = UserHasPermiso::join("permisos", 'permisos.id', '=', 'users_has_permisos.id_permiso')
             ->select("permisos.*")
             ->where("users_has_permisos.status", true)
-            ->where("permisos.type_content", "cities")
+            ->where("permisos.type", "cities")
             ->where("users_has_permisos.id_user", Auth::user()->id)
             ->get();
 
         $manage_city = [];
         foreach ($user_permisos as $row) {
-            $manage_city[] = $row->code_content;
+            $manage_city[] = $row->code;
         }
 
         // in_array($request_group, $manage_groups) => si el valor de $request_group esta en el array $manage_groups entonces devuelve true

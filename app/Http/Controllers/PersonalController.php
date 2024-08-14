@@ -27,8 +27,8 @@ class PersonalController extends Controller
 
             $ciudades = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->type_content == 'cities') {
-                    $ciudades[] = $row->code_content;
+                if ($row->type == 'cities') {
+                    $ciudades[] = $row->code;
                 }
             }
 

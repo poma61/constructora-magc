@@ -17,12 +17,9 @@ class AdministrativeModulePermission
         $module_user_permissions = [];
         foreach ($user_permissions  as $row) {
             if ($row->type == 'module') {
-                $module_user_permissions[] = $row->code_content;
+                $module_user_permissions[] = $row->code;
             }
         } //foreach
-
-
-
 
         foreach ($permissions_code_content as $permission) {
 

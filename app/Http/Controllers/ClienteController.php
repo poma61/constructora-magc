@@ -32,18 +32,18 @@ class ClienteController extends Controller
 
             $ciudades = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->type_content == 'cities') {
-                    $ciudades[] = $row->code_content;
+                if ($row->type == 'cities') {
+                    $ciudades[] = $row->code;
                 }
             }
 
             $city_groups = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->type_content == 'groups') {
+                if ($row->type == 'groups') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
                     // al aplicar explode, tenemnos un array, de este tipo ['Santa-Cruz', '02']
-                    $parts = explode('_', $row->code_content);
+                    $parts = explode('_', $row->code);
 
                     $city_groups[] = [
                         "ciudad" => $parts[0],
@@ -77,11 +77,11 @@ class ClienteController extends Controller
 
             $manage_groups = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->type_content == 'groups') {
+                if ($row->type == 'groups') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
                     // al aplicar explode, tenemnos un array, de este tipo ['Santa-Cruz', '02']
-                    $parts = explode('_', $row->code_content);
+                    $parts = explode('_', $row->code);
                     if ($parts[0] == $city) {
                         $manage_groups[] = $parts[1];
                     }
@@ -89,7 +89,7 @@ class ClienteController extends Controller
             }
 
             // Ordenamos los grupos de forma ascendente
-            // porque podria haber la posibilidad de que esten desordenados [10, 02, 03, 01, 04]
+            // porque segun como asignemos los permisos, estaran desordenados y debemos ordenar [10, 02, 03, 01, 04]
             sort($manage_groups);
 
             return view('cliente/tablero-grupo-cliente-view', [
@@ -115,11 +115,11 @@ class ClienteController extends Controller
 
             $manage_groups = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->type_content == 'groups') {
+                if ($row->type == 'groups') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
                     // al aplicar explode, tenemnos un array, de este tipo ['Santa-Cruz', '02']
-                    $parts = explode('_', $row->code_content);
+                    $parts = explode('_', $row->code);
                     if ($parts[0] == $city) {
                         $manage_groups[] = $parts[1];
                     }
@@ -127,7 +127,7 @@ class ClienteController extends Controller
             }
 
             // Ordenamos los grupos de forma ascendente
-            // porque podria haber la posibilidad de que esten desordenados [10, 02, 03, 01, 04]
+            // porque segun como asignemos los permisos, estaran desordenados y debemos ordenar [10, 02, 03, 01, 04]
             sort($manage_groups);
 
             return view('cliente/grafico-grupo-cliente-view', [
@@ -153,10 +153,10 @@ class ClienteController extends Controller
 
             $manage_groups = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->type_content == 'groups') {
+                if ($row->type == 'groups') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
-                    $parts = explode('_', $row->code_content);
+                    $parts = explode('_', $row->code);
                     if ($parts[0] == $city) {
                         $manage_groups[] = $parts[1];
                     }
@@ -164,7 +164,7 @@ class ClienteController extends Controller
             }
 
             // Ordenamos los grupos de forma ascendente
-            // porque podria haber la posibilidad de que esten desordenados [10, 02, 03, 01, 04]
+            // porque segun como asignemos los permisos, estaran desordenados y debemos ordenar [10, 02, 03, 01, 04]
             sort($manage_groups);
 
             return view('cliente/calendar-grupo-cliente-view', [
@@ -191,18 +191,18 @@ class ClienteController extends Controller
 
             $manage_groups = [];
             foreach ($user_has_permiso as $row) {
-                if ($row->type_content == 'groups') {
+                if ($row->type == 'groups') {
                     // el numero de grupo viene asi Santa-Cruz_01 , Santa-Cruz_02 
                     // Entonces debemos separar la ciudad y su correspondiente grupo
                     // obtenemos un array de esta manera ['Santa-Cruz', '02']
-                    $parts = explode('_', $row->code_content);
+                    $parts = explode('_', $row->code);
                     if ($parts[0] == $city) {
                         $manage_groups[] = $parts[1];
                     }
                 }
             }
             // Ordenamos los grupos de forma ascendente
-            // porque podria haber la posibilidad de que esten desordenados [10, 02, 03, 01, 04]
+            // porque segun como asignemos los permisos, estaran desordenados y debemos ordenar [10, 02, 03, 01, 04]
             sort($manage_groups);
 
 
@@ -246,7 +246,7 @@ class ClienteController extends Controller
             $list_records_cliente_permissions = [];
             foreach ($user_permissions as $row) {
                 if ($row->type == 'records') {
-                    $list_records_cliente_permissions[] = $row->code_content;
+                    $list_records_cliente_permissions[] = $row->code;
                 }
             }
 
@@ -327,9 +327,11 @@ class ClienteController extends Controller
             $responsable->save();
 
             // Formatear la hora antes de incluirla en la respuesta JSON
-            //esto solo se debe   hacer a un update y create
+            // esto solo se debe   hacer a un update y create
             // cuando hacemos un update a la base de datos el formato de hora se vuelve asi '23:59' lo mismo pasa al hacer un create
-            //entonces '23:59', ya no es un formato de hora valido
+            // entonces '23:59', ya no es un formato de hora valido
+            // no es necesario guardar en la base de datos porque en la base de datos el formato de hora esta correcto
+            // solo para enviar al json lo formateamos la hora
             $cliente->hora_reunion = Carbon::parse($cliente->hora_reunion)->format('H:i:s');
 
 
@@ -352,44 +354,25 @@ class ClienteController extends Controller
     {
         try {
             $user_permissions = Auth::user()->onPermission();
-            $list_records_cliente_permissions = [];
+            $list_user_permissions = [];
             foreach ($user_permissions as $row) {
-                if ($row->type == 'records') {
-                    $list_records_cliente_permissions[] = $row->code_content;
-                }
+                $list_user_permissions[] = $row->code;
             }
 
             // verificar si el responsable del cliente esta editando 
-            if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
-
-                $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
-                    ->select("clientes.*")
-                    ->where('responsables.id_personal', Auth::user()->id_personal)
-                    ->where('clientes.id', $request->input('id'))
-                    ->first();
-
-                if ($cliente == null) {
-                    return response()->json([
-                        'status' => false,
-                        'records' => [],
-                        'message' => 'No tienes acceso al cliente registrado!',
-                    ], 401);
-                }
-            } elseif (in_array('all_clients_records', $list_records_cliente_permissions)) {
-
+            $cliente = null;
+            if (in_array('edit_clients_records', $list_user_permissions)) {
                 $cliente = Cliente::where('status', true)
                     ->where('id', $request->input('id'))
                     ->first();
-            } else {
-                $cliente = null;
-            }
+            } //if
 
             if ($cliente == null) {
                 return response()->json([
                     'status' => false,
                     'records' => [],
-                    'message' => 'No se encontro ningun registro!',
-                ], 404);
+                    'message' => 'Lo sentimos, pero no tienes los permisos necesarios para editar este registro!',
+                ], 401);
             }
 
             $personal = Auth::user()->onPersonal()->first();
@@ -412,6 +395,8 @@ class ClienteController extends Controller
             //esto solo se debe   hacer a un update y create
             // cuando hacemos un update a la base de datos el formato de hora se vuelve asi '23:59' lo mismo pasa al hacer un create
             //entonces '23:59', ya no es un formato de hora valido
+            // no es necesario guardar en la base de datos porque en la base de datos el formato de hora esta correcto
+            // solo para enviar al json lo formateamos la hora
             $cliente->hora_reunion = Carbon::parse($cliente->hora_reunion)->format('H:i:s');
 
 
@@ -434,43 +419,24 @@ class ClienteController extends Controller
     {
         try {
             $user_permissions = Auth::user()->onPermission();
-            $list_records_cliente_permissions = [];
+            $list_user_permissions = [];
             foreach ($user_permissions as $row) {
-                if ($row->type == 'records') {
-                    $list_records_cliente_permissions[] = $row->code_content;
-                }
+                $list_user_permissions[] = $row->code;
             }
 
-            // verificar si el responsable del cliente esta editando 
-            if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
-
-                $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
-                    ->select("clientes.*")
-                    ->where('responsables.id_personal', Auth::user()->id_personal)
-                    ->where('clientes.id', $request->input('id'))
-                    ->first();
-
-                if ($cliente == null) {
-                    return response()->json([
-                        'status' => false,
-                        'records' => [],
-                        'message' => 'No tienes acceso al cliente registrado!',
-                    ], 401);
-                }
-            } elseif (in_array('all_clients_records', $list_records_cliente_permissions)) {
-
+            // verificar si tiene permisos para eliminar registro
+            $cliente = null;
+            if (in_array('delete_clients_records', $list_user_permissions)) {
                 $cliente = Cliente::where('status', true)
                     ->where('id', $request->input('id'))
                     ->first();
-            } else {
-                $cliente = null;
             }
 
             if ($cliente == null) {
                 return response()->json([
                     'status' => false,
                     'records' => [],
-                    'message' => 'No tienes acceso a los registros!',
+                    'message' => 'Lo sentimos, pero no tienes los permisos necesarios para eliminar este registro!',
                 ], 401);
             }
 
@@ -581,7 +547,7 @@ class ClienteController extends Controller
             $list_records_cliente_permissions = [];
             foreach ($user_permissions as $row) {
                 if ($row->type == 'records') {
-                    $list_records_cliente_permissions[] = $row->code_content;
+                    $list_records_cliente_permissions[] = $row->code;
                 }
             }
             if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
@@ -641,7 +607,7 @@ class ClienteController extends Controller
         }
     }
 
-    public function  calendarMeeting(Request $request)
+    public function calendarMeeting(Request $request)
     {
         try {
             $ciudad = Ciudad::where('city_name', $request->input('ciudad'))
@@ -656,7 +622,7 @@ class ClienteController extends Controller
             $list_records_cliente_permissions = [];
             foreach ($user_permissions as $row) {
                 if ($row->type == 'records') {
-                    $list_records_cliente_permissions[] = $row->code_content;
+                    $list_records_cliente_permissions[] = $row->code;
                 }
             }
             if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
@@ -735,7 +701,7 @@ class ClienteController extends Controller
             $list_records_cliente_permissions = [];
             foreach ($user_permissions as $row) {
                 if ($row->type == 'records') {
-                    $list_records_cliente_permissions[] = $row->code_content;
+                    $list_records_cliente_permissions[] = $row->code;
                 }
             }
             if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {

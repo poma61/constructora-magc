@@ -35,7 +35,7 @@
                         style="min-width: 250px;" />
 
                     <v-text-field class="ma-1" color="cyan-darken-2" label="Ciudad" readonly v-model="item_user.ciudad"
-                         style="min-width: 250px;" />
+                        style="min-width: 250px;" />
                 </div>
 
                 <v-divider class="border-opacity-50"></v-divider>
@@ -44,9 +44,9 @@
                     <p class="text-info">Todos los modulos | Acceso a las ciudades de: </p>
                     <div class="as-flex-content-permisions">
                         <!-- renderizamos los permisos la parte de ciudades -->
-                        <v-checkbox v-for="(city, index) in list_city_permissions" :key="index"
-                            :label="city.code_content" :value="city.code_content" hide-details color="success"
-                            class="item-flex-permisions" v-model="city_permissions">
+                        <v-checkbox v-for="(city, index) in list_city_permissions" :key="index" :label="city.code"
+                            :value="city.code" hide-details color="success" class="item-flex-permisions"
+                            v-model="user_city_permissions">
                         </v-checkbox>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
 
                 <div class="mx-2">
                     <!-- renderizamos los permisos la parte de grupos -->
-                    <div v-for="(ciudad_grupo, index) in list_groups_permissions" :key="index">
+                    <div v-for="(ciudad_grupo, index) in list_cliente_groups_permissions" :key="index">
                         <p class="text-info">Modulo Cliente | {{ ciudad_grupo.ciudad }} | Administra grupos:</p>
                         <div class="as-flex-content-permisions">
                             <!-- el grupo viene de esta forma "Santa-Cruz_01" -->
@@ -63,8 +63,8 @@
                             <v-switch v-for="(grupo, grupo_index) in ciudad_grupo.grupos" :key="grupo_index"
                                 :label="grupo.split('_')[1]" :value="grupo" class="item-flex-permisions" color="success"
                                 hide-details inset
-                                :disabled="city_permissions.includes(ciudad_grupo.ciudad) ? false : true"
-                                v-model="groups_permissions">
+                                :disabled="user_city_permissions.includes(ciudad_grupo.ciudad) ? false : true"
+                                v-model="user_cliente_groups_permissions">
                             </v-switch>
                         </div>
                     </div>
@@ -72,12 +72,14 @@
 
                 <v-divider class="border-opacity-50"></v-divider>
                 <div class="mx-2">
-                    <p class="text-info">Modulo Cliente | Acceso a los clientes registrados: </p>
-                    <v-radio-group v-model="record_permissions" inline>
-                        <v-radio v-for="(record, index) in list_records_permissions" :key="index" :label="record.name"
-                            :value="record.code_content" color="cyan-darken-2"></v-radio>
-                    </v-radio-group>
-                </div>
+                    <p class="text-info">Modulo Cliente | Registros: </p>
+                    <div class="as-flex-content-permisions">
+                        <v-switch v-for="(record, index) in list_cliente_records_permissions" :key="index"
+                            :label="record.name" :value="record.code" hide-details color="cyan-darken-2"
+                            v-model="user_cliente_record_permissions"  class="item-flex-permisions"
+                            style = "min-width: 300px;" />
+                    </div>
+                </div> 
 
                 <v-divider class="border-opacity-50"></v-divider>
 
@@ -86,13 +88,13 @@
                     <div class="as-flex-content-permisions">
                         <!-- renderizamos los permisos la parte de ciudades -->
                         <v-switch v-for="(row, index) in list_modules_permissions" :key="index" :label="row.name"
-                            :value="row.code_content" hide-details color="success" class="item-flex-permisions"
-                            v-model="module_permissions">
+                            :value="row.code" hide-details color="success" class="item-flex-permisions"
+                            v-model="user_module_permissions">
                         </v-switch>
                     </div>
                 </div>
 
-                <!-- permisos -->
+                <!-- Aclaracion de todos los permisos -->
                 <v-divider class="border-opacity-50"></v-divider>
                 <div class="mx-2">
                     <p class="text-info">Todos los usuarios tiene acceso por defecto a los modulos: </p>
@@ -147,31 +149,31 @@ export default defineComponent({
         const show = false;
         const ci = "";
         const change_search_personal = null;
-        const groups_permissions = [];
-        const city_permissions = [];
+        const user_cliente_groups_permissions = [];
+        const user_city_permissions = [];
         const list_city_permissions = [];
-        const list_groups_permissions = [];
+        const list_cliente_groups_permissions = [];
         const item_user = this.props.item_user_parent;
         const message_errors_field = {};
         const list_modules_permissions = [];
-        const list_records_permissions = [];
-        const module_permissions = [];
-        const record_permissions = null;
+        const list_cliente_records_permissions = [];
+        const user_module_permissions = [];
+        const user_cliente_record_permissions = [];
         return {
             show,
             ci,
             change_search_personal,
             list_city_permissions,
-            list_groups_permissions,
+            list_cliente_groups_permissions,
             list_modules_permissions,
-            list_records_permissions,
-            groups_permissions,
-            city_permissions,
-            module_permissions,
+            list_cliente_records_permissions,
+            user_cliente_groups_permissions,
+            user_city_permissions,
+            user_module_permissions,
             item_user,
             message_errors_field,
             change_overlay,
-            record_permissions,
+            user_cliente_record_permissions,
         }
     },//data
 
@@ -217,22 +219,28 @@ export default defineComponent({
             const response = await permiso.index();
             if (response.status) {
                 const list_permisos = response.records;
-                // Filtrar solo los elementos de tipo "all_module", para permisos de ciudad de todos los modulos
-                this.list_city_permissions = list_permisos.filter(row => row.type == 'all_module');
+                // Filtrar solo los elementos de tipo "cities", para permisos de ciudad de todos los modulos
+                this.list_city_permissions = list_permisos.filter(row => row.type == 'cities');
 
                 //filtrar elementos de tipo module, para permisos de modulo
                 this.list_modules_permissions = list_permisos.filter(row => row.type == "module")
 
-                //filtrar elementos de tipo module, para permisos de modulo
-                this.list_records_permissions = list_permisos.filter(row => row.type == "records")
+                //filtrar elementos de tipo module_cliente_records
+                this.list_cliente_records_permissions = list_permisos.filter(row => row.type_content == "module_cliente_records")
 
-                //filtrar elementos de tipo module_cliente, para permisos de grupos
-                const list_groups = list_permisos.filter(row => row.type == 'module_cliente');
-                const list_ciudades = this.list_city_permissions.map(row => row.code_content);
+                //filtrar elementos de tipo module_cliente_groups, para permisos de grupos en el modulo cliente
+                const list_cliente_groups = list_permisos.filter(row => row.type_content == 'module_cliente_groups');
+
+
                 //ahora agrupamos las ciudades con sus respectivos grupos
-                list_ciudades.forEach(city => {
-                    const grupos = list_groups.filter(item => item.code_content.includes(city)).map(item => item.code_content);
-                    this.list_groups_permissions.push({
+                const ciudades = this.list_city_permissions.map(row => row.code);
+                ciudades.forEach(city => {
+                    // 'includes' verifica si la cadena city está presente dentro de la cadena code.
+                    // El método .map() en JavaScript se utiliza para transformar cada elemento de un array y crear
+                    // un nuevo array con los resultados de esa transformación
+                    const grupos = list_cliente_groups.filter(item => item.code.includes(city)).map(item => item.code);
+
+                    this.list_cliente_groups_permissions.push({
                         ciudad: city,
                         grupos: grupos,
                     });
@@ -248,13 +256,12 @@ export default defineComponent({
             const usuario = new Usuario();
             usuario.setFill(this.item_user);
             const all_permissions = [
-                ...this.city_permissions,
-                ...this.groups_permissions,
-                ...this.module_permissions,
+                ...this.user_city_permissions,
+                ...this.user_cliente_groups_permissions,
+                ...this.user_module_permissions,
+                ...this.user_cliente_record_permissions,
             ];
-            if (this.record_permissions != null) {
-                all_permissions.push(this.record_permissions);
-            }
+
             usuario.setParameter({
                 permissions: all_permissions
             });
@@ -297,19 +304,22 @@ export default defineComponent({
             const usuario = new Usuario(this.item_user);
 
             const response = await usuario.userPermission();
-            if (response.status) {
+
+            if (response.status) { 
                 const permisos = response.records;
-     
-                //filter => objetos segun condicion
-                //map => nos devulve un array
-                this.city_permissions = permisos.filter(row => row.type_content == 'cities').map(row => row.code_content);
-                this.groups_permissions = permisos.filter(row => row.type_content == 'groups').map(row => row.code_content);
-                this.module_permissions = permisos.filter(row => row.type == 'module').map(row => row.code_content);
-                const is_record_permissions = permisos.filter(row => row.type == 'records');
-                is_record_permissions.forEach(row => {
-                    this.record_permissions = row.code_content;
-                })
-            }else{
+
+                // filter => objetos segun condicion
+                // map => nos devulve un array
+                // filtrar cities para ver si tiene acceso a todos los modulos
+                this.user_city_permissions = permisos.filter(row => row.type == 'cities').map(row => row.code);
+                this.user_module_permissions = permisos.filter(row => row.type == 'module').map(row => row.code);
+
+                this.user_cliente_groups_permissions = permisos.filter(row => row.type_content == 'module_cliente_groups').map(row => row.code);
+
+                this.user_cliente_record_permissions = permisos.filter(row => row.type_content == 'module_cliente_records').map(row => row.code);
+                
+
+            } else {
                 this.emit('isSnackbarMessageView', 'error', response.message)
             }
         },
@@ -319,23 +329,24 @@ export default defineComponent({
     watch: {
         // verifica si el usuario ha selecciona una ciudad
         // en group_permissions solo debe de haber los grupos de las ciudades habilitadas por el usuario
-        city_permissions(new_value, old_value) {
+        user_city_permissions(new_value, old_value) {
             let copy_groups_permissions = [];
             new_value.forEach(city => {
-                // ise con el metodo filter para filtrar por ciudad, NO funciona ( this.groups_permissions.filter() )
+                // ise con el metodo filter para filtrar por ciudad, NO funciona ( this.user_cliente_groups_permissions.filter() )
                 // porque el orden de iteracion segun el valor de city  y crea un copy_groups_permissions solo para un ciudad 
-                for (let i = 0; i < this.groups_permissions.length; i++) {
-                    if (this.groups_permissions[i].includes(city)) {
-                        copy_groups_permissions.push(this.groups_permissions[i]);
+                for (let i = 0; i < this.user_cliente_groups_permissions.length; i++) {
+                    if (this.user_cliente_groups_permissions[i].includes(city)) {
+                        copy_groups_permissions.push(this.user_cliente_groups_permissions[i]);
                     }
                 }
             });
-            this.groups_permissions = copy_groups_permissions;
+            this.user_cliente_groups_permissions = copy_groups_permissions;
 
         }
     },
     async mounted() {
         this.change_overlay = true;
+
         setTimeout(async () => {
             await this.listPermissions();
             //cuando es update listamos los permisos de usuarios
@@ -359,6 +370,6 @@ export default defineComponent({
 
 .as-flex-content-permisions .item-flex-permisions {
     flex-grow: 0;
-    margin: 10px 5px
+    margin: 10px 5px;
 }
 </style>
