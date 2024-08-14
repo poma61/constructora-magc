@@ -250,7 +250,7 @@ class ClienteController extends Controller
                 }
             }
 
-            if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
+            if (in_array('reading_responsable_records_clients', $list_records_cliente_permissions)) {
 
                 $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
                     ->select("clientes.*")
@@ -265,13 +265,13 @@ class ClienteController extends Controller
                         }
                     )
                     ->get();
-            } elseif (in_array('all_clients_records', $list_records_cliente_permissions)) {
+            } elseif (in_array('reading_all_records_clients', $list_records_cliente_permissions)) {
 
                 $cliente = Cliente::where('status', true)
                     ->where('id_grupo', $grupo->id)
                     ->whereYear('fecha_reunion', $request->input('year'))
                     ->when(
-                        $request->input('month') != 'todos',
+                        $request->input('month') != 'todos',// si la expresion es verdadero aplica la funcion query
                         function ($query) use ($meses, $request) {
                             return $query->whereMonth('fecha_reunion', $meses[$request->input('month')]);
                         }
@@ -550,7 +550,7 @@ class ClienteController extends Controller
                     $list_records_cliente_permissions[] = $row->code;
                 }
             }
-            if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
+            if (in_array('reading_responsable_records_clients', $list_records_cliente_permissions)) {
 
                 $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
                     ->select('clientes.estado', DB::raw('COUNT(clientes.estado) as total'))
@@ -566,7 +566,7 @@ class ClienteController extends Controller
                     )
                     ->groupBy('clientes.estado')
                     ->get();
-            } elseif (in_array('all_clients_records', $list_records_cliente_permissions)) {
+            } elseif (in_array('reading_all_records_clients', $list_records_cliente_permissions)) {
 
                 $cliente = Cliente::select('estado', DB::raw('COUNT(estado) as total'))
                     ->where('id_grupo', $grupo->id)
@@ -625,7 +625,7 @@ class ClienteController extends Controller
                     $list_records_cliente_permissions[] = $row->code;
                 }
             }
-            if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
+            if (in_array('reading_responsable_records_clients', $list_records_cliente_permissions)) {
 
                 $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
                     ->select(
@@ -639,7 +639,7 @@ class ClienteController extends Controller
                     ->where('responsables.id_personal', Auth::user()->id_personal)
                     ->where('clientes.status', true)
                     ->get();
-            } elseif (in_array('all_clients_records', $list_records_cliente_permissions)) {
+            } elseif (in_array('reading_all_records_clients', $list_records_cliente_permissions)) {
 
                 $cliente = Cliente::select('nombres', 'apellido_paterno', 'apellido_materno', 'hora_reunion', 'fecha_reunion')
                     ->where('id_grupo', $grupo->id)
@@ -704,7 +704,7 @@ class ClienteController extends Controller
                     $list_records_cliente_permissions[] = $row->code;
                 }
             }
-            if (in_array('responsable_clients_records', $list_records_cliente_permissions)) {
+            if (in_array('reading_responsable_records_clients', $list_records_cliente_permissions)) {
 
                 $cliente = Cliente::join('responsables', 'responsables.id_cliente', '=', 'clientes.id')
                     ->select(
@@ -725,7 +725,7 @@ class ClienteController extends Controller
                         }
                     )
                     ->get();
-            } elseif (in_array('all_clients_records', $list_records_cliente_permissions)) {
+            } elseif (in_array('reading_all_records_clients', $list_records_cliente_permissions)) {
 
                 $cliente = Cliente::select('nombres', 'apellido_paterno', 'apellido_materno', 'fecha_reunion', 'hora_reunion')
                     ->where('id_grupo', $grupo->id)

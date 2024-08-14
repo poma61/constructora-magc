@@ -44,7 +44,7 @@
                     <p class="text-info">Todos los modulos | Acceso a las ciudades de: </p>
                     <div class="as-flex-content-permisions">
                         <!-- renderizamos los permisos la parte de ciudades -->
-                        <v-checkbox v-for="(city, index) in list_city_permissions" :key="index" :label="city.code"
+                        <v-checkbox v-for="(city, idx) in list_city_permissions" :key="idx" :label="city.code"
                             :value="city.code" hide-details color="success" class="item-flex-permisions"
                             v-model="user_city_permissions">
                         </v-checkbox>
@@ -55,7 +55,7 @@
 
                 <div class="mx-2">
                     <!-- renderizamos los permisos la parte de grupos -->
-                    <div v-for="(ciudad_grupo, index) in list_cliente_groups_permissions" :key="index">
+                    <div v-for="(ciudad_grupo, idx) in list_cliente_groups_permissions" :key="idx">
                         <p class="text-info">Modulo Cliente | {{ ciudad_grupo.ciudad }} | Administra grupos:</p>
                         <div class="as-flex-content-permisions">
                             <!-- el grupo viene de esta forma "Santa-Cruz_01" -->
@@ -71,12 +71,21 @@
                 </div>
 
                 <v-divider class="border-opacity-50"></v-divider>
+
                 <div class="mx-2">
                     <p class="text-info">Modulo Cliente | Registros: </p>
-                    <v-switch v-for="(record, index) in list_cliente_records_permissions" :key="index"
-                        :label="record.name" :value="record.code" hide-details color="cyan-darken-2"
-                        v-model="user_cliente_record_permissions" />
 
+                    <div style="width: fit-content; height: 83px">
+                        <v-radio-group v-model="user_cliente_records_reading_permissions" >
+                            <v-radio v-for="(row, idx) in list_cliente_records_reading_permissions" :label="row.name"
+                                :value="row.code" color="cyan-darken-2" :key="idx" />
+                        </v-radio-group>
+                    </div>
+                    <div style="width: fit-content; margin-left: 10px;">
+                        <v-switch v-for="(row, idx) in list_cliente_records_actions_permissions" :key="idx"
+                            :label="row.name" :value="row.code" hide-details color="cyan-darken-2"
+                            v-model="user_cliente_records_actions_permissions"/>
+                    </div>
                 </div>
 
                 <v-divider class="border-opacity-50"></v-divider>
@@ -85,7 +94,7 @@
                     <p class="text-info">Modulo administrativo: </p>
                     <div class="as-flex-content-permisions">
                         <!-- renderizamos los permisos la parte de ciudades -->
-                        <v-switch v-for="(row, index) in list_modules_permissions" :key="index" :label="row.name"
+                        <v-switch v-for="(row, idx) in list_modules_permissions" :key="idx" :label="row.name"
                             :value="row.code" hide-details color="success" class="item-flex-permisions"
                             v-model="user_module_permissions">
                         </v-switch>
@@ -154,9 +163,11 @@ export default defineComponent({
         const item_user = this.props.item_user_parent;
         const message_errors_field = {};
         const list_modules_permissions = [];
-        const list_cliente_records_permissions = [];
+        const list_cliente_records_actions_permissions = [];
+        const list_cliente_records_reading_permissions = [];
         const user_module_permissions = [];
-        const user_cliente_record_permissions = [];
+        const user_cliente_records_actions_permissions = [];
+        const user_cliente_records_reading_permissions = null;
         return {
             show,
             ci,
@@ -164,14 +175,16 @@ export default defineComponent({
             list_city_permissions,
             list_cliente_groups_permissions,
             list_modules_permissions,
-            list_cliente_records_permissions,
+            list_cliente_records_actions_permissions,
+            list_cliente_records_reading_permissions,
             user_cliente_groups_permissions,
             user_city_permissions,
             user_module_permissions,
             item_user,
             message_errors_field,
             change_overlay,
-            user_cliente_record_permissions,
+            user_cliente_records_actions_permissions,
+            user_cliente_records_reading_permissions,
         }
     },//data
 
@@ -223,8 +236,9 @@ export default defineComponent({
                 //filtrar elementos de tipo module, para permisos de modulo
                 this.list_modules_permissions = list_permisos.filter(row => row.type == "module")
 
-                //filtrar elementos de tipo module_cliente_records
-                this.list_cliente_records_permissions = list_permisos.filter(row => row.type_content == "module_cliente_records")
+                //filtrar
+                this.list_cliente_records_actions_permissions = list_permisos.filter(row => row.type_content == "cliente_module_records_actions")
+                this.list_cliente_records_reading_permissions = list_permisos.filter(row => row.type_content == "cliente_module_records_reading")
 
                 //filtrar elementos de tipo module_cliente_groups, para permisos de grupos en el modulo cliente
                 const list_cliente_groups = list_permisos.filter(row => row.type_content == 'module_cliente_groups');
@@ -257,8 +271,11 @@ export default defineComponent({
                 ...this.user_city_permissions,
                 ...this.user_cliente_groups_permissions,
                 ...this.user_module_permissions,
-                ...this.user_cliente_record_permissions,
+                ...this.user_cliente_records_actions_permissions,
             ];
+
+            // agregar el permiso de lectura de datos
+            all_permissions.push(this.user_cliente_records_reading_permissions)
 
             usuario.setParameter({
                 permissions: all_permissions
@@ -314,8 +331,12 @@ export default defineComponent({
 
                 this.user_cliente_groups_permissions = permisos.filter(row => row.type_content == 'module_cliente_groups').map(row => row.code);
 
-                this.user_cliente_record_permissions = permisos.filter(row => row.type_content == 'module_cliente_records').map(row => row.code);
+                this.user_cliente_records_actions_permissions = permisos.filter(row => row.type_content == 'cliente_module_records_actions').map(row => row.code);
 
+                const is_user_cliente_records_reading_permissions = permisos.filter(row => row.type_content == 'cliente_module_records_reading').map(row => row.code);
+                is_user_cliente_records_reading_permissions.forEach(row=>{
+                    this.user_cliente_records_reading_permissions =  row;
+                })
 
             } else {
                 this.emit('isSnackbarMessageView', 'error', response.message)
@@ -340,8 +361,10 @@ export default defineComponent({
             });
             this.user_cliente_groups_permissions = copy_groups_permissions;
 
-        }
-    },
+        },
+
+    }, // watch
+
     async mounted() {
         this.change_overlay = true;
 
