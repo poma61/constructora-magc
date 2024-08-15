@@ -76,7 +76,7 @@
                     <p class="text-info">Modulo Cliente | Registros: </p>
 
                     <div style="width: fit-content; height: 83px">
-                        <v-radio-group v-model="user_cliente_records_reading_permissions" >
+                        <v-radio-group v-model="user_cliente_records_reading_permissions">
                             <v-radio v-for="(row, idx) in list_cliente_records_reading_permissions" :label="row.name"
                                 :value="row.code" color="cyan-darken-2" :key="idx" />
                         </v-radio-group>
@@ -84,7 +84,7 @@
                     <div style="width: fit-content; margin-left: 10px;">
                         <v-switch v-for="(row, idx) in list_cliente_records_actions_permissions" :key="idx"
                             :label="row.name" :value="row.code" hide-details color="cyan-darken-2"
-                            v-model="user_cliente_records_actions_permissions"/>
+                            v-model="user_cliente_records_actions_permissions" />
                     </div>
                 </div>
 
@@ -274,8 +274,11 @@ export default defineComponent({
                 ...this.user_cliente_records_actions_permissions,
             ];
 
-            // agregar el permiso de lectura de datos
-            all_permissions.push(this.user_cliente_records_reading_permissions)
+            // agregar el permiso de lectura de datos solo si no esta null
+            // si enviamos null habra error en el backend
+            if (this.user_cliente_records_reading_permissions != null) {
+                all_permissions.push(this.user_cliente_records_reading_permissions)
+            }
 
             usuario.setParameter({
                 permissions: all_permissions
@@ -334,8 +337,8 @@ export default defineComponent({
                 this.user_cliente_records_actions_permissions = permisos.filter(row => row.type_content == 'cliente_module_records_actions').map(row => row.code);
 
                 const is_user_cliente_records_reading_permissions = permisos.filter(row => row.type_content == 'cliente_module_records_reading').map(row => row.code);
-                is_user_cliente_records_reading_permissions.forEach(row=>{
-                    this.user_cliente_records_reading_permissions =  row;
+                is_user_cliente_records_reading_permissions.forEach(row => {
+                    this.user_cliente_records_reading_permissions = row;
                 })
 
             } else {
