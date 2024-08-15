@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
-use App\Models\Ciudad;
 use App\Models\Permiso;
 use App\Models\User;
 use App\Models\UserHasPermiso;
@@ -33,6 +32,7 @@ class UserController extends Controller
                     ->select('users.*', 'personals.nombres', 'personals.apellido_paterno', 'personals.apellido_materno', 'ciudades.city_name as ciudad')
                     ->where('personals.status', true)
                     ->where('users.status', true)
+                    ->where('users.usuario', '<>', 'system')
                     ->get();
 
                 return response()->json([
@@ -47,6 +47,7 @@ class UserController extends Controller
                     ->where('ciudades.city_name', $city)
                     ->where('personals.status', true)
                     ->where('users.status', true)
+                    ->where('users.usuario', '<>', 'system')
                     ->get();
                 return response()->json([
                     'records' => $user,

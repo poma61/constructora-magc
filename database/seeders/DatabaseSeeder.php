@@ -301,11 +301,11 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         // // Asigamos permisos a usuarios
-        // UserHasPermiso::insert([
-        //     ["id_user" => 1, "id_permiso" => 115, "status" => true],
-        //     ["id_user" => 1, "id_permiso" => 116, "status" => true],
-        // ]);
+        UserHasPermiso::insert([
+            ["id_user" => 1, "id_permiso" => 115, "status" => true],
+            ["id_user" => 1, "id_permiso" => 116, "status" => true],
+        ]);
     }
 }//class
 
-// NOTA: no se puede hacer un seeder en una app en produccion
+// NOTA: no se puede hacer un seeder en una app en produccion y si se hacer se debe verificar que datos son 

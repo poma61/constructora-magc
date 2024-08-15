@@ -68,9 +68,9 @@
                                 {{ permission }}
                             </span>
 
-                            <span  class="tag is-danger m-1" v-if="user_cliente_record_permissions.length  == 0" >
+                            <span class="tag is-danger m-1" v-if="user_cliente_record_permissions.length == 0">
                                 Sin asignar.
-                            </span>  
+                            </span>
 
                         </td>
                     </tr>
@@ -178,7 +178,9 @@ export default defineComponent({
                 this.user_city_permissions = user_permisos.filter(row => row.type == 'cities').map(row => row.name);
                 this.user_module_permissions = user_permisos.filter(row => row.type == 'module').map(row => row.name);
 
-                this.user_cliente_record_permissions = user_permisos.filter(row => row.type_content == 'module_cliente_records').map(row => row.name);
+                this.user_cliente_record_permissions = user_permisos.filter(
+                    row => row.type_content == 'cliente_module_records_actions' || row.type_content == 'cliente_module_records_reading'
+                ).map(row => row.name);
 
                 // ahora agrupamos las ciudades con sus respectivos grupos
                 // filter => devuelve un array de objetos segun cumplan la condicion
@@ -216,4 +218,3 @@ export default defineComponent({
     }
 });
 </script>
- 

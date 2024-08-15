@@ -8,6 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
+        /*
+        Parece una relacion de muchos a muchos en responsables y clientes
+        Pero en si la tabla responsables es la tabla extra 'clientes_has_personals', 
+        Donde un cliente puede tener muchas personas responsables y una persona es responsable de muchos clientes,
+        Entonces la tabla extra es clientes_has_personals, pero lo nombramos responsables
+        */
+
         Schema::create('responsables', function (Blueprint $table) {
             $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
             $table->id();

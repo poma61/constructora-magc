@@ -13,16 +13,8 @@ use App\Http\Controllers\FinanzasDeConstruccionController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\CCDController;
 use App\Http\Controllers\PermisoController;
-
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Facades\Artisan;
-
-// en un hosting muchas veces no se puede ejecutar php artisan
-// para generar storage link en un hosting se puede hacer desde una peticion get
-Route::get('/storage-link', function () {
-    // Ejecutar el comando de enlace simbólico
-    Artisan::call('storage:link');
-    return 'Enlace simbólico creado correctamente';
-});
 
 
 //middleware('guest') si el usuario esta autenticado no permite que el usuario acceda a la vista login
@@ -251,9 +243,19 @@ Route::group(['middleware' => ['auth', 'updating.mode' ]], function () {
 Route::get('/operacion/ccd', [CCDController::class, 'index'])->middleware(['auth', 'updating.mode' ])->name('r-ccd-operation');
 
 
+// //CUIDADO!!
 // // ESTE codigo fue comentado por razones de seguridad
 // Route::get('/seed-database', function () {
 //     $seeder = new DatabaseSeeder(); // Crea una instancia del seeder
 //     $seeder->run(); // Ejecuta el seeder
 //     return  response("Database seeded successfully!");
+// });
+
+
+// // en un hosting muchas veces no se puede ejecutar php artisan
+// // para generar storage link en un hosting se puede hacer desde una peticion get
+// Route::get('/storage-link', function () {
+//     // Ejecutar el comando de enlace simbólico
+//     Artisan::call('storage:link');
+//     return 'Enlace simbólico creado correctamente';
 // });

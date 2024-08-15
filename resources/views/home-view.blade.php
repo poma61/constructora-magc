@@ -17,7 +17,7 @@
                 <div class="tile is-vertical is-8">
                     <div class="tile">
                         <div class="tile is-parent is-vertical">
-                            <article class="tile is-child notification is-link">
+                            <article class="tile is-child notification has-background-primary">
                                 <p class="title">Vision</p>
                                 <div class="content">
                                     <p>
@@ -27,7 +27,7 @@
                                     </p>
                                 </div>
                             </article>
-                            <article class="tile is-child notification is-link">
+                            <article class="tile is-child notification has-background-primary">
                                 <p class="title">Mision</p>
                                 <div class="content">
                                     <p>
@@ -41,7 +41,7 @@
                             </article>
                         </div>
                         <div class="tile is-parent">
-                            <article class="tile is-child notification is-link">
+                            <article class="tile is-child notification has-background-primary">
                                 <p class="title">¿Quienes somos?</p>
                                 <div class="content">
                                     <p>
