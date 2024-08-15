@@ -4,6 +4,13 @@ use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
 return [
+    
+    /**
+     * Verifica si el sistema esta en modo actualizacion
+     * */ 
+
+    'system_is_updating' =>(bool) env('SYSTEM_IS_UPDATING', false), 
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -14,7 +21,7 @@ return [
     | any other location as required by the application or its packages.
     |
     */
-
+      
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

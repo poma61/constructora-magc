@@ -7,22 +7,15 @@ use Illuminate\Http\Request;
 
 class Authenticate extends Middleware
 {
-    /**
-     * Get the path the user should be redirected to when they are not authenticated.
-     */
-    protected function redirectTo(Request $request): ?string
+
+    protected function redirectTo(Request $request)
     {
-        
-        //si el usuaripo no esta autenticado redireccionamos a la siguiente pagina
+        // si quieres personalizar el mensaje de error
+        // ir a la ruta y modificar Illuminate/Auth/Middleware/Authenticate
+        // Unauthenticated. = No autenticado.
+
+        //si el usuario no esta autenticado redireccionamos a la siguiente ruta route('r-view-login')
         return $request->expectsJson() ? null : route('r-view-login');
-
-        // if ($request->is('api/*')) {
-        //     if ($token = $request->cookie('cookie_auth_token')) {
-
-        //         $request->headers->set('Authorization', 'Bearer ' . $token);
-        //         $request->headers->set("Accept", "application/json");
-        //     }
-        // }
-
+       
     }
 }

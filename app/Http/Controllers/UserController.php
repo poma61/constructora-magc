@@ -132,7 +132,7 @@ class UserController extends Controller
             $user->update();
 
 
-            // Eliminamos visualmente todos los permisos actualizando el status (status => indica si el registro fue elinminado)
+            // Eliminamos  todos los permisos actualizando el status (status => indica si el registro fue eliminado)
             // Los datos de la base de datos no se deben eliminar  por buenas praticas de sistemas
             UserHasPermiso::join('permisos', 'permisos.id', '=', 'users_has_permisos.id_permiso')
                 ->select('permisos.*')

@@ -14,15 +14,13 @@ use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\CCDController;
 use App\Http\Controllers\PermisoController;
 
-use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Facades\Artisan;
 
 // en un hosting muchas veces no se puede ejecutar php artisan
 // para generar storage link en un hosting se puede hacer desde una peticion get
 Route::get('/storage-link', function () {
     // Ejecutar el comando de enlace simbólico
-Artisan::call('storage:link');
-    
+    Artisan::call('storage:link');
     return 'Enlace simbólico creado correctamente';
 });
 
@@ -30,12 +28,25 @@ Artisan::call('storage:link');
 //middleware('guest') si el usuario esta autenticado no permite que el usuario acceda a la vista login
 //entonces esto redirige a la vista principal donde se configura en la siguiente ruta del archivo php
 //app/Providers/RouteServiceProvider.php
-Route::get('/', [AuthController::class, 'index'])->name('r-view-login')->middleware('guest');
+Route::get('/', function () {
+    $system_is_updating = config('app.system_is_updating');
+    if ($system_is_updating) {
+        // Si el sistema está en actualización, mostramos la vista de mantenimiento
+        return view('updating/system-update');
+    } else {
+        return app(AuthController::class)->index();
+    }
+})->name('r-view-login')->middleware('guest');
+
+// No es necesario el  middleware 'updating.mode' porque por mas que el sistema de deja hacer login
+// te bota, porque todas las rutas tienen el middlware 'updating.mode'
+// aunque si colocamos el middlware 'updating.mode' es innecesario
 Route::post('/login', [AuthController::class, 'login'])->name("r-login");
 
 //auth
-Route::group(['middleware' => ['auth']], function () {
-    Route::get("/salir", [AuthController::class, 'logout'])->name("r-salir");
+// para salir del sistema no es ncesari aplicar el middleware 'updating.mode' , porque se esta saaliendo del sistema
+Route::get("/salir", [AuthController::class, 'logout'])->name("r-salir")->middleware('auth');
+Route::group(['middleware' => ['auth', 'updating.mode' ]], function () {
     Route::get("/me", [AuthController::class, 'viewMe'])->name("r-me");
     Route::post("/microservice/auth/me", [AuthController::class, 'me']);
     Route::put("/microservice/auth/update-credentials-me", [AuthController::class, 'updateCredentials']);
@@ -43,16 +54,17 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 //home
-Route::get("/home", [HomeController::class, 'index'])->name("r-home")->middleware("auth");
+Route::get("/home", [HomeController::class, 'index'])->name("r-home")->middleware(["auth", "updating.mode"]);
 
 //personal
-Route::group(['middleware' => ['auth', 'module.administrative.permissions:access_personals']], function () {
+Route::group(['middleware' => ['auth', 'module.administrative.permissions:access_personals', 'updating.mode']], function () {
     Route::get('/personal/view', [PersonalController::class, 'ciudadView'])->name("r-personal-view");
-    //para buscar personal
-    //no necesita el middleware para validar ciudad 
+    // para buscar personal
+    // no necesita el middleware para validar ciudad, porque esta ruta se ejecuta cada vez que queremos crear un usuario
+    // y los usuarios ya no estan separados por ciudades 
     Route::post('/microservice/personal/buscar-personal-registrado', [PersonalController::class, 'searchByCi']);
 });
-Route::group(['middleware' => ['auth', 'city.permissions', 'module.administrative.permissions:access_personals']], function () {
+Route::group(['middleware' => ['auth', 'city.permissions', 'module.administrative.permissions:access_personals', 'updating.mode']], function () {
     Route::get('/personal/tablero/{ciudad}', [PersonalController::class, 'indexView'])->name("r-tablero-personal-view");
     Route::post('/microservice/personal/index', [PersonalController::class, 'index']);
     Route::post('/microservice/personal/create', [PersonalController::class, 'create']);
@@ -63,7 +75,7 @@ Route::group(['middleware' => ['auth', 'city.permissions', 'module.administrativ
 
 
 //user
-Route::group(['middleware' => ['auth', 'module.administrative.permissions:access_users',]], function () {
+Route::group(['middleware' => ['auth', 'module.administrative.permissions:access_users','updating.mode' ]], function () {
     Route::get('/user/view', [UserController::class, 'indexView'])->name('r-user-view');
     Route::post('/microservice/user/index', [UserController::class, 'index']);
     Route::post('/microservice/user/create', [UserController::class, 'create']);
@@ -73,15 +85,15 @@ Route::group(['middleware' => ['auth', 'module.administrative.permissions:access
 });
 
 //permisos
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth','updating.mode' ]], function () {
     Route::post('/microservice/permiso/list', [PermisoController::class, 'index']);
 });
 
 //clientes
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth','updating.mode' ]], function () {
     Route::get('/cliente/view', [ClienteController::class, 'indexView'])->name('r-cliente-index-view');
 });
-Route::group(['middleware' => ['auth', 'city.permissions', 'group.permissions']], function () {
+Route::group(['middleware' => ['auth', 'city.permissions', 'group.permissions', 'updating.mode' ]], function () {
     //vistas
     Route::get('/cliente/tablero/{ciudad}/{grupo}', [ClienteController::class, 'tableroView'])->name('r-tablero-cliente-grupo-view');
     Route::get('/cliente/grafico/{ciudad}/{grupo}', [ClienteController::class, 'graficoView'])->name('r-grafico-cliente-grupo-view');
@@ -101,8 +113,8 @@ Route::group(['middleware' => ['auth', 'city.permissions', 'group.permissions']]
 });
 
 //Contratos
-Route::get('/contrato/ciudad', [ContratoController::class, 'viewCiudad'])->middleware('auth')->name('r-ciudad-contrato');
-Route::group(['middleware' => ['auth', 'city.permissions']], function () {
+Route::get('/contrato/ciudad', [ContratoController::class, 'viewCiudad'])->middleware(['auth','updating.mode' ])->name('r-ciudad-contrato');
+Route::group(['middleware' => ['auth', 'city.permissions','updating.mode' ]], function () {
     //vistas
     Route::get('/contrato/tablero/{ciudad}', [ContratoController::class, 'viewTablero'])->name('r-tablero-contrato');
     Route::get('/contrato/calendario/{ciudad}', [ContratoController::class, 'viewCalendario'])->name('r-calendario-contrato');
@@ -122,8 +134,8 @@ Route::group(['middleware' => ['auth', 'city.permissions']], function () {
 
 
 //control de obras
-Route::get('/control-de-obra/ciudad', [ObraController::class, 'viewCiudad'])->middleware('auth')->name('r-ciudad-control-de-obra');
-Route::group(['middleware' => ['auth', 'city.permissions']], function () {
+Route::get('/control-de-obra/ciudad', [ObraController::class, 'viewCiudad'])->middleware(['auth', 'updating.mode' ])->name('r-ciudad-control-de-obra');
+Route::group(['middleware' => ['auth', 'city.permissions', 'updating.mode' ]], function () {
     //vistas
     Route::get('/control-de-obra/tablero/{ciudad}', [ObraController::class, 'viewTablero'])->name('r-tablero-control-de-obra');
     Route::get('/control-de-obra/grafico/{ciudad}', [ObraController::class, 'viewGrafico'])->name('r-grafico-control-de-obra');
@@ -145,8 +157,8 @@ Route::group(['middleware' => ['auth', 'city.permissions']], function () {
 
 
 //Finanzas de construccion
-Route::get('/finanzas-de-construccion/ciudad', [FinanzasDeConstruccionController::class, 'viewCiudad'])->middleware('auth')->name('r-ciudad-finanzas-de-construccion');
-Route::group(['middleware' => ['auth', 'city.permissions']], function () {
+Route::get('/finanzas-de-construccion/ciudad', [FinanzasDeConstruccionController::class, 'viewCiudad'])->middleware(['auth', 'updating.mode' ])->name('r-ciudad-finanzas-de-construccion');
+Route::group(['middleware' => ['auth', 'city.permissions', 'updating.mode' ]], function () {
     //vistas
     Route::get('/finanzas-de-construccion/contratista/tablero/{ciudad}', [FinanzasDeConstruccionController::class, 'viewTableroContratista'])->name('r-tablero-finanzas-de-construccion');
     Route::get('/finanzas-de-construccion/contratista/grafico/{ciudad}', [FinanzasDeConstruccionController::class, 'viewGraficoContratista'])->name('r-grafico-finanzas-de-construccion');
@@ -172,8 +184,8 @@ Route::group(['middleware' => ['auth', 'city.permissions']], function () {
 
 
 //Inventario
-Route::get('/inventario/ciudad', [InventarioController::class, 'viewCiudad'])->middleware('auth')->name('r-ciudad-inventario');
-Route::group(['middleware' => ['auth', 'city.permissions']], function () {
+Route::get('/inventario/ciudad', [InventarioController::class, 'viewCiudad'])->middleware(['auth', 'updating.mode' ])->name('r-ciudad-inventario');
+Route::group(['middleware' => ['auth', 'city.permissions', 'updating.mode' ]], function () {
     //vistas
     Route::get('/inventario/tablero/{ciudad}', [InventarioController::class, 'viewTablero'])->name('r-tablero-inventario');
     Route::get('/inventario/grafico/{ciudad}', [InventarioController::class, 'viewGrafico'])->name('r-grafico-inventario');
@@ -195,7 +207,7 @@ Route::group(['middleware' => ['auth', 'city.permissions']], function () {
 
 
 //disenio
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'updating.mode' ]], function () {
     //vistas
     Route::get('/disenio/tablero/', [DisenioController::class, 'viewTablero'])->name('r-tablero-disenio');
     Route::get('/disenio/grafico/', [DisenioController::class, 'viewGrafico'])->name('r-grafico-disenio');
@@ -236,7 +248,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 //CCD
-Route::get('/operacion/ccd', [CCDController::class, 'index'])->middleware('auth')->name('r-ccd-operation');
+Route::get('/operacion/ccd', [CCDController::class, 'index'])->middleware(['auth', 'updating.mode' ])->name('r-ccd-operation');
 
 
 // // ESTE codigo fue comentado por razones de seguridad

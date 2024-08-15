@@ -6,8 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ asset('src/images/logo-empresa.jpeg') }}" />
+    <link rel="stylesheet" type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@mdi/font@7.2.96/css/materialdesignicons.min.css" />
     <link rel="stylesheet" media="screen" href="{{ asset('src/css/auth/animacion.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('src/css/auth/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('src/css/auth/main.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('src/css/bulma/bulma.css') }}" />
 

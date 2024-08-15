@@ -1,5 +1,5 @@
 {{-- En este apartado se colocan las notificaciones generales del sistema, como: actualizacion, mantenimiento, errores --}}
-<article class="message is-info">
+{{-- <article class="message is-info">
     <div class="message-header">
       <p>Informacion</p>
       <button class="delete" aria-label="delete"></button>
@@ -10,4 +10,4 @@
      con el administrador del sistema <b> Miguel Angel Guzman.</b>
        (En casos extremos puedes comunicarte al numero <b>60504276</b> via Whatsapp DataTech )
     </div>
-  </article>
+  </article> --}}

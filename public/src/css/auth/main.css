@@ -29,7 +29,7 @@ a:focus {
 
 a:hover {
 	text-decoration: none;
-  color: #6675df;
+ 
 }
 
 /*---------------------------------------------*/
@@ -438,7 +438,7 @@ input.input100 {
   width: 100%;
   height: 50px;
   border-radius: 10px;
-  background: #6675df;
+  background: #2f3561;
 
   font-family: Montserrat-Bold;
   font-size: 12px;
@@ -454,7 +454,7 @@ input.input100 {
 }
 
 .login100-form-btn:hover {
-  background: #3950ff;
+  background: #485196;
 }
 
 

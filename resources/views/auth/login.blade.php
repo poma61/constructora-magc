@@ -3,9 +3,10 @@
 @section('title', 'Constructora MAGC')
 
 @section('template_login')
-    <form class="login100-form validate-form" action="{{ route('r-login') }}" method="post">
+
+    <form class="login100-form" action="{{ route('r-login') }}" method="post">
         @csrf
-        <span class="login100-form-title p-b-43">
+        <span class="login100-form-title">
             Inicio de Sesion
         </span>
 
@@ -15,7 +16,6 @@
             <span class="label-input100">Usuario</span>
 
         </div>
-
 
         <div class="wrap-input100 validate-input" data-validate="Este campo es obligatorio">
             <input class="input100" type="password" name="password"  autocomplete="current-password">
@@ -37,9 +37,11 @@
             </div>
         @enderror
 
+
     </form>
 
     <div class="login100-more" style="background-image: url({{ asset('src/images/logo-empresa.jpeg') }});">
     </div>
+    
 @endsection
 

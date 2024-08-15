@@ -58,5 +58,6 @@ class Kernel extends HttpKernel
         'city.permissions' => \App\Http\Middleware\CityPermission::class,
         'group.permissions' => \App\Http\Middleware\GroupPermission::class,
         'module.administrative.permissions' => \App\Http\Middleware\AdministrativeModulePermission::class,
+        'updating.mode' => \App\Http\Middleware\UpdatingMode::class,
     ];
 }
