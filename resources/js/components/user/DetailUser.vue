@@ -176,6 +176,7 @@ export default defineComponent({
                 const user_permisos = response.records;
 
                 this.user_city_permissions = user_permisos.filter(row => row.type == 'cities').map(row => row.name);
+
                 this.user_module_permissions = user_permisos.filter(row => row.type == 'module').map(row => row.name);
 
                 this.user_cliente_record_permissions = user_permisos.filter(
@@ -187,6 +188,7 @@ export default defineComponent({
                 // map => devuelve un array
                 const user_cliente_list_groups = user_permisos.filter(row => row.type_content == 'module_cliente_groups');
                 let grupos;
+
                 this.ciudades.forEach(city => {
                     // filter => devulve un array segun condicion
                     // map => nos devulve un array

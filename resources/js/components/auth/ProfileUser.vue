@@ -107,16 +107,16 @@
                         <tr>
                             <th>Todos los modulos | Acceso a las ciudades de :</th>
                             <td>
-                                <span class="tag is-info m-1" v-for="(city, index) in city_permissions" :key="index">
+                                <span class="tag is-info m-1" v-for="(city, index) in user_city_permissions" :key="index">
                                     {{ city }}
                                 </span>
-                                <span class="tag is-danger m-1" v-if="city_permissions.length == 0">
+                                <span class="tag is-danger m-1" v-if="user_city_permissions.length == 0">
                                     Sin asignar ciudad.
                                 </span>
                             </td>
                         </tr>
 
-                        <tr v-for="(city_group, index_city_group) in groups_permissions" :key="index_city_group">
+                        <tr v-for="(city_group, index_city_group) in user_cliente_groups_permissions" :key="index_city_group">
                             <th>
                                 Modulo Cliente | {{ city_group.ciudad }} | Administra grupos:
                             </th>
@@ -136,15 +136,17 @@
                         </tr>
 
                         <tr>
-                            <th> Modulo Cliente | Acceso a los clientes registrados:</th>
+                            <th> Modulo Cliente | Registros:</th>
                             <td>
-                                <span v-if="record_permissions != null" class="tag is-info m-1">
-                                    {{ record_permissions }}
-                                </span>
 
-                                <span v-else class="tag is-danger m-1">
-                                    Sin asignar registros.
-                                </span>
+                                <span v-for="( row , idx) in user_cliente_record_permissions" class="tag is-info m-1" :key = "idx" >
+                                    {{ row }}
+                                </span> 
+
+                                 <span v-if = "user_cliente_record_permissions.length == 0" class="tag is-danger m-1">
+                                    Sin asignar.
+                                </span> 
+
                             </td>
                         </tr>
                         
@@ -153,14 +155,14 @@
                                 Acceso a modulos administrativos:
                             </th>
                             <td>
-                                <span class="tag is-success m-1" v-for="(module, index) in module_permissions"
+                                <span class="tag is-success m-1" v-for="(module, index) in user_module_permissions"
                                     :key="index" :index="index">
                                     <!-- el grupo viene de esta forma "Santa-Cruz_01" -->
                                     <!-- split => divide un string a partir de "_" y obtenemos ["Santa-Cruzz","01"] -->
                                     {{ module }}
                                 </span>
 
-                                <span class="tag is-danger m-1" v-if="module_permissions.length == 0">
+                                <span class="tag is-danger m-1" v-if="user_module_permissions.length == 0">
                                     Sin asignar modulos administrativos.
                                 </span>
                             </td>
@@ -222,7 +224,7 @@ const user_autenticate = ref({
     nombres: "",
     apellido_paterno: "",
     apellido_materno: "",
-    cargo: "",
+    cargo: "", 
     ci: "",
     ci_expedido: "",
     telefono: "",
@@ -232,10 +234,11 @@ const user_autenticate = ref({
     id_usuario: "",
 });
 
-const city_permissions = ref([]);
-const module_permissions = ref([]);
-const groups_permissions = ref([]);
-const record_permissions = ref(null);
+const user_city_permissions = ref([]);
+const user_module_permissions = ref([]);
+const user_cliente_groups_permissions = ref([]);
+const user_cliente_record_permissions = ref([]);
+
 const ciudades = ref([
     "Santa-Cruz",
     "Chuquisaca",
@@ -308,28 +311,31 @@ const clear = () => {
 };
 
 const loadUserPermission = async () => {
-    const usuario = new Auth();
+    const usuario = new Auth(); 
     const response = await usuario.onPermission();
     if (response.status) {
-        const permisos = response.records;
+        const user_permisos = response.records;
 
-        city_permissions.value = permisos.filter(row => row.type_content == 'cities').map(row => row.name);
-        module_permissions.value = permisos.filter(row => row.type == 'module').map(row => row.name);
-        const is_record_permissions = permisos.filter(row => row.type == 'records');
-        is_record_permissions.forEach(row => {
-            record_permissions.value = row.name;
-        })
+        user_city_permissions.value = user_permisos.filter(row => row.type == 'cities').map(row => row.name);
+        user_module_permissions.value = user_permisos.filter(row => row.type == 'module').map(row => row.name);
+
+        user_cliente_record_permissions.value = user_permisos.filter(
+                    row => row.type_content == 'cliente_module_records_actions' || row.type_content == 'cliente_module_records_reading'
+                ).map(row => row.name); 
 
         //ahora agrupamos las ciudades con sus respectivos grupos
         //filter => devuelve un array de objetos segun cumplan la condicion
         // map => devuelve un array
-        const list_groups = permisos.filter(row => row.type_content == 'groups');
+        const user_cliente_list_groups = user_permisos.filter(row => row.type_content == 'module_cliente_groups');
         let grupos;
         ciudades.value.forEach(city => {
             //filter => devulve un array segun condicion
-            //map => nos devulve un array
-            grupos = list_groups.filter(item => item.code_content.includes(city)).map(item => item.code_content);
-            groups_permissions.value.push({
+            //map => nos devulve un array 
+            grupos = user_cliente_list_groups.filter(item => item.code.includes(city)).map(item => item.code);
+            // ordenar el array grupos, porque puede venir desordenado
+            grupos = grupos.sort()
+
+            user_cliente_groups_permissions.value.push({
                 ciudad: city,
                 grupos: grupos,
             });
@@ -342,6 +348,5 @@ const loadUserPermission = async () => {
 onMounted(async () => {
     await me();
     await loadUserPermission();
-
 });
 </script>
